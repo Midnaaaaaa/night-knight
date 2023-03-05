@@ -70,6 +70,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	tilesheet.setMinFilter(GL_NEAREST);
 	tilesheet.setMagFilter(GL_NEAREST);
 	getline(fin, line);
+	sstream.clear();
 	sstream.str(line);
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
@@ -90,8 +91,7 @@ bool TileMap::loadLevel(const string &levelFile)
 				tile = tile * 10 + c - int('0');
 				fin.get(c);
 			}
-			map[j * mapSize.x + i] = tile - int('0');
-			cout << "Tile " << tile << endl;
+			map[j * mapSize.x + i] = tile;
 		}
 	#ifndef _WIN32
 		fin.get(tile);
@@ -120,7 +120,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				// Non-empty tile
 				nTiles++;
 				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
-				texCoordTile[0] = glm::vec2(float((tile-1)%tilesheetSize.x) / tilesheetSize.x, float((tile-1)/tilesheetSize.x) / tilesheetSize.y);
+				texCoordTile[0] = glm::vec2(float((tile)%tilesheetSize.x) / tilesheetSize.x, float((tile)/tilesheetSize.x) / tilesheetSize.y);
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
 				//texCoordTile[0] += halfTexel;
 				texCoordTile[1] -= halfTexel;
