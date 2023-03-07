@@ -43,11 +43,7 @@ private:
 	GLuint vbo;
 	GLint posLocation, texCoordLocation;
 	int nTiles;
-
-	glm::ivec2 position;
-	//Map size equals number of tiles of the map 16 horizontal 11 vertical
-	glm::ivec2 mapSize;
-	glm::ivec2 tilesheetSize;
+	glm::ivec2 position, mapSize, tilesheetSize;
 	int tileSize, blockSize;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
