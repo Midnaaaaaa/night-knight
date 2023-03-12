@@ -65,8 +65,8 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream.str(line);
 	sstream >> tilesheetFile;
 	tilesheet.loadFromFile(tilesheetFile, TEXTURE_PIXEL_FORMAT_RGBA);
-	tilesheet.setWrapS(GL_CLAMP_TO_EDGE);
-	tilesheet.setWrapT(GL_CLAMP_TO_EDGE);
+	//tilesheet.setWrapS(GL_CLAMP_TO_EDGE);
+	//tilesheet.setWrapT(GL_CLAMP_TO_EDGE);
 	//tilesheet.setMinFilter(GL_LINEAR_MIPMAP_LINEAR);
 	//tilesheet.setMagFilter(GL_LINEAR_MIPMAP_LINEAR);
 	tilesheet.setMinFilter(GL_NEAREST);
