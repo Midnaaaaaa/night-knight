@@ -17,9 +17,9 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 
 TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
-	mapSize = glm::ivec2(16, 11);
-	tileSize = 32;
-	blockSize = 32;
+	mapSize = glm::ivec2(32, 22);
+	tileSize = 16;
+	blockSize = 16;
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 	
@@ -53,7 +53,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	ifstream fin;
 	string line, tilesheetFile;
 	stringstream sstream;
-	char tile;
+	short tile;
 	
 	fin.open(levelFile.c_str());
 	if(!fin.is_open())
