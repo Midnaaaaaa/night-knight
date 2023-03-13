@@ -7,6 +7,14 @@
 
 using namespace std;
 
+const vector<bool> TileMap::solid = {	0,1,1,0,0,0,0,0,
+										0,0,0,1,0,0,0,0,
+										0,0,1,1,1,0,0,0,
+										1,1,1,1,1,1,1,1,
+										1,1,1,1,0,0,0,0,
+										0,0,0,0,0,0,0,0,
+										0,0,0,0,0,0,0,0,
+										0,0,0,0,0,0,0,0};
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
@@ -166,7 +174,8 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for(int y=y0; y<=y1; y++)
 	{
-		if(map[y*mapSize.x+x] != 0)
+		char tile = map[y * mapSize.x + x];
+		if(solid[tile])
 			return true;
 	}
 	
@@ -182,7 +191,8 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for(int y=y0; y<=y1; y++)
 	{
-		if(map[y*mapSize.x+x] != 0)
+		char tile = map[y * mapSize.x + x];
+		if (solid[tile])
 			return true;
 	}
 	
@@ -198,7 +208,8 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	y = (pos.y + size.y - 1) / tileSize;
 	for(int x=x0; x<=x1; x++)
 	{
-		if(map[y*mapSize.x+x] != 0)
+		char tile = map[y * mapSize.x + x];
+		if (solid[tile])
 		{
 			if(*posY - tileSize * y + size.y <= 4)
 			{
