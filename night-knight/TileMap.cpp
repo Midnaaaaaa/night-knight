@@ -7,13 +7,18 @@
 
 using namespace std;
 
-const vector<bool> TileMap::solid = {	0,1,1,0,0,0,0,0,
+#define TILE_NOT_SOLID 0
+#define TILE_SOLID 1
+#define TILE_PLATFORM 2
+#define TILE_SPIKE 3
+
+const vector<int> TileMap::tileType = {	0,1,2,0,0,0,0,0,
 										0,0,0,1,0,0,0,0,
-										0,0,1,1,1,0,0,0,
-										1,1,1,1,1,1,1,1,
-										1,1,1,1,0,0,0,0,
-										0,0,0,0,0,0,0,0,
-										0,0,0,0,0,0,0,0,
+										0,0,3,3,3,0,0,0,
+										1,1,3,1,1,1,2,2,
+										1,1,1,1,1,0,0,0,
+										0,0,0,0,1,0,0,0,
+										0,0,0,0,1,0,0,0,
 										0,0,0,0,0,0,0,0};
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
@@ -165,7 +170,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 // Method collisionMoveDown also corrects Y coordinate if the box is
 // already intersecting a tile below.
 
-bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const
+bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping) const
 {
 	int x, y0, y1;
 	
@@ -174,15 +179,24 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for(int y=y0; y<=y1; y++)
 	{
-		char tile = map[y * mapSize.x + x];
-		if(solid[tile])
+		int tile = map[y * mapSize.x + x];
+		int type = tileType[tile];
+		switch (type)
+		{
+		case TILE_NOT_SOLID:
+			break;
+		case TILE_PLATFORM:
+			if (bJumping) break;
+		case TILE_SOLID:
+		case TILE_SPIKE:
 			return true;
+		}
 	}
 	
 	return false;
 }
 
-bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const
+bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping) const
 {
 	int x, y0, y1;
 	
@@ -191,9 +205,18 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for(int y=y0; y<=y1; y++)
 	{
-		char tile = map[y * mapSize.x + x];
-		if (solid[tile])
+		int tile = map[y * mapSize.x + x];
+		int type = tileType[tile];
+		switch (type)
+		{
+		case TILE_NOT_SOLID:
+			break;
+		case TILE_PLATFORM:
+			if (bJumping) break;
+		case TILE_SOLID:
+		case TILE_SPIKE:
 			return true;
+		}
 	}
 	
 	return false;
@@ -208,10 +231,16 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	y = (pos.y + size.y - 1) / tileSize;
 	for(int x=x0; x<=x1; x++)
 	{
-		char tile = map[y * mapSize.x + x];
-		if (solid[tile])
+		int tile = map[y * mapSize.x + x];
+		int type = tileType[tile];
+		switch (type)
 		{
-			if(*posY - tileSize * y + size.y <= 4)
+		case TILE_NOT_SOLID:
+			break;
+		case TILE_SOLID:
+		case TILE_PLATFORM:
+		case TILE_SPIKE:
+			if (*posY - tileSize * y + size.y <= 4)
 			{
 				*posY = tileSize * y - size.y;
 				return true;
@@ -219,6 +248,31 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 		}
 	}
 	
+	return false;
+}
+
+bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const
+{
+	int x0, x1, y;
+
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+	y = pos.y / tileSize;
+	for (int x = x0; x <= x1; x++)
+	{
+		int tile = map[y * mapSize.x + x];
+		int type = tileType[tile];
+		switch (type)
+		{
+		case TILE_NOT_SOLID:
+		case TILE_PLATFORM:
+			break;
+		case TILE_SOLID:
+		case TILE_SPIKE:
+			return true;
+		}
+	}
+
 	return false;
 }
 

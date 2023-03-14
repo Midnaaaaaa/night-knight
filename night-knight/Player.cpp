@@ -9,6 +9,7 @@
 #define JUMP_ANGLE_STEP 4
 #define JUMP_HEIGHT 96
 #define FALL_STEP 4
+#define PLAYER_OFFSET 8
 
 
 enum PlayerAnims
@@ -30,13 +31,13 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->setAnimationSpeed(STAND_RIGHT, 8);
 		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.0f, 0.0f));
 		
-		sprite->setAnimationSpeed(MOVE_LEFT, 8);
+		sprite->setAnimationSpeed(MOVE_LEFT, 10);
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 7, 0.0f));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 6, 0.0f));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 5, 0.0f));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 6, 0.0f));
 		
-		sprite->setAnimationSpeed(MOVE_RIGHT, 8);
+		sprite->setAnimationSpeed(MOVE_RIGHT, 10);
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.0f));
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 1, 0.0f));
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 2, 0.0f));
@@ -65,7 +66,7 @@ void Player::update(int deltaTime)
 			rightSight = false;
 		}
 		posPlayer.x -= 2;
-		if(map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+		if(map->collisionMoveLeft(glm::ivec2(posPlayer.x + PLAYER_OFFSET, posPlayer.y), glm::ivec2(16, 32), bJumping))
 		{
 			posPlayer.x += 2;
 			sprite->changeAnimation(STAND_LEFT);
@@ -78,7 +79,7 @@ void Player::update(int deltaTime)
 			rightSight = true;
 		}
 		posPlayer.x += 2;
-		if(map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+		if(map->collisionMoveRight(glm::ivec2(posPlayer.x + PLAYER_OFFSET, posPlayer.y), glm::ivec2(16, 32), bJumping))
 		{
 			posPlayer.x -= 2;
 			sprite->changeAnimation(STAND_RIGHT);
@@ -108,15 +109,22 @@ void Player::update(int deltaTime)
 		}
 		else
 		{
-			posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+			int nextY = int(startY - 96 / 2 * sin(3.14159f * jumpAngle / 180.f));
+			if (map->collisionMoveUp(glm::ivec2(posPlayer.x + PLAYER_OFFSET, nextY), glm::ivec2(16, 32), &nextY)) {
+				jumpAngle = (180 - jumpAngle) + JUMP_ANGLE_STEP;
+				nextY = int(startY - 96 / 2 * sin(3.14159f * jumpAngle / 180.f));
+			}
+			posPlayer.y = nextY;
+
+
 			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y);
+				bJumping = !map->collisionMoveDown(glm::ivec2(posPlayer.x + PLAYER_OFFSET, posPlayer.y), glm::ivec2(16, 32), &posPlayer.y);
 		}
 	}
 	else
 	{
 		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 32), &posPlayer.y))
+		if(map->collisionMoveDown(glm::ivec2(posPlayer.x + PLAYER_OFFSET, posPlayer.y), glm::ivec2(16, 32), &posPlayer.y))
 		{
 			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
