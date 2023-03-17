@@ -101,7 +101,14 @@ void Player::update(int deltaTime)
 	
 	if(bJumping)
 	{
-		jumpAngle += JUMP_ANGLE_STEP;
+		//Check if next jump frame is safe, before advancing
+		int nextJumpAngle = jumpAngle + JUMP_ANGLE_STEP;
+
+		int nextY = int(startY - 96 / 2 * sin(3.14159f * nextJumpAngle / 180.f));
+		if (map->collisionMoveUp(glm::ivec2(posPlayer.x + PLAYER_OFFSET, nextY), glm::ivec2(16, 32))) {
+			jumpAngle = (180 - jumpAngle);
+		}
+
 		if(jumpAngle == 180)
 		{
 			bJumping = false;
@@ -109,13 +116,10 @@ void Player::update(int deltaTime)
 		}
 		else
 		{
-			int nextY = int(startY - 96 / 2 * sin(3.14159f * jumpAngle / 180.f));
-			if (map->collisionMoveUp(glm::ivec2(posPlayer.x + PLAYER_OFFSET, nextY), glm::ivec2(16, 32), &nextY)) {
-				jumpAngle = (180 - jumpAngle) + JUMP_ANGLE_STEP;
-				nextY = int(startY - 96 / 2 * sin(3.14159f * jumpAngle / 180.f));
-			}
-			posPlayer.y = nextY;
+			//Advance jumpAngle
+			jumpAngle += JUMP_ANGLE_STEP;
 
+			posPlayer.y = int(startY - 96 / 2 * sin(3.14159f * nextJumpAngle / 180.f));
 
 			if(jumpAngle > 90)
 				bJumping = !map->collisionMoveDown(glm::ivec2(posPlayer.x + PLAYER_OFFSET, posPlayer.y), glm::ivec2(16, 32), &posPlayer.y);
