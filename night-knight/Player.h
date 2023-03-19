@@ -20,6 +20,8 @@ public:
 	
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
+
+	void checkCollisionWithPlatform();
 	
 private:
 	bool bJumping;
@@ -29,6 +31,8 @@ private:
 	Sprite *sprite;
 	TileMap *map;
 	bool rightSight;
+
+	glm::ivec2 playerSize = glm::ivec2(16,32);
 
 };
 
