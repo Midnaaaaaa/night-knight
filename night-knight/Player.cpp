@@ -7,7 +7,7 @@
 
 
 #define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 96
+#define JUMP_HEIGHT (96 + 5)/2
 #define FALL_STEP 4
 #define PLAYER_OFFSET 8
 
@@ -104,7 +104,7 @@ void Player::update(int deltaTime)
 		//Check if next jump frame is safe, before advancing
 		int nextJumpAngle = jumpAngle + JUMP_ANGLE_STEP;
 
-		int nextY = int(startY - 96 / 2 * sin(3.14159f * nextJumpAngle / 180.f));
+		int nextY = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
 		if (map->collisionMoveUp(glm::ivec2(posPlayer.x + PLAYER_OFFSET, nextY), playerSize)) {
 			jumpAngle = (180 - jumpAngle);
 		}
@@ -119,7 +119,7 @@ void Player::update(int deltaTime)
 			//Advance jumpAngle
 			jumpAngle += JUMP_ANGLE_STEP;
 
-			posPlayer.y = int(startY - 96 / 2 * sin(3.14159f * nextJumpAngle / 180.f));
+			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
 
 			checkCollisionWithPlatform();
 
