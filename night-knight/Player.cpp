@@ -9,7 +9,7 @@
 #define JUMP_ANGLE_STEP 4
 #define JUMP_HEIGHT (96 + 5)/2
 #define FALL_STEP 4
-#define PLAYER_OFFSET 8
+//#define PLAYER_OFFSET 8
 
 
 enum PlayerAnims
@@ -59,7 +59,7 @@ void Player::update(int deltaTime)
 			rightSight = false;
 		}
 		posCharacter.x -= 2;
-		if(map->collisionMoveLeft(glm::ivec2(posCharacter.x + PLAYER_OFFSET, posCharacter.y), characterSize, bJumping))
+		if(map->collisionMoveLeft(glm::ivec2(posCharacter.x + colliderOffset.x, posCharacter.y), colliderSize, bJumping))
 		{
 			posCharacter.x += 2;
 			sprite->changeAnimation(STAND_LEFT);
@@ -72,7 +72,7 @@ void Player::update(int deltaTime)
 			rightSight = true;
 		}
 		posCharacter.x += 2;
-		if(map->collisionMoveRight(glm::ivec2(posCharacter.x + PLAYER_OFFSET, posCharacter.y), characterSize, bJumping))
+		if(map->collisionMoveRight(glm::ivec2(posCharacter.x + colliderOffset.x, posCharacter.y), colliderSize, bJumping))
 		{
 			posCharacter.x -= 2;
 			sprite->changeAnimation(STAND_RIGHT);
@@ -98,7 +98,7 @@ void Player::update(int deltaTime)
 		int nextJumpAngle = jumpAngle + JUMP_ANGLE_STEP;
 
 		int nextY = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
-		if (map->collisionMoveUp(glm::ivec2(posCharacter.x + PLAYER_OFFSET, nextY), characterSize)) {
+		if (map->collisionMoveUp(glm::ivec2(posCharacter.x + colliderOffset.x, nextY), colliderSize)) {
 			jumpAngle = (180 - jumpAngle);
 		}
 
@@ -117,7 +117,7 @@ void Player::update(int deltaTime)
 			checkCollisionWithPlatform();
 
 			if (jumpAngle > 90) {
-				int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + PLAYER_OFFSET, posCharacter.y), characterSize, &posCharacter.y);
+				int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x, posCharacter.y), colliderSize, &posCharacter.y);
 				bJumping = tileCol == TILE_NOT_SOLID;
 			}
 		}
@@ -126,7 +126,7 @@ void Player::update(int deltaTime)
 	{
 		posCharacter.y += FALL_STEP;
 		checkCollisionWithPlatform();
-		if(map->collisionMoveDown(glm::ivec2(posCharacter.x + PLAYER_OFFSET, posCharacter.y), characterSize, &posCharacter.y) != 0)
+		if(map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x, posCharacter.y), colliderSize, &posCharacter.y) != 0)
 		{
 			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
@@ -144,10 +144,10 @@ void Player::checkCollisionWithPlatform() {
 	int tileSize = map->getTileSize();
 	for (int i = 0; i < 2; ++i) {
 		int dummy = posCharacter.y;
-		int offset = (i == 0) ? 0 : characterSize.x - 1;
-		int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + PLAYER_OFFSET + offset, posCharacter.y), glm::ivec2(1, characterSize.y), &dummy);
+		int offset = (i == 0) ? 0 : colliderSize.x - 1;
+		int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x + offset, posCharacter.y), glm::ivec2(1, colliderSize.y), &dummy);
 		if (tileCol == TILE_PLATFORM) {
-			map->modifyTileMap(posCharacter.y / tileSize + 2, (posCharacter.x + PLAYER_OFFSET + offset) / tileSize, 4 * 8 + 5);
+			map->modifyTileMap(posCharacter.y / tileSize + 2, (posCharacter.x + colliderOffset.x + offset) / tileSize, 4 * 8 + 5);
 		}
 	}
 }
