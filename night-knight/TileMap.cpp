@@ -310,7 +310,18 @@ void TileMap::modifyTileMap(int i, int j, int newTile) {
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * 24 * numTile[i*mapSize.x + j], sizeof(float) * 24, &vertices[0]);
 }
 
-
+bool TileMap::tevacae(const glm::ivec2& pos, const glm::ivec2& size, bool rightSight) const {
+	int pixelX, pixelY;
+	if (rightSight) {
+		pixelX = pos.x + size.x;
+		pixelY = pos.y + size.y;
+	}
+	else {
+		pixelX = pos.x-1;
+		pixelY = pos.y + size.y;
+	}
+	return map[(pixelX / tileSize) + (pixelY / tileSize) * mapSize.x] == TILE_NOT_SOLID;
+}
 
 
 

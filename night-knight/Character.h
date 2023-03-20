@@ -3,6 +3,13 @@
 #include "Sprite.h"
 #include "TileMap.h"
 
+
+enum CharacterAnims
+{
+	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT
+};
+
+
 class Character
 {
 public:
@@ -12,6 +19,9 @@ public:
 
 	void setTileMap(TileMap* tileMap);
 	void setPosition(const glm::vec2& pos);
+	glm::ivec2 getPosition() const;
+	glm::ivec2 getSize() const;
+
 
 protected:
 
@@ -24,6 +34,7 @@ protected:
 	Sprite* sprite;
 	TileMap* map;
 	bool rightSight;
+	glm::ivec2 spriteSize;
 
 	glm::ivec2 colliderSize, colliderOffset;
 

@@ -42,6 +42,8 @@ public:
 	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 
 	void modifyTileMap(int i, int j, int newTile);
+
+	bool tevacae(const glm::ivec2& pos, const glm::ivec2& size, bool rightSight) const;
 	
 private:
 	bool loadLevel(const string &levelFile);

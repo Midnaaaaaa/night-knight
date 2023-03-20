@@ -15,9 +15,12 @@ public:
 	virtual void update(int deltaTime);
 
 	void checkCollisionWithPlatform();
+	bool isHurted();
+	bool checkCollisionWithSprite(glm::ivec2 leftTop, glm::ivec2 rightBottom, int type);
 
 private:
 	virtual void loadAnimations();
+	bool hurted = false;
 
 };
 

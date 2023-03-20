@@ -29,6 +29,7 @@ Scene::~Scene()
 
 void Scene::init()
 {
+
 	initShaders();
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
@@ -36,6 +37,12 @@ void Scene::init()
 
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
+
+	Esquelet *prueba = new Esquelet();
+	prueba->init(glm::ivec2(SCREEN_X, SCREEN_Y), "images/bub.png", glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), texProgram);
+	prueba->setPosition(glm::vec2(10 * map->getTileSize(), 3 * map->getTileSize()));
+	prueba->setTileMap(map);
+	enemies.push_back(prueba);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
@@ -44,6 +51,16 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	for (Enemy* e : enemies)
+	{
+		e->update(deltaTime);
+		if (!player->isHurted()) {
+			glm::ivec2 topLeft = e->getPosition();
+			glm::ivec2 bottomRight = topLeft + e->getSize();
+			//0 means TYPE_ENEMY
+			bool wasHit = player->checkCollisionWithSprite(topLeft, bottomRight, 0);	
+		}
+	}
 }
 
 void Scene::render()
@@ -58,6 +75,10 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+	for (Enemy* e : enemies)
+	{
+		e->render();
+	}
 }
 
 void Scene::initShaders()

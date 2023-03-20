@@ -11,11 +11,10 @@
 #define FALL_STEP 4
 //#define PLAYER_OFFSET 8
 
-
-enum PlayerAnims
-{
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, CROUCH_LEFT, CROUCH_RIGHT
-};
+#define TYPE_ENEMY 1
+#define TYPE_KEY 2
+#define TYPE_GEM 3
+#define TYPE_STOPWATCH 4
 
 
 void Player::loadAnimations() {
@@ -153,5 +152,19 @@ void Player::checkCollisionWithPlatform() {
 }
 
 
+bool Player::isHurted() {
+	return hurted;
+}
+
+
+bool Player::checkCollisionWithSprite(glm::ivec2 leftTop, glm::ivec2 rightBottom, int type) {
+	glm::ivec2 p0(posCharacter.x + colliderOffset.x, posCharacter.y + colliderOffset.y);
+	glm::ivec2 p1(posCharacter.x + colliderOffset.x + colliderSize.x, posCharacter.y + colliderOffset.y + colliderSize.y);
+	if (p0.x < rightBottom.x && p1.x > leftTop.x && p0.y < rightBottom.y && p1.y > leftTop.y) {
+		if (type == TYPE_ENEMY) hurted = true;
+		return true;
+	}
+	return false;
+}
 
 
