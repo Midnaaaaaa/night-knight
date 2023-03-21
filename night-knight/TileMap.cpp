@@ -7,6 +7,7 @@
 
 using namespace std;
 
+/*
 const vector<int> TileMap::tileType = {	0,1,3,0,0,0,0,0,
 										0,0,0,1,0,0,0,0,
 										0,0,2,2,2,0,0,0,
@@ -15,6 +16,35 @@ const vector<int> TileMap::tileType = {	0,1,3,0,0,0,0,0,
 										0,0,0,0,1,0,0,0,
 										0,0,0,0,1,0,0,0,
 										0,0,0,0,0,0,0,0};
+
+const vector<int> TileMap::tileType = { 0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,
+										3,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,
+										4,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,
+										1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,
+										1,1,1,1,1,1,1,0,0,0,0,3,0,0,0,0,
+										1,1,1,0,0,1,1,0,0,0,0,4,0,0,0,0,
+										1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,
+										0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0};
+										*/
+
+const vector<int> TileMap::tileType = { 0,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,
+										2,4,4,1,1,1,1,1,1,1,1,1,1,1,1,1,
+										2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+										2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+										0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,
+										0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,
+										0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
+										0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	// -----------------------------------------------------------------
+										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+};
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
@@ -118,11 +148,13 @@ bool TileMap::loadLevel(const string &levelFile)
 void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 {
 	int tile;
-	glm::vec2 posTile, texCoordTile[2], halfTexel;
+	glm::vec2 posTile, texCoordTile[2], halfTexel, quarterTexel;
 	vector<float> vertices;
 	
 	nTiles = 0;
 	halfTexel = glm::vec2(0.5f / tilesheet.width(), 0.5f / tilesheet.height());
+	quarterTexel = glm::vec2(0.25f / tilesheet.width(), 0.25f / tilesheet.height());
+
 	for(int j=0; j<mapSize.y; j++)
 	{
 		for(int i=0; i<mapSize.x; i++)
@@ -137,7 +169,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				texCoordTile[0] = glm::vec2(float((tile)%tilesheetSize.x) / tilesheetSize.x, float((tile)/tilesheetSize.x) / tilesheetSize.y);
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
 				//texCoordTile[0] += halfTexel;
-				//texCoordTile[1] -= halfTexel;
+				texCoordTile[1] -= quarterTexel;
 				// First triangle
 				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
 				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
@@ -285,6 +317,7 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, boo
 }
 
 void TileMap::modifyTileMap(int i, int j, int newTile) {
+	if (newTile < 0) newTile = map[mapSize.x * i + j] + (-newTile); //XD confia
 	map[mapSize.x * i + j] = newTile;
 
 	glm::vec2 posTile, oldPosTile, texCoordTile[2], halfTexel;

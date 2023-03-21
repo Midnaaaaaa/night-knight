@@ -27,6 +27,8 @@ private:
 	void initShaders();
 
 private:
+	Texture bgSpritesheet;
+	Sprite *bg;
 	TileMap *map;
 	Player *player;
 	vector<Enemy*> enemies;

@@ -35,7 +35,13 @@ void Scene::init()
 {
 
 	initShaders();
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
+	map = TileMap::createTileMap("levels/level28.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	bgSpritesheet.loadFromFile("images/bg28.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	bg = Sprite::createSprite(glm::ivec2(32*map->getTileSize(), 22*map->getTileSize()), glm::ivec2(1,1), &bgSpritesheet, &texProgram);
+	bg->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
+	
+
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), "images/simon-sprite.png", glm::ivec2(16,32), glm::ivec2(8,0), glm::ivec2(32,32), glm::vec2(1/8.f, 1/4.f), texProgram);
 
@@ -69,6 +75,9 @@ void Scene::update(int deltaTime)
 
 void Scene::render()
 {
+	bg->render();
+
+
 	glm::mat4 modelview;
 
 	texProgram.use();

@@ -142,11 +142,10 @@ void Player::update(int deltaTime)
 void Player::checkCollisionWithPlatform() {
 	int tileSize = map->getTileSize();
 	for (int i = 0; i < 2; ++i) {
-		int dummy = posCharacter.y;
 		int offset = (i == 0) ? 0 : colliderSize.x - 1;
-		int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x + offset, posCharacter.y), glm::ivec2(1, colliderSize.y), &dummy);
+		int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x + offset, posCharacter.y), glm::ivec2(1, colliderSize.y), nullptr);
 		if (tileCol == TILE_PLATFORM) {
-			map->modifyTileMap(posCharacter.y / tileSize + 2, (posCharacter.x + colliderOffset.x + offset) / tileSize, 4 * 8 + 5);
+			map->modifyTileMap(posCharacter.y / tileSize + 2, (posCharacter.x + colliderOffset.x + offset) / tileSize, /*4 * 8 + 5*/ -16);
 		}
 	}
 }
