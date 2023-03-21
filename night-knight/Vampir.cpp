@@ -33,8 +33,8 @@ void Vampir::update(int deltaTime) {
 		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
 		nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * MOVE_SPEED;
 		
-		bool collisionUp = goesUp && map->collisionMoveUp(nextPos, glm::ivec2(1, spriteSize.x), false);
-		bool collisionDown = !goesUp && map->collisionMoveDown(glm::ivec2(nextPos.x, nextPos.y + spriteSize.y), glm::ivec2(spriteSize.x, 1), &nextPos.y);
+		bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), glm::ivec2(spriteSize.x, 1), false);
+		bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), glm::ivec2(spriteSize.x, 1), nullptr);
 
 		if (nextPos.x < map->LEFT_WALL || nextPos.x + spriteSize.x > map->RIGHT_WALL) {
 			rightSight = !rightSight;
@@ -44,9 +44,9 @@ void Vampir::update(int deltaTime) {
 			nextPos.y = posCharacter.y;
 			goesUp = !goesUp;
 		}
-		else if (collisionUp || collisionDown) {
+		else if (goesUp && collisionUp || !goesUp && collisionDown) {
 			goesUp = !goesUp;
-			nextPos.y = posCharacter.y + (goesUp * 2 - 1) * MOVE_SPEED;
+			nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * MOVE_SPEED;
 		}
 
 		posCharacter = nextPos;

@@ -242,7 +242,10 @@ int TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, in
 		case TILE_PLATFORM:
 		case TILE_PLATFORM_ACTIVATED:
 		case TILE_SPIKE:
-			if (*posY - tileSize * y + size.y <= 4)
+			if (posY == nullptr) {
+				return type;
+			}
+			else if (*posY - tileSize * y + size.y <= 4)
 			{
 				*posY = tileSize * y - size.y;
 				return type;
