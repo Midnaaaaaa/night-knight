@@ -43,7 +43,7 @@ void Scene::init()
 	
 
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), "images/simon-sprite.png", glm::ivec2(16,32), glm::ivec2(8,0), glm::ivec2(32,32), glm::vec2(1/8.f, 1/4.f), texProgram);
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), "images/soma-animations.png", glm::ivec2(16,32), glm::ivec2(8,32), glm::ivec2(32,64), glm::vec2(1/16.f, 1/16.f), texProgram);
 
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);

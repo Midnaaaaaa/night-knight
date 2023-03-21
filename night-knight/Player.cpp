@@ -44,7 +44,7 @@ void Player::loadAnimations() {
 	sprite->setAnimationSpeed(CROUCH_RIGHT, 8);
 	sprite->addKeyframe(CROUCH_RIGHT, glm::vec2(1 / 8.f * 3, 0.0f));
 
-	sprite->changeAnimation(1);
+	sprite->changeAnimation(STAND_RIGHT);
 }
 
 
@@ -58,7 +58,7 @@ void Player::update(int deltaTime)
 			rightSight = false;
 		}
 		posCharacter.x -= 2;
-		if(map->collisionMoveLeft(glm::ivec2(posCharacter.x + colliderOffset.x, posCharacter.y), colliderSize, bJumping))
+		if(map->collisionMoveLeft(posCharacter + colliderOffset, colliderSize, bJumping))
 		{
 			posCharacter.x += 2;
 			sprite->changeAnimation(STAND_LEFT);
@@ -71,7 +71,7 @@ void Player::update(int deltaTime)
 			rightSight = true;
 		}
 		posCharacter.x += 2;
-		if(map->collisionMoveRight(glm::ivec2(posCharacter.x + colliderOffset.x, posCharacter.y), colliderSize, bJumping))
+		if(map->collisionMoveRight(posCharacter + colliderOffset, colliderSize, bJumping))
 		{
 			posCharacter.x -= 2;
 			sprite->changeAnimation(STAND_RIGHT);
@@ -116,7 +116,7 @@ void Player::update(int deltaTime)
 			checkCollisionWithPlatform();
 
 			if (jumpAngle > 90) {
-				int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x, posCharacter.y), colliderSize, &posCharacter.y);
+				int tileCol = map->collisionMoveDown(posCharacter + colliderOffset, colliderSize, &posCharacter.y);
 				bJumping = tileCol == TILE_NOT_SOLID;
 			}
 		}
@@ -125,7 +125,7 @@ void Player::update(int deltaTime)
 	{
 		posCharacter.y += FALL_STEP;
 		checkCollisionWithPlatform();
-		if(map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x, posCharacter.y), colliderSize, &posCharacter.y) != 0)
+		if(map->collisionMoveDown(posCharacter + colliderOffset, colliderSize, &posCharacter.y) != 0)
 		{
 			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
