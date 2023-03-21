@@ -34,9 +34,28 @@ void Player::loadAnimations() {
 
 	sprite->setAnimationSpeed(MOVE_RIGHT, 10);
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.0f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 1, 0.0f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 2, 0.0f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 1, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 1, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 2, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 3, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 4, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 5, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 6, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 7, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 8, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 9, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 10, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 11, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 12, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 13, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 14, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 15, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 0, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 1, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 2, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 3, 1 / 16.f * 1));
+
+
+
 
 	sprite->setAnimationSpeed(CROUCH_LEFT, 8);
 	sprite->addKeyframe(CROUCH_LEFT, glm::vec2(1 / 8.f * 4, 0.0f));
@@ -97,7 +116,7 @@ void Player::update(int deltaTime)
 		int nextJumpAngle = jumpAngle + JUMP_ANGLE_STEP;
 
 		int nextY = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
-		if (map->collisionMoveUp(glm::ivec2(posCharacter.x + colliderOffset.x, nextY), colliderSize, true)) {
+		if (map->collisionMoveUp(glm::ivec2(posCharacter.x + colliderOffset.x, nextY + colliderOffset.y), colliderSize, true)) {
 			jumpAngle = (180 - jumpAngle);
 		}
 
@@ -143,9 +162,9 @@ void Player::checkCollisionWithPlatform() {
 	int tileSize = map->getTileSize();
 	for (int i = 0; i < 2; ++i) {
 		int offset = (i == 0) ? 0 : colliderSize.x - 1;
-		int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x + offset, posCharacter.y), glm::ivec2(1, colliderSize.y), nullptr);
+		int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x + offset, posCharacter.y + colliderOffset.y), glm::ivec2(1, colliderSize.y), nullptr);
 		if (tileCol == TILE_PLATFORM) {
-			map->modifyTileMap(posCharacter.y / tileSize + 2, (posCharacter.x + colliderOffset.x + offset) / tileSize, /*4 * 8 + 5*/ -16);
+			map->modifyTileMap((posCharacter.y + colliderOffset.y + colliderSize.y) / tileSize, (posCharacter.x + colliderOffset.x + offset) / tileSize, /*4 * 8 + 5*/ -16);
 		}
 	}
 }
