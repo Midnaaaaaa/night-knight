@@ -97,7 +97,7 @@ void Player::update(int deltaTime)
 		int nextJumpAngle = jumpAngle + JUMP_ANGLE_STEP;
 
 		int nextY = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
-		if (map->collisionMoveUp(glm::ivec2(posCharacter.x + colliderOffset.x, nextY), colliderSize)) {
+		if (map->collisionMoveUp(glm::ivec2(posCharacter.x + colliderOffset.x, nextY), colliderSize, true)) {
 			jumpAngle = (180 - jumpAngle);
 		}
 

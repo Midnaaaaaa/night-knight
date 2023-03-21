@@ -31,7 +31,8 @@ TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProg
 	loadLevel(levelFile);
 	this->minCoords = minCoords;
 	prepareArrays(minCoords, program);
-	
+	LEFT_WALL = 2 * tileSize;
+	RIGHT_WALL = (mapSize.x - 2) * tileSize;
 }
 
 TileMap::~TileMap()
@@ -252,7 +253,7 @@ int TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, in
 	return 0;
 }
 
-bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size) const
+bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, bool ignorePlatform) const
 {
 	int x0, x1, y;
 
@@ -266,9 +267,11 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size) con
 		switch (type)
 		{
 		case TILE_NOT_SOLID:
+			break;
 		case TILE_PLATFORM:
 		case TILE_PLATFORM_ACTIVATED:
-			break;
+			if (ignorePlatform)
+				break;
 		case TILE_SOLID:
 		case TILE_SPIKE:
 			return true;

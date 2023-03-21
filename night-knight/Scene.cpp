@@ -3,6 +3,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
+#include "Esquelet.h"
+#include "Vampir.h"
 
 
 #define SCREEN_X 32*2
@@ -10,6 +12,8 @@
 
 #define INIT_PLAYER_X_TILES 2
 #define INIT_PLAYER_Y_TILES 9
+
+
 
 
 Scene::Scene()
@@ -38,7 +42,7 @@ void Scene::init()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
-	Esquelet *prueba = new Esquelet();
+	Vampir *prueba = new Vampir();
 	prueba->init(glm::ivec2(SCREEN_X, SCREEN_Y), "images/bub.png", glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), texProgram);
 	prueba->setPosition(glm::vec2(10 * map->getTileSize(), 3 * map->getTileSize()));
 	prueba->setTileMap(map);

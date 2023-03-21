@@ -7,8 +7,6 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Enemy.h"
-#include "Esquelet.h"
-
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.

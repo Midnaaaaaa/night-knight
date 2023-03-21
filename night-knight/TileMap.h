@@ -26,6 +26,9 @@ private:
 	TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
 
 public:
+
+	int LEFT_WALL, RIGHT_WALL;
+
 	// Tile maps can only be created inside an OpenGL context
 	static TileMap *createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
 
@@ -39,7 +42,7 @@ public:
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping) const;
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping) const;
 	int collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size) const;
+	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, bool ignorePlatform) const;
 
 	void modifyTileMap(int i, int j, int newTile);
 
