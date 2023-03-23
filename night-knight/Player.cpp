@@ -33,7 +33,6 @@ void Player::loadAnimations() {
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 6, 0.0f));
 
 	sprite->setAnimationSpeed(MOVE_RIGHT, 10);
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.0f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 1, 0.0f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 2, 0.0f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 3, 0.0f));
@@ -165,6 +164,7 @@ void Player::checkCollisionWithPlatform() {
 		int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x + offset, posCharacter.y + colliderOffset.y), glm::ivec2(1, colliderSize.y), nullptr);
 		if (tileCol == TILE_PLATFORM) {
 			map->modifyTileMap((posCharacter.y + colliderOffset.y + colliderSize.y) / tileSize, (posCharacter.x + colliderOffset.x + offset) / tileSize, /*4 * 8 + 5*/ -16);
+			map->reduceNumberOfPlatforms();
 		}
 	}
 }

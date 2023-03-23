@@ -55,6 +55,7 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 
 TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
+	numPlatforms = 0;
 	mapSize = glm::ivec2(32, 22);
 	tileSize = 16;
 	blockSize = 16;
@@ -134,6 +135,7 @@ bool TileMap::loadLevel(const string &levelFile)
 				tile = tile * 10 + c - int('0');
 				fin.get(c);
 			}
+			if (tileType[tile] == TILE_PLATFORM) ++numPlatforms;
 			map[j * mapSize.x + i] = tile;
 		}
 	#ifndef _WIN32
@@ -362,6 +364,10 @@ bool TileMap::tevacae(const glm::ivec2& pos, const glm::ivec2& size, bool rightS
 	return map[(pixelX / tileSize) + (pixelY / tileSize) * mapSize.x] == TILE_NOT_SOLID;
 }
 
+
+void TileMap::reduceNumberOfPlatforms() {
+	numPlatforms--;
+}
 
 
 

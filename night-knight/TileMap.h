@@ -47,6 +47,8 @@ public:
 	void modifyTileMap(int i, int j, int newTile);
 
 	bool tevacae(const glm::ivec2& pos, const glm::ivec2& size, bool rightSight) const;
+
+	void reduceNumberOfPlatforms();
 	
 private:
 	bool loadLevel(const string &levelFile);
@@ -78,6 +80,9 @@ private:
 
 	//[i,j] -> nTile
 	int *numTile;
+
+
+	int numPlatforms;
 
 	static const vector<int> tileType;
 
