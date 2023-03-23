@@ -23,8 +23,11 @@ void Player::loadAnimations() {
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(1 / 8.f * 7, 0.f));
 
-	sprite->setAnimationSpeed(STAND_RIGHT, 8);
+	sprite->setAnimationSpeed(STAND_RIGHT, 20);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.0f, 0.0f));
+	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1/16.f * 2, 1/16.f * 1));
+	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 5, 1 / 16.f * 1));
+	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
 
 	sprite->setAnimationSpeed(MOVE_LEFT, 10);
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 7, 0.0f));
