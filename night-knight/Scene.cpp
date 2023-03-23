@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Esquelet.h"
 #include "Vampir.h"
+#include "Fantasma.h"
 
 
 #define SCREEN_X 32*2
@@ -53,6 +54,14 @@ void Scene::init()
 	prueba->setPosition(glm::vec2(10 * map->getTileSize(), 3 * map->getTileSize()));
 	prueba->setTileMap(map);
 	enemies.push_back(prueba);
+
+	
+	Fantasma* prueba1 = new Fantasma();
+	prueba1->init(glm::ivec2(SCREEN_X, SCREEN_Y), "images/bub.png", glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), texProgram);
+	prueba1->setPosition(glm::vec2(10 * map->getTileSize(), 6 * map->getTileSize()));
+	prueba1->setTileMap(map);
+	enemies.push_back(prueba1);
+	
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }

@@ -27,29 +27,71 @@ posCharacter = nextPos;
 
 void Vampir::update(int deltaTime) {
 	sprite->update(deltaTime);
+	timer += deltaTime;
+
+	if (timer > 6500 && not wantsToTransform) {
+		if (isBat) wantsToTransform = true;
+		else isBat = true;
+		timer = 0;
+	}
+
 	if (isBat) {
-		//Igual que el fantasma
+
+
+		/*
+		--------------
+		|		|
+		|		|
+		|_______|
+		---------------
+
+		colliders justo fuera del collider para poder detectar que entra "justo" entre las plataformas
+		*/
+
+		bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), glm::ivec2(colliderSize.x, 1), false);
+		bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), glm::ivec2(colliderSize.x, 1), nullptr);
+		if (collisionUp && collisionDown) {
+			goesUp = !goesUp;
+			posCharacter.x += (rightSight * 2 - 1) * MOVE_SPEED;
+		}
+		else {
+			//Igual que el fantasma
+			glm::ivec2 nextPos;
+			nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
+			nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * MOVE_SPEED;
+		
+
+
+			bool collisionUp = map->collisionMoveUp(nextPos, glm::ivec2(colliderSize.x, 1), false);
+			bool collisionDown = map->collisionMoveDown(glm::ivec2(nextPos.x, nextPos.y + spriteSize.y - 1), glm::ivec2(colliderSize.x, 1), nullptr);
+
+
+			if (nextPos.x < map->LEFT_WALL || nextPos.x + spriteSize.x > map->RIGHT_WALL) {
+				rightSight = !rightSight;
+				nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
+			}
+			else if (wantsToTransform && collisionDown) {
+				wantsToTransform = false;
+				isBat = false;
+				timer = 0;
+				nextPos.y = posCharacter.y; //No cambiamos la y
+			}
+			else if (goesUp && collisionUp || !goesUp && collisionDown) {
+				goesUp = !goesUp;
+				nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * MOVE_SPEED;
+			}
+
+			posCharacter = nextPos;
+		}
 		glm::ivec2 nextPos;
 		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
-		nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * MOVE_SPEED;
-		
-		bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), glm::ivec2(spriteSize.x, 1), false);
-		bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), glm::ivec2(spriteSize.x, 1), nullptr);
+		nextPos.y = posCharacter.y;
 
-		if (nextPos.x < map->LEFT_WALL || nextPos.x + spriteSize.x > map->RIGHT_WALL) {
+		if (map->collisionMoveLeft(nextPos, colliderSize, false) || map->collisionMoveRight(nextPos, colliderSize, false)) {
 			rightSight = !rightSight;
 			nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
 		}
-		else if (collisionUp && collisionDown) {
-			nextPos.y = posCharacter.y;
-			goesUp = !goesUp;
-		}
-		else if (goesUp && collisionUp || !goesUp && collisionDown) {
-			goesUp = !goesUp;
-			nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * MOVE_SPEED;
-		}
 
-		posCharacter = nextPos;
 	}
 	else {
 		// Igual que l'esquelet

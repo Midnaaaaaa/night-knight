@@ -5,8 +5,11 @@ class Vampir : public Enemy
 	virtual void update(int deltaTime);
 	virtual void loadAnimations();
 private:
-	bool isBat = true;
+	bool isBat = false;
+	bool wantsToTransform = false;
 	bool goesUp = true;
+
+	float timer = 0;
 
 };
 
