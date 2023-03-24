@@ -66,11 +66,7 @@ void Vampir::update(int deltaTime) {
 			bool collisionDown = map->collisionMoveDown(glm::ivec2(nextPos.x, nextPos.y + spriteSize.y - 1), glm::ivec2(colliderSize.x, 1), nullptr);
 
 
-			if (nextPos.x < map->LEFT_WALL || nextPos.x + spriteSize.x > map->RIGHT_WALL) {
-				rightSight = !rightSight;
-				nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
-			}
-			else if (wantsToTransform && collisionDown) {
+			if (wantsToTransform && collisionDown) {
 				wantsToTransform = false;
 				isBat = false;
 				timer = 0;
@@ -83,13 +79,15 @@ void Vampir::update(int deltaTime) {
 
 			posCharacter = nextPos;
 		}
+
+		//Comprobar la posicion del siguiente frame. Si colisionaria horizontalmente, cambiamos la direccion (pero no la posicion), 
+		//asi en el siguiente frame ya está girado y no va a colisionar
 		glm::ivec2 nextPos;
 		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
 		nextPos.y = posCharacter.y;
 
 		if (map->collisionMoveLeft(nextPos, colliderSize, false) || map->collisionMoveRight(nextPos, colliderSize, false)) {
 			rightSight = !rightSight;
-			nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
 		}
 
 	}
