@@ -1,6 +1,10 @@
 #include "Vampir.h"
 
-#define MOVE_SPEED 1
+
+enum CharacterAnims
+{
+	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, FLY
+};
 
 
 /*
@@ -52,13 +56,13 @@ void Vampir::update(int deltaTime) {
 		bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), glm::ivec2(colliderSize.x, 1), nullptr);
 		if (collisionUp && collisionDown) {
 			goesUp = !goesUp;
-			posCharacter.x += (rightSight * 2 - 1) * MOVE_SPEED;
+			posCharacter.x += (rightSight * 2 - 1) * moveSpeed;
 		}
 		else {
 			//Igual que el fantasma
 			glm::ivec2 nextPos;
-			nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
-			nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * MOVE_SPEED;
+			nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;
+			nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * moveSpeed;
 		
 
 
@@ -74,7 +78,7 @@ void Vampir::update(int deltaTime) {
 			}
 			else if (goesUp && collisionUp || !goesUp && collisionDown) {
 				goesUp = !goesUp;
-				nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * MOVE_SPEED;
+				nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * moveSpeed;
 			}
 
 			posCharacter = nextPos;
@@ -83,7 +87,7 @@ void Vampir::update(int deltaTime) {
 		//Comprobar la posicion del siguiente frame. Si colisionaria horizontalmente, cambiamos la direccion (pero no la posicion), 
 		//asi en el siguiente frame ya está girado y no va a colisionar
 		glm::ivec2 nextPos;
-		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
+		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;
 		nextPos.y = posCharacter.y;
 
 		if (map->collisionMoveLeft(nextPos, colliderSize, false) || map->collisionMoveRight(nextPos, colliderSize, false)) {
@@ -98,7 +102,7 @@ void Vampir::update(int deltaTime) {
 			rightSight = !rightSight;
 			sprite->changeAnimation(rightSight);
 		}
-		posCharacter.x += (rightSight * 2 - 1) * MOVE_SPEED;
+		posCharacter.x += (rightSight * 2 - 1) * moveSpeed;
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));

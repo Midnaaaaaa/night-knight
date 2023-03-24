@@ -1,11 +1,12 @@
 #include "Character.h"
 
-void Character::init(const glm::ivec2& tileMapPos, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2 &texSize, ShaderProgram& shaderProgram)
+void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2 &texSize, ShaderProgram& shaderProgram)
 {
+	this->moveSpeed = 1;
+	this->rightSight = rightSight;
 	this->colliderSize = colliderSize;
 	this->colliderOffset = colliderOffset;
 	this->spriteSize = pixelSize;
-	rightSight = true;
 	bJumping = false;
 	spritesheet.loadFromFile(spriteFile, TEXTURE_PIXEL_FORMAT_RGBA);
 	//sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1 / 8.f, 1 / 4.f), &spritesheet, &shaderProgram);
@@ -15,6 +16,7 @@ void Character::init(const glm::ivec2& tileMapPos, string spriteFile, const glm:
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
 
 }
+
 
 
 void Character::render() {
@@ -30,6 +32,10 @@ void Character::setPosition(const glm::vec2& pos)
 {
 	posCharacter = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
+}
+
+void Character::setSpeed(int speed) {
+	this->moveSpeed = speed;
 }
 
 glm::ivec2 Character::getPosition() const{

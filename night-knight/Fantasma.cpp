@@ -1,21 +1,25 @@
 #include "Fantasma.h"
 
-#define MOVE_SPEED 1
+enum CharacterAnims
+{
+	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT
+};
+
 
 void Fantasma::update(int deltaTime) {
 	sprite->update(deltaTime);
 
 	//Igual que el fantasma
 	glm::ivec2 nextPos;
-	nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
-	nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * MOVE_SPEED;
+	nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;
+	nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * moveSpeed;
 
 	bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), glm::ivec2(spriteSize.x, 1), false);
 	bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), glm::ivec2(spriteSize.x, 1), nullptr);
 
 	if (nextPos.x < map->LEFT_WALL || nextPos.x + spriteSize.x > map->RIGHT_WALL) {
 		rightSight = !rightSight;
-		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * MOVE_SPEED;
+		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;
 	}
 	else if (collisionUp && collisionDown) {
 		nextPos.y = posCharacter.y;
@@ -23,7 +27,7 @@ void Fantasma::update(int deltaTime) {
 	}
 	else if (goesUp && collisionUp || !goesUp && collisionDown) {
 		goesUp = !goesUp;
-		nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * MOVE_SPEED;
+		nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * moveSpeed;
 	}
 
 	posCharacter = nextPos;

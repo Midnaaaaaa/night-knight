@@ -43,11 +43,6 @@ void Sprite::update(int deltaTime)
 		{
 			timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
 
-			if (animations[currentAnimation].loopStart > 0) {
-				currentKeyframe = currentKeyframe;
-			}
-
-
 			int frameCount = animations[currentAnimation].keyframeDispl.size();
 			int loopStart = animations[currentAnimation].loopStart;
 			loopStart = (loopStart < frameCount) ? loopStart : frameCount; //Para que no se pase

@@ -44,20 +44,21 @@ void Scene::init()
 	
 
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), "images/soma-animations.png", glm::ivec2(16,32), glm::ivec2(8,32), glm::ivec2(32,64), glm::vec2(1/16.f, 1/16.f), texProgram);
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/soma-animations.png", glm::ivec2(16,32), glm::ivec2(8,32), glm::ivec2(32,64), glm::vec2(1/16.f, 1/16.f), texProgram);
 
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
+	player->setSpeed(2);
 
 	Vampir *prueba = new Vampir();
-	prueba->init(glm::ivec2(SCREEN_X, SCREEN_Y), "images/bub.png", glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), texProgram);
+	prueba->init(glm::ivec2(SCREEN_X, SCREEN_Y), false, "images/bub.png", glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), texProgram);
 	prueba->setPosition(glm::vec2(10 * map->getTileSize(), 3 * map->getTileSize()));
 	prueba->setTileMap(map);
 	enemies.push_back(prueba);
 
 	
 	Fantasma* prueba1 = new Fantasma();
-	prueba1->init(glm::ivec2(SCREEN_X, SCREEN_Y), "images/bub.png", glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), texProgram);
+	prueba1->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/bub.png",  glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), texProgram);
 	prueba1->setPosition(glm::vec2(10 * map->getTileSize(), 6 * map->getTileSize()));
 	prueba1->setTileMap(map);
 	enemies.push_back(prueba1);

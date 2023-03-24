@@ -16,6 +16,12 @@
 #define TYPE_GEM 3
 #define TYPE_STOPWATCH 4
 
+enum CharacterAnims
+{
+	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT
+};
+
+
 
 void Player::loadAnimations() {
 	sprite->setNumberAnimations(6);
@@ -78,10 +84,10 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(MOVE_LEFT);
 			rightSight = false;
 		}
-		posCharacter.x -= 2;
+		posCharacter.x -= moveSpeed;
 		if(map->collisionMoveLeft(posCharacter + colliderOffset, colliderSize, bJumping))
 		{
-			posCharacter.x += 2;
+			posCharacter.x += moveSpeed;
 			sprite->changeAnimation(STAND_LEFT);
 		}
 	}
@@ -91,10 +97,10 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(MOVE_RIGHT);
 			rightSight = true;
 		}
-		posCharacter.x += 2;
+		posCharacter.x += moveSpeed;
 		if(map->collisionMoveRight(posCharacter + colliderOffset, colliderSize, bJumping))
 		{
-			posCharacter.x -= 2;
+			posCharacter.x -= moveSpeed;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
 	}

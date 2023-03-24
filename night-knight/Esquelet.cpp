@@ -1,7 +1,11 @@
 #include "Esquelet.h"
 
 
-#define MOVE_SPEED 1
+enum CharacterAnims
+{
+	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT
+};
+
 
 void Esquelet::update(int deltaTime) {
 	sprite->update(deltaTime);
@@ -10,7 +14,7 @@ void Esquelet::update(int deltaTime) {
 		rightSight = !rightSight;
 		sprite->changeAnimation(rightSight);
 	}
-	posCharacter.x += (rightSight * 2 - 1) * MOVE_SPEED;
+	posCharacter.x += (rightSight * 2 - 1) * moveSpeed;
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
 }
