@@ -34,6 +34,11 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	position = glm::vec2(0.f);
 }
 
+//Sprite::~Sprite()
+//{
+//	free();
+//}
+
 void Sprite::update(int deltaTime)
 {
 	if(currentAnimation >= 0)

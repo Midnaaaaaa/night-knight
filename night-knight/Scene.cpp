@@ -29,6 +29,12 @@ Scene::~Scene()
 		delete map;
 	if(player != NULL)
 		delete player;
+	if (key != nullptr) {
+		key->free();
+	}
+	for (Enemy* e : enemies) {
+		delete e;
+	}
 }
 
 

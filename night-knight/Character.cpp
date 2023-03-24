@@ -17,6 +17,9 @@ void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string sprit
 
 }
 
+Character::~Character() {
+	sprite->free();
+}
 
 
 void Character::render() {

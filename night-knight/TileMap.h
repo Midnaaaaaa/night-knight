@@ -75,9 +75,9 @@ private:
 
 	//
 	glm::vec2 tileTexSize;
-	int *map;
 	
 
+	int *map;
 	//[i,j] -> nTile
 	int *numTile;
 

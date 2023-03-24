@@ -69,7 +69,10 @@ TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProg
 TileMap::~TileMap()
 {
 	if(map != NULL)
-		delete map;
+		delete[] map; // seguro que es delete[] ??
+	if (numTile != nullptr)
+		delete[] numTile;
+	free();
 }
 
 
