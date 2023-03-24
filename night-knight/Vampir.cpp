@@ -52,8 +52,8 @@ void Vampir::update(int deltaTime) {
 		colliders justo fuera del collider para poder detectar que entra "justo" entre las plataformas
 		*/
 
-		bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), glm::ivec2(colliderSize.x, 1), false);
-		bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), glm::ivec2(colliderSize.x, 1), nullptr);
+		bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), glm::ivec2(colliderSize.x, 1));
+		bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), glm::ivec2(colliderSize.x, 1));
 		if (collisionUp && collisionDown) {
 			goesUp = !goesUp;
 			posCharacter.x += (rightSight * 2 - 1) * moveSpeed;
@@ -66,8 +66,8 @@ void Vampir::update(int deltaTime) {
 		
 
 
-			bool collisionUp = map->collisionMoveUp(nextPos, glm::ivec2(colliderSize.x, 1), false);
-			bool collisionDown = map->collisionMoveDown(glm::ivec2(nextPos.x, nextPos.y + spriteSize.y - 1), glm::ivec2(colliderSize.x, 1), nullptr);
+			bool collisionUp = map->collisionMoveUp(nextPos, glm::ivec2(colliderSize.x, 1));
+			bool collisionDown = map->collisionMoveDown(glm::ivec2(nextPos.x, nextPos.y + spriteSize.y - 1), glm::ivec2(colliderSize.x, 1));
 
 
 			if (wantsToTransform && collisionDown) {
@@ -90,14 +90,14 @@ void Vampir::update(int deltaTime) {
 		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;
 		nextPos.y = posCharacter.y;
 
-		if (map->collisionMoveLeft(nextPos, colliderSize, false) || map->collisionMoveRight(nextPos, colliderSize, false)) {
+		if (map->collisionMoveLeft(nextPos, colliderSize, false) || map->collisionMoveRight(nextPos, colliderSize)) {
 			rightSight = !rightSight;
 		}
 
 	}
 	else {
 		// Igual que l'esquelet
-		bool sightChange = (map->tevacae(posCharacter, spriteSize, rightSight) || map->collisionMoveLeft(posCharacter, spriteSize, false) || map->collisionMoveRight(posCharacter, spriteSize, false));
+		bool sightChange = (map->tevacae(posCharacter, spriteSize, rightSight) || map->collisionMoveLeft(posCharacter, spriteSize) || map->collisionMoveRight(posCharacter, spriteSize));
 		if (sightChange) {
 			rightSight = !rightSight;
 			sprite->changeAnimation(rightSight);

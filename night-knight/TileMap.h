@@ -39,10 +39,10 @@ public:
 	
 	int getTileSize() const { return tileSize; }
 
-	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping) const;
-	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping) const;
-	int collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
-	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, bool ignorePlatform) const;
+	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping = false) const;
+	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping = false) const;
+	int collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY = nullptr) const;
+	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, bool ignorePlatform = false) const;
 
 	void modifyTileMap(int i, int j, int newTile);
 
@@ -82,9 +82,10 @@ private:
 	int *numTile;
 
 
+	static const vector<int> tileType;
+
 	int numPlatforms;
 
-	static const vector<int> tileType;
 
 };
 
