@@ -28,7 +28,7 @@ public:
 	void free();
 
 	void setNumberAnimations(int nAnimations);
-	void setAnimationSpeed(int animId, int keyframesPerSec);
+	void setAnimationParams(int animId, int keyframesPerSec, int loopStart = 0);
 	void addKeyframe(int animId, const glm::vec2 &frame);
 	void changeAnimation(int animId);
 	int animation() const;
@@ -46,6 +46,8 @@ private:
 	float timeAnimation;
 	glm::vec2 texCoordDispl;
 	vector<AnimKeyframes> animations;
+
+	int offset = 0;
 
 };
 

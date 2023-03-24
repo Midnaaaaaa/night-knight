@@ -20,22 +20,22 @@
 void Player::loadAnimations() {
 	sprite->setNumberAnimations(6);
 
-	sprite->setAnimationSpeed(STAND_LEFT, 8);
+	sprite->setAnimationParams(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(1 / 8.f * 7, 0.f));
 
-	sprite->setAnimationSpeed(STAND_RIGHT, 20);
+	sprite->setAnimationParams(STAND_RIGHT, 4);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.0f, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1/16.f * 2, 1/16.f * 1));
+	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 4, 1 / 16.f * 1));
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 5, 1 / 16.f * 1));
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
 
-	sprite->setAnimationSpeed(MOVE_LEFT, 10);
+	sprite->setAnimationParams(MOVE_LEFT, 10);
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 7, 0.0f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 6, 0.0f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 5, 0.0f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 6, 0.0f));
 
-	sprite->setAnimationSpeed(MOVE_RIGHT, 10);
+	sprite->setAnimationParams(MOVE_RIGHT, 10, 2);
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 1, 0.0f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 2, 0.0f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 3, 0.0f));
@@ -59,10 +59,10 @@ void Player::loadAnimations() {
 
 
 
-	sprite->setAnimationSpeed(CROUCH_LEFT, 8);
+	sprite->setAnimationParams(CROUCH_LEFT, 8);
 	sprite->addKeyframe(CROUCH_LEFT, glm::vec2(1 / 8.f * 4, 0.0f));
 
-	sprite->setAnimationSpeed(CROUCH_RIGHT, 8);
+	sprite->setAnimationParams(CROUCH_RIGHT, 8);
 	sprite->addKeyframe(CROUCH_RIGHT, glm::vec2(1 / 8.f * 3, 0.0f));
 
 	sprite->changeAnimation(STAND_RIGHT);
@@ -108,8 +108,8 @@ void Player::update(int deltaTime)
 	}
 	else
 	{
-		if(rightSight) sprite->changeAnimation(STAND_RIGHT);
-		else sprite->changeAnimation(STAND_LEFT);
+		if(rightSight && sprite->animation() != STAND_RIGHT) sprite->changeAnimation(STAND_RIGHT);
+		else if(!rightSight && sprite->animation() != STAND_LEFT) sprite->changeAnimation(STAND_LEFT);
 	}
 	
 	if(bJumping)

@@ -34,11 +34,11 @@ void Fantasma::update(int deltaTime) {
 void Fantasma::loadAnimations() {
 	sprite->setNumberAnimations(2);
 
-	sprite->setAnimationSpeed(MOVE_LEFT, 10);
+	sprite->setAnimationParams(MOVE_LEFT, 10);
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f, 0.0f));
 
 
-	sprite->setAnimationSpeed(MOVE_RIGHT, 10);
+	sprite->setAnimationParams(MOVE_RIGHT, 10);
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.0f));
 
 	sprite->changeAnimation(rightSight);
