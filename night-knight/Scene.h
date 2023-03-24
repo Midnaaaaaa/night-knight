@@ -25,9 +25,10 @@ public:
 
 private:
 	void initShaders();
+	void spawnKey();
 
 private:
-	Texture bgSpritesheet;
+	Texture bgSpritesheet, objectsSpritesheet;
 	Sprite *bg;
 	TileMap *map;
 	Player *player;
@@ -36,6 +37,7 @@ private:
 	float currentTime;
 	glm::mat4 projection;
 
+	Sprite* key;
 };
 
 

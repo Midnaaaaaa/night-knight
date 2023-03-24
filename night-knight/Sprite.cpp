@@ -107,6 +107,10 @@ int Sprite::animation() const
 	return currentAnimation;
 }
 
+void Sprite::setDisplacement(const glm::vec2& displacement) {
+	this->texCoordDispl = displacement;
+}
+
 void Sprite::setPosition(const glm::vec2 &pos)
 {
 	position = pos;

@@ -38,18 +38,13 @@ void Scene::init()
 	initShaders();
 
 	map = TileMap::createTileMap("levels/level28.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	objectsSpritesheet.loadFromFile("images/varied.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgSpritesheet.loadFromFile("images/bg28.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bg = Sprite::createSprite(glm::ivec2(32*map->getTileSize(), 22*map->getTileSize()), glm::ivec2(1,1), &bgSpritesheet, &texProgram);
 	bg->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
 	
 
-	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/soma-animations.png", glm::ivec2(16,32), glm::ivec2(8,32), glm::ivec2(32,64), glm::vec2(1/16.f, 1/16.f), texProgram);
-
-	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	player->setTileMap(map);
-	player->setSpeed(2);
-
+	//Enemigos
 	Vampir *prueba = new Vampir();
 	prueba->init(glm::ivec2(SCREEN_X, SCREEN_Y), false, "images/bub.png", glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), texProgram);
 	prueba->setPosition(glm::vec2(10 * map->getTileSize(), 3 * map->getTileSize()));
@@ -63,6 +58,19 @@ void Scene::init()
 	prueba1->setTileMap(map);
 	enemies.push_back(prueba1);
 	
+
+	//Player
+	player = new Player();
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/soma-animations.png", glm::ivec2(16,32), glm::ivec2(8,32), glm::ivec2(32,64), glm::vec2(1/16.f, 1/16.f), texProgram);
+
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	player->setTileMap(map);
+	player->setSpeed(2);
+
+
+	//Objetos (sprites)
+	key = nullptr;
+
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
@@ -80,6 +88,9 @@ void Scene::update(int deltaTime)
 			//0 means TYPE_ENEMY
 			bool wasHit = player->checkCollisionWithSprite(topLeft, bottomRight, 0);	
 		}
+	}
+	if (currentTime > 5000 && key == nullptr) {
+		spawnKey();
 	}
 }
 
@@ -101,6 +112,10 @@ void Scene::render()
 	for (Enemy* e : enemies)
 	{
 		e->render();
+	}
+
+	if (key != nullptr) {
+		key->render();
 	}
 }
 
@@ -134,5 +149,9 @@ void Scene::initShaders()
 	fShader.free();
 }
 
-
+void Scene::spawnKey() {
+	key = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1/2.f, 1/2.f), &objectsSpritesheet, &texProgram);
+	key->setDisplacement(glm::vec2(1 / 2.f, 1 / 2.f));
+	key->setPosition(glm::ivec2(SCREEN_X + 28 * map->getTileSize(), SCREEN_Y + 18 * map->getTileSize()));
+}
 
