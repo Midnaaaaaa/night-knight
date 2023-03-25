@@ -46,8 +46,8 @@ void Scene::init()
 	map = TileMap::createTileMap("levels/level28.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	objectsSpritesheet.loadFromFile("images/varied.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgSpritesheet.loadFromFile("images/bg28.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	bg = Sprite::createSprite(glm::ivec2(32*map->getTileSize(), 22*map->getTileSize()), glm::ivec2(1,1), &bgSpritesheet, &texProgram);
-	bg->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
+	bg = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(32*map->getTileSize(), 22*map->getTileSize()), glm::ivec2(1,1), &bgSpritesheet, &texProgram);
+	//bg->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
 	
 
 	//Enemigos
@@ -167,8 +167,8 @@ void Scene::initShaders()
 }
 
 void Scene::spawnKey() {
-	key = Sprite::createSprite(glm::vec2(32, 32), glm::vec2(1/2.f, 1/2.f), &objectsSpritesheet, &texProgram);
+	key = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(32, 32), glm::vec2(1/2.f, 1/2.f), &objectsSpritesheet, &texProgram);
 	key->setDisplacement(glm::vec2(1 / 2.f, 1 / 2.f));
-	key->setPosition(glm::ivec2(SCREEN_X + 28 * map->getTileSize(), SCREEN_Y + 18 * map->getTileSize()));
+	key->setPosition(glm::ivec2(28 * map->getTileSize(), 18 * map->getTileSize()));
 }
 
