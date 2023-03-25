@@ -368,6 +368,8 @@ bool TileMap::tevacae(const glm::ivec2& pos, const glm::ivec2& size, bool rightS
 }
 
 
+int TileMap::getNumOfTilesRemaining() { return numPlatforms; }
+
 void TileMap::reduceNumberOfPlatforms() {
 	numPlatforms--;
 }

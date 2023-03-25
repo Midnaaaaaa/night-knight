@@ -35,6 +35,7 @@ void Player::loadAnimations() {
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 5, 1 / 16.f * 1));
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
 
+
 	sprite->setAnimationParams(MOVE_LEFT, 10);
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 7, 0.0f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 6, 0.0f));

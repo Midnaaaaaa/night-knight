@@ -49,6 +49,7 @@ public:
 	bool tevacae(const glm::ivec2& pos, const glm::ivec2& size, bool rightSight) const;
 
 	void reduceNumberOfPlatforms();
+	int getNumOfTilesRemaining();
 	
 private:
 	bool loadLevel(const string &levelFile);

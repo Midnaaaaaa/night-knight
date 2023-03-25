@@ -77,6 +77,7 @@ void Scene::init()
 	//Objetos (sprites)
 	key = nullptr;
 
+
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
@@ -95,7 +96,7 @@ void Scene::update(int deltaTime)
 			bool wasHit = player->checkCollisionWithSprite(topLeft, bottomRight, 0);	
 		}
 	}
-	if (currentTime > 5000 && key == nullptr) {
+	if (map->getNumOfTilesRemaining() == 0) {
 		spawnKey();
 	}
 }
