@@ -182,15 +182,11 @@ bool Player::isHurted() {
 	return hurted;
 }
 
-bool Player::hasKey() { return playerGrabbedKey; }
-
-
 bool Player::checkCollisionWithRect(const glm::ivec2& leftTop, const glm::ivec2& rightBottom, int type) {
 	glm::ivec2 p0(posCharacter.x + colliderOffset.x, posCharacter.y + colliderOffset.y);
 	glm::ivec2 p1(posCharacter.x + colliderOffset.x + colliderSize.x, posCharacter.y + colliderOffset.y + colliderSize.y);
 	if (p0.x < rightBottom.x && p1.x > leftTop.x && p0.y < rightBottom.y && p1.y > leftTop.y) {
 		if (type == TYPE_ENEMY) hurted = true;
-		if (type == TYPE_KEY) playerGrabbedKey = true;
 		return true;
 	}
 	return false;

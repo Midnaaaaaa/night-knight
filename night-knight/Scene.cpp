@@ -80,6 +80,8 @@ void Scene::init()
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
+
+	keyCollected = false;
 }
 
 void Scene::update(int deltaTime)
@@ -96,14 +98,13 @@ void Scene::update(int deltaTime)
 			bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);	
 		}
 	}
-	if (map->getNumOfTilesRemaining() == 0 && !player->hasKey()) {
+	if (map->getNumOfTilesRemaining() == 0 && !keyCollected) {
 		spawnKey();
 	}
-	if (key != nullptr && !player->hasKey()) {
+	if (key != nullptr && !keyCollected) {
 		glm::vec2 topLeft = key->getPosition();
 		glm::vec2 bottomRight = topLeft + key->getSpriteSize();
-		player->checkCollisionWithRect(topLeft, bottomRight, 2); //2 means KEY
-		if (player->hasKey()) {
+		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
 			key->free();
 			key = nullptr;
 		}
