@@ -89,16 +89,26 @@ void Scene::update(int deltaTime)
 	for (Enemy* e : enemies)
 	{
 		e->update(deltaTime);
+		glm::ivec2 topLeft = e->getPosition();
+		glm::ivec2 bottomRight = topLeft + e->getSize();
 		if (!player->isHurted()) {
-			glm::ivec2 topLeft = e->getPosition();
-			glm::ivec2 bottomRight = topLeft + e->getSize();
-			//0 means TYPE_ENEMY
-			bool wasHit = player->checkCollisionWithSprite(topLeft, bottomRight, 0);	
+			//1 means TYPE_ENEMY
+			bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);	
 		}
 	}
-	if (map->getNumOfTilesRemaining() == 0) {
+	if (map->getNumOfTilesRemaining() == 0 && !player->hasKey()) {
 		spawnKey();
 	}
+	if (key != nullptr && !player->hasKey()) {
+		glm::vec2 topLeft = key->getPosition();
+		glm::vec2 bottomRight = topLeft + key->getSpriteSize();
+		player->checkCollisionWithRect(topLeft, bottomRight, 2); //2 means KEY
+		if (player->hasKey()) {
+			key->free();
+			key = nullptr;
+		}
+	}
+
 }
 
 void Scene::render()

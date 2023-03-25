@@ -16,11 +16,13 @@ public:
 
 	void checkCollisionWithPlatform();
 	bool isHurted();
-	bool checkCollisionWithSprite(glm::ivec2 leftTop, glm::ivec2 rightBottom, int type);
+	bool checkCollisionWithRect(const glm::ivec2 &leftTop, const glm::ivec2 &rightBottom, int type);
+	bool hasKey();
 
 private:
 	virtual void loadAnimations();
 	bool hurted = false;
+	bool playerGrabbedKey = false;
 
 };
 
