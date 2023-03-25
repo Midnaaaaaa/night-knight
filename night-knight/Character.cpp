@@ -10,7 +10,7 @@ void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string sprit
 	bJumping = false;
 	spritesheet.loadFromFile(spriteFile, TEXTURE_PIXEL_FORMAT_RGBA);
 	//sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1 / 8.f, 1 / 4.f), &spritesheet, &shaderProgram);
-	sprite = Sprite::createSprite(pixelSize, texSize, &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(tileMapDispl, pixelSize, texSize, &spritesheet, &shaderProgram);
 	loadAnimations();
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
