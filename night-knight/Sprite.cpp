@@ -2,6 +2,7 @@
 #include <GL/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Sprite.h"
+#include <iostream>
 
 
 Sprite *Sprite::createSprite(const glm::vec2& tileMapPos, const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program)
@@ -49,11 +50,17 @@ void Sprite::update(int deltaTime)
 		while(timeAnimation > animations[currentAnimation].millisecsPerKeyframe)
 		{
 			timeAnimation -= animations[currentAnimation].millisecsPerKeyframe;
+			
 
 			int frameCount = animations[currentAnimation].keyframeDispl.size();
 			int loopStart = animations[currentAnimation].loopStart;
 			loopStart = (loopStart < frameCount) ? loopStart : frameCount; //Para que no se pase
-			currentKeyframe = (currentKeyframe + 1) % (frameCount - loopStart) + loopStart;
+			if (frameCount > 15) {
+				cout << "hola";
+			}
+			currentKeyframe++;
+			if (currentKeyframe >= frameCount) currentKeyframe = loopStart;
+			
 		}
 		texCoordDispl = animations[currentAnimation].keyframeDispl[currentKeyframe];
 	}

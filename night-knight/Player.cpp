@@ -28,13 +28,13 @@ void Player::loadAnimations() {
 
 	sprite->setAnimationParams(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(1 / 8.f * 7, 0.f));
-/*
+
 	sprite->setAnimationParams(STAND_RIGHT, 4);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.0f, 0.0f));
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 1, 0.0f));
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 2, 0.0f));
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 3, 0.0f));
-*/
+
 
 	sprite->setAnimationParams(MOVE_LEFT, 10);
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 7, 0.0f));
@@ -42,28 +42,26 @@ void Player::loadAnimations() {
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 5, 0.0f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 6, 0.0f));
 
-	sprite->setAnimationParams(STAND_RIGHT, 2, 3);
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 4, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 5, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 6, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 7, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 8, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 9, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 10, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 11, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 12, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 13, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 14, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 15, 0.0f));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 0, 1 / 16.f * 1));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 1, 1 / 16.f * 1));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 2, 1 / 16.f * 1));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 3, 1 / 16.f * 1));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 4, 1 / 16.f * 1));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 5, 1 / 16.f * 1));
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
-
-
+	sprite->setAnimationParams(MOVE_RIGHT, 25, 3);
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 4, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 5, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 6, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 7, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 8, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 9, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 10, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 11, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 12, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 13, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 14, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 15, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 0, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 1, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 2, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 3, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 4, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 5, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
 
 
 	sprite->setAnimationParams(CROUCH_LEFT, 8);
