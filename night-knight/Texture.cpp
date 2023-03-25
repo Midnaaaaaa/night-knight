@@ -7,8 +7,8 @@ using namespace std;
 
 Texture::Texture()
 {
-	wrapS = GL_REPEAT;
-	wrapT = GL_REPEAT;
+	wrapS = GL_MIRRORED_REPEAT;
+	wrapT = GL_MIRRORED_REPEAT;
 	minFilter = GL_NEAREST;
 	magFilter = GL_NEAREST;
 }
