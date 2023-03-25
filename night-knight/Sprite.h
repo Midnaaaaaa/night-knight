@@ -28,7 +28,7 @@ public:
 	void free();
 
 	void setNumberAnimations(int nAnimations);
-	void setAnimationParams(int animId, int keyframesPerSec, int loopStart = 0);
+	void setAnimationParams(int animId, int keyframesPerSec, bool mirror, int loopStart = 0);
 	void addKeyframe(int animId, const glm::vec2 &frame);
 	void changeAnimation(int animId);
 	int animation() const;
@@ -51,6 +51,7 @@ private:
 	glm::vec2 texCoordDispl;
 	vector<AnimKeyframes> animations;
 	glm::vec2 spriteSize;
+	glm::vec2 sizeOfEachTile;
 
 };
 

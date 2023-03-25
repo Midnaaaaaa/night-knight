@@ -18,7 +18,7 @@
 
 enum CharacterAnims
 {
-	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT
+	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT, JUMP_ASCENDING, JUMP_ASCENDING_RIGHT1, 
 };
 
 
@@ -26,23 +26,41 @@ enum CharacterAnims
 void Player::loadAnimations() {
 	sprite->setNumberAnimations(6);
 
-	sprite->setAnimationParams(STAND_LEFT, 8);
-	sprite->addKeyframe(STAND_LEFT, glm::vec2(1 / 8.f * 7, 0.f));
+	sprite->setAnimationParams(STAND_LEFT, 4, true);
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.0f, 0.0f));
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(1 / 16.f * 1, 0.0f));
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(1 / 16.f * 2, 0.0f));
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(1 / 16.f * 3, 0.0f));
 
-	sprite->setAnimationParams(STAND_RIGHT, 4);
+	sprite->setAnimationParams(STAND_RIGHT, 4, false);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.0f, 0.0f));
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 1, 0.0f));
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 2, 0.0f));
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 3, 0.0f));
 
 
-	sprite->setAnimationParams(MOVE_LEFT, 10);
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 7, 0.0f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 6, 0.0f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 5, 0.0f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 6, 0.0f));
+	sprite->setAnimationParams(MOVE_LEFT, 25, true, 3);
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 4, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 5, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 6, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 7, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 8, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 9, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 10, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 11, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 12, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 13, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 14, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 15, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 0, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 1, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 2, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 3, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 4, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 5, 1 / 16.f * 1));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
 
-	sprite->setAnimationParams(MOVE_RIGHT, 25, 3);
+	sprite->setAnimationParams(MOVE_RIGHT, 25, false, 3);
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 4, 0.0f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 5, 0.0f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 6, 0.0f));
@@ -64,10 +82,10 @@ void Player::loadAnimations() {
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
 
 
-	sprite->setAnimationParams(CROUCH_LEFT, 8);
+	sprite->setAnimationParams(CROUCH_LEFT, 8, true);
 	sprite->addKeyframe(CROUCH_LEFT, glm::vec2(1 / 8.f * 4, 0.0f));
 
-	sprite->setAnimationParams(CROUCH_RIGHT, 8);
+	sprite->setAnimationParams(CROUCH_RIGHT, 8, false);
 	sprite->addKeyframe(CROUCH_RIGHT, glm::vec2(1 / 8.f * 3, 0.0f));
 
 	sprite->changeAnimation(STAND_RIGHT);
@@ -146,6 +164,8 @@ void Player::update(int deltaTime)
 				bJumping = tileCol == TILE_NOT_SOLID;
 			}
 		}
+		//Cambiar animaciones de salto
+
 	}
 	else
 	{
@@ -160,6 +180,7 @@ void Player::update(int deltaTime)
 				startY = posCharacter.y;
 			}
 		}
+		
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));

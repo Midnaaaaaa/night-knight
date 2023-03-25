@@ -35,6 +35,7 @@ Sprite::Sprite(const glm::vec2& tileMapPos, const glm::vec2 &quadSize, const glm
 	spriteSize = quadSize;
 	tileMapDispl = tileMapPos;
 	position = glm::vec2(0.f);
+	sizeOfEachTile = sizeInSpritesheet;
 }
 
 //Sprite::~Sprite()
@@ -91,18 +92,23 @@ void Sprite::setNumberAnimations(int nAnimations)
 	animations.resize(nAnimations);
 }
 
-void Sprite::setAnimationParams(int animId, int keyframesPerSec, int loopStart)
+void Sprite::setAnimationParams(int animId, int keyframesPerSec, bool mirror, int loopStart)
 {
 	if (animId < int(animations.size())) {
 		animations[animId].millisecsPerKeyframe = 1000.f / keyframesPerSec;
 		animations[animId].loopStart = loopStart;
+		animations[animId].mirror = mirror;
 	}
 }
 
 void Sprite::addKeyframe(int animId, const glm::vec2 &displacement)
 {
-	if(animId < int(animations.size()))
-		animations[animId].keyframeDispl.push_back(displacement);
+	if (animId < int(animations.size())) {
+		if (animations[animId].mirror) {
+			animations[animId].keyframeDispl.push_back(glm::vec2(-displacement.x - sizeOfEachTile.x, displacement.y));
+		}
+		else animations[animId].keyframeDispl.push_back(displacement);
+	}
 }
 
 void Sprite::changeAnimation(int animId)

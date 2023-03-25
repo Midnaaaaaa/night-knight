@@ -105,6 +105,7 @@ void Scene::update(int deltaTime)
 		glm::vec2 topLeft = key->getPosition();
 		glm::vec2 bottomRight = topLeft + key->getSpriteSize();
 		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
+			keyCollected = true;
 			key->free();
 			key = nullptr;
 		}
