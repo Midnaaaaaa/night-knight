@@ -39,6 +39,8 @@ private:
 
 	Sprite* key;
 
+	bool keyCollected;
+
 };
 
 
