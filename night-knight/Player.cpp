@@ -148,19 +148,19 @@ void Player::loadAnimations() {
 	sprite->addKeyframe(FALLING_RIGHT3, glm::vec2(1 / 16.f * 14, 1 / 16.f * 1));
 
 
-	sprite->setAnimationParams(FALL_ANIMATION, 8, false, 2);
+	sprite->setAnimationParams(FALL_ANIMATION, 8, false);
 	sprite->addKeyframe(FALL_ANIMATION, glm::vec2(1 / 16.f * 11, 1 / 16.f * 1));
 
 
-	sprite->setAnimationParams(FALL_ANIMATION_MIRROR, 8, true, 2);
+	sprite->setAnimationParams(FALL_ANIMATION_MIRROR, 8, true);
 	sprite->addKeyframe(FALL_ANIMATION_MIRROR, glm::vec2(1 / 16.f * 11, 1 / 16.f * 1));
 
 
-	sprite->setAnimationParams(FALL_ANIMATION_RIGHT, 8, false, 2);
+	sprite->setAnimationParams(FALL_ANIMATION_RIGHT, 8, false);
 	sprite->addKeyframe(FALL_ANIMATION_RIGHT, glm::vec2(1 / 16.f * 14, 1 / 16.f * 1));
 
 
-	sprite->setAnimationParams(FALL_ANIMATION_LEFT, 8, true, 1);
+	sprite->setAnimationParams(FALL_ANIMATION_LEFT, 8, true);
 	sprite->addKeyframe(FALL_ANIMATION_LEFT, glm::vec2(1 / 16.f * 14, 1 / 16.f * 1));
 
 
@@ -179,6 +179,38 @@ void Player::update(int deltaTime)
 {	
 	sprite->update(deltaTime);
 	
+	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+	{
+		if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT || sprite->animation() == STAND_LEFT) {
+			sprite->changeAnimation(MOVE_LEFT);
+			rightSight = false;
+		}
+		posCharacter.x -= moveSpeed;
+		if (map->collisionMoveLeft(posCharacter + colliderOffset, colliderSize, bJumping))
+		{
+			posCharacter.x += moveSpeed;
+			if (sprite->animation() == MOVE_LEFT) sprite->changeAnimation(STAND_LEFT);
+		}
+	}
+	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+	{
+		if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_RIGHT || sprite->animation() == STAND_LEFT) {
+			sprite->changeAnimation(MOVE_RIGHT);
+			rightSight = true;
+		}
+		posCharacter.x += moveSpeed;
+		if (map->collisionMoveRight(posCharacter + colliderOffset, colliderSize, bJumping))
+		{
+			posCharacter.x -= moveSpeed;
+			if (sprite->animation() == MOVE_RIGHT) sprite->changeAnimation(STAND_RIGHT);
+		}
+	}
+	else
+	{
+		if (rightSight && (sprite->animation() == MOVE_RIGHT)) sprite->changeAnimation(STAND_RIGHT);
+		else if (!rightSight && (sprite->animation() == MOVE_LEFT)) sprite->changeAnimation(STAND_LEFT);
+	}
+
 	if(bJumping)
 	{
 		//Check if next jump frame is safe, before advancing
@@ -276,50 +308,20 @@ void Player::update(int deltaTime)
 		checkCollisionWithPlatform();
 		if(map->collisionMoveDown(posCharacter + colliderOffset, colliderSize, &posCharacter.y) != 0)
 		{
-			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
+			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
 				bJumping = true;
 				jumpAngle = 0;
 				startY = posCharacter.y;
 			}
-			if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
-			{
-				if (sprite->animation() != MOVE_LEFT) {
-					sprite->changeAnimation(MOVE_LEFT);
-					rightSight = false;
-				}
-				posCharacter.x -= moveSpeed;
-				if (map->collisionMoveLeft(posCharacter + colliderOffset, colliderSize, bJumping))
-				{
-					posCharacter.x += moveSpeed;
-					sprite->changeAnimation(STAND_LEFT);
-				}
-			}
-			else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
-			{
-				if (sprite->animation() != MOVE_RIGHT) {
-					sprite->changeAnimation(MOVE_RIGHT);
-					rightSight = true;
-				}
-				posCharacter.x += moveSpeed;
-				if (map->collisionMoveRight(posCharacter + colliderOffset, colliderSize, bJumping))
-				{
-					posCharacter.x -= moveSpeed;
-					sprite->changeAnimation(STAND_RIGHT);
-				}
-			}
-			else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+
+			if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
 				if (rightSight && sprite->animation() != CROUCH_RIGHT) {
 					sprite->changeAnimation(CROUCH_RIGHT);
 				}
 				else if (!rightSight && sprite->animation() != CROUCH_LEFT) {
 					sprite->changeAnimation(CROUCH_LEFT);
 				}
-			}
-			else
-			{
-				if (rightSight && sprite->animation() != STAND_RIGHT) sprite->changeAnimation(STAND_RIGHT);
-				else if (!rightSight && sprite->animation() != STAND_LEFT) sprite->changeAnimation(STAND_LEFT);
 			}
 		}
 		else {
