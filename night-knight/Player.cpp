@@ -172,7 +172,7 @@ void Player::update(int deltaTime)
 {	
 	sprite->update(deltaTime);
 	
-	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
+	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && (sprite->animation() != CROUCH_LEFT && sprite->animation() != CROUCH_RIGHT))
 	{
 		if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT || sprite->animation() == STAND_LEFT || 
 			sprite->animation() == TOUCHING_GROUND || sprite->animation() == TOUCHING_GROUND_MIRROR) {
@@ -186,7 +186,7 @@ void Player::update(int deltaTime)
 			if (sprite->animation() == MOVE_LEFT) sprite->changeAnimation(STAND_LEFT);
 		}
 	}
-	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
+	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && (sprite->animation() != CROUCH_LEFT && sprite->animation() != CROUCH_RIGHT))
 	{
 		if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_RIGHT || sprite->animation() == STAND_LEFT ||
 			sprite->animation() == TOUCHING_GROUND || sprite->animation() == TOUCHING_GROUND_MIRROR) {
@@ -215,6 +215,8 @@ void Player::update(int deltaTime)
 		{
 			bJumping = false;
 			posCharacter.y = startY;
+			if (rightSight) sprite->changeAnimation(FALLING_NO_JUMP, 2);
+			else sprite->changeAnimation(FALLING_NO_JUMP_MIRROR, 2);
 		}
 		else
 		{
@@ -277,7 +279,7 @@ void Player::update(int deltaTime)
 				else sprite->changeAnimation(FALLING_MIRROR2);
 			}
 		}
-		else if (jumpAngle > 150) {
+		else if (jumpAngle > 150 && jumpAngle < 180) {
 			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
 				rightSight = true;
 				sprite->changeAnimation(FALLING3);
@@ -350,12 +352,12 @@ void Player::update(int deltaTime)
 			}
 		}
 		else {
-				if (rightSight) {
-					if (sprite->animation() != FALLING_NO_JUMP) sprite->changeAnimation(FALLING_NO_JUMP);
-				}
-				else {
-					if (sprite->animation() != FALLING_NO_JUMP_MIRROR) sprite->changeAnimation(FALLING_NO_JUMP_MIRROR);
-				}
+			if (rightSight) {
+				if (sprite->animation() != FALLING_NO_JUMP) sprite->changeAnimation(FALLING_NO_JUMP);
+			}
+			else {
+				if (sprite->animation() != FALLING_NO_JUMP_MIRROR) sprite->changeAnimation(FALLING_NO_JUMP_MIRROR);
+			}
 		}
 	}
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));

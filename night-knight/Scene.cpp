@@ -14,7 +14,9 @@
 #define INIT_PLAYER_X_TILES 2
 #define INIT_PLAYER_Y_TILES 9
 
-
+enum SpriteAnimations{
+	IDLE_KEY
+};
 
 
 Scene::Scene()
@@ -44,7 +46,7 @@ void Scene::init()
 	initShaders();
 
 	map = TileMap::createTileMap("levels/level28.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	objectsSpritesheet.loadFromFile("images/varied.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	objectsSpritesheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgSpritesheet.loadFromFile("images/bg28.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bg = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(32*map->getTileSize(), 22*map->getTileSize()), glm::ivec2(1,1), &bgSpritesheet, &texProgram);
 	//bg->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
@@ -98,10 +100,11 @@ void Scene::update(int deltaTime)
 			bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);	
 		}
 	}
-	if (map->getNumOfTilesRemaining() == 0 && !keyCollected) {
+	if (map->getNumOfTilesRemaining() == 0 && !keyCollected && key == nullptr) {
 		spawnKey();
 	}
 	if (key != nullptr && !keyCollected) {
+		key->update(deltaTime);
 		glm::vec2 topLeft = key->getPosition();
 		glm::vec2 bottomRight = topLeft + key->getSpriteSize();
 		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
@@ -110,6 +113,7 @@ void Scene::update(int deltaTime)
 			key = nullptr;
 		}
 	}
+	
 
 }
 
@@ -169,8 +173,27 @@ void Scene::initShaders()
 }
 
 void Scene::spawnKey() {
-	key = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(32, 32), glm::vec2(1/2.f, 1/2.f), &objectsSpritesheet, &texProgram);
-	key->setDisplacement(glm::vec2(1 / 2.f, 1 / 2.f));
-	key->setPosition(glm::ivec2(28 * map->getTileSize(), 18 * map->getTileSize()));
+	key = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(16, 16), glm::vec2(1/8.f, 1/8.f), &objectsSpritesheet, &texProgram);
+	key->setDisplacement(glm::vec2(1 / 8.f * 2, 1 / 8.f * 1));
+	key->setPosition(glm::ivec2(28.5 * map->getTileSize(), 18.5 * map->getTileSize()));
+	key->setNumberAnimations(1);
+	key->setAnimationParams(IDLE_KEY, 15, true);
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 2, 1 / 8.f * 1));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 3, 1 / 8.f * 1));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 4, 1 / 8.f * 1));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 5, 1 / 8.f * 1));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 6, 1 / 8.f * 1));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 5, 1 / 8.f * 1));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 4, 1 / 8.f * 1));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 3, 1 / 8.f * 1));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 2, 1 / 8.f * 1));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 7, 1 / 8.f * 1));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 0, 1 / 8.f * 2));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 1, 1 / 8.f * 2));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 2, 1 / 8.f * 2));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 1, 1 / 8.f * 2));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 0, 1 / 8.f * 2));
+	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 7, 1 / 8.f * 1));
+	key->changeAnimation(IDLE_KEY);
 }
 
