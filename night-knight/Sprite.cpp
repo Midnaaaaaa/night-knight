@@ -111,14 +111,14 @@ void Sprite::addKeyframe(int animId, const glm::vec2 &displacement)
 	}
 }
 
-void Sprite::changeAnimation(int animId)
+void Sprite::changeAnimation(int animId, int startFrame)
 {
 	if(animId < int(animations.size()))
 	{
 		currentAnimation = animId;
-		currentKeyframe = 0;
+		currentKeyframe = startFrame;
 		timeAnimation = 0.f;
-		texCoordDispl = animations[animId].keyframeDispl[0];
+		texCoordDispl = animations[animId].keyframeDispl[startFrame];
 	}
 }
 

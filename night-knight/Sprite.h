@@ -30,7 +30,7 @@ public:
 	void setNumberAnimations(int nAnimations);
 	void setAnimationParams(int animId, int keyframesPerSec, bool mirror, int loopStart = 0);
 	void addKeyframe(int animId, const glm::vec2 &frame);
-	void changeAnimation(int animId);
+	void changeAnimation(int animId, int startFrame = 0);
 	int animation() const;
 	void setDisplacement(const glm::vec2& displacement);
 
