@@ -28,7 +28,7 @@ public:
 	void free();
 
 	void setNumberAnimations(int nAnimations);
-	void setAnimationParams(int animId, int keyframesPerSec, bool mirror, int loopStart = 0);
+	void setAnimationParams(int animId, int keyframesPerSec, bool mirror, int loopStart = 0, int nextAnimation = -1);
 	void addKeyframe(int animId, const glm::vec2 &frame);
 	void changeAnimation(int animId, int startFrame = 0);
 	int animation() const;

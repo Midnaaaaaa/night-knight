@@ -19,6 +19,7 @@ struct AnimKeyframes
 	vector<glm::vec2> keyframeDispl;
 	int loopStart;
 	bool mirror;
+	int nextAnimation;
 };
 
 

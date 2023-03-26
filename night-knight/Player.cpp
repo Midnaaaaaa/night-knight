@@ -18,13 +18,13 @@
 
 enum CharacterAnims
 {
-	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT, JUMP_ASCENDING, JUMP_ASCENDING_RIGHT, JUMP_ASCENDING_LEFT, JUMP_ASCENDING_MIRROR, FALLING1, FALLING_MIRROR1, FALLING2, FALLING_MIRROR2, FALLING3, FALLING_MIRROR3
+	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT, JUMP_ASCENDING, JUMP_ASCENDING_RIGHT, JUMP_ASCENDING_LEFT, JUMP_ASCENDING_MIRROR, FALLING1, FALLING_MIRROR1, FALLING2, FALLING_MIRROR2, FALLING_NO_JUMP, FALLING_NO_JUMP_MIRROR, FALLING3, FALLING_MIRROR3, TOUCHING_GROUND, TOUCHING_GROUND_MIRROR
 };
 
 
 
 void Player::loadAnimations() {
-	sprite->setNumberAnimations(16);
+	sprite->setNumberAnimations(20);
 
 	sprite->setAnimationParams(STAND_LEFT, 4, true);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.0f, 0.0f));
@@ -39,7 +39,7 @@ void Player::loadAnimations() {
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(1 / 16.f * 3, 0.0f));
 
 
-	sprite->setAnimationParams(MOVE_LEFT, 25, true, 3);
+	sprite->setAnimationParams(MOVE_LEFT, 30, true, 3);
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 4, 0.0f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 5, 0.0f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 6, 0.0f));
@@ -60,7 +60,7 @@ void Player::loadAnimations() {
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 5, 1 / 16.f * 1));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
 
-	sprite->setAnimationParams(MOVE_RIGHT, 25, false, 3);
+	sprite->setAnimationParams(MOVE_RIGHT, 30, false, 3);
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 4, 0.0f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 5, 0.0f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 16.f * 6, 0.0f));
@@ -124,6 +124,32 @@ void Player::loadAnimations() {
 	sprite->addKeyframe(FALLING_MIRROR3, glm::vec2(1 / 16.f * 14, 1 / 16.f * 1));
 
 
+	sprite->setAnimationParams(FALLING_NO_JUMP, 10, false, 2);
+	sprite->addKeyframe(FALLING_NO_JUMP, glm::vec2(1 / 16.f * 12, 1 / 16.f * 1));
+	sprite->addKeyframe(FALLING_NO_JUMP, glm::vec2(1 / 16.f * 13, 1 / 16.f * 1));
+	sprite->addKeyframe(FALLING_NO_JUMP, glm::vec2(1 / 16.f * 14, 1 / 16.f * 1));
+
+	sprite->setAnimationParams(FALLING_NO_JUMP_MIRROR, 10, true, 2);
+	sprite->addKeyframe(FALLING_NO_JUMP_MIRROR, glm::vec2(1 / 16.f * 12, 1 / 16.f * 1));
+	sprite->addKeyframe(FALLING_NO_JUMP_MIRROR, glm::vec2(1 / 16.f * 13, 1 / 16.f * 1));
+	sprite->addKeyframe(FALLING_NO_JUMP_MIRROR, glm::vec2(1 / 16.f * 14, 1 / 16.f * 1));
+
+
+	sprite->setAnimationParams(TOUCHING_GROUND, 20, false, 0, STAND_RIGHT);
+	//sprite->addKeyframe(TOUCHING_GROUND, glm::vec2(1 / 16.f * 4, 1 / 16.f * 2));
+	//sprite->addKeyframe(TOUCHING_GROUND, glm::vec2(1 / 16.f * 5, 1 / 16.f * 2));
+	sprite->addKeyframe(TOUCHING_GROUND, glm::vec2(1 / 16.f * 6, 1 / 16.f * 2));
+	sprite->addKeyframe(TOUCHING_GROUND, glm::vec2(1 / 16.f * 7, 1 / 16.f * 2));
+	sprite->addKeyframe(TOUCHING_GROUND, glm::vec2(1 / 16.f * 8, 1 / 16.f * 2));
+	sprite->addKeyframe(TOUCHING_GROUND, glm::vec2(1 / 16.f * 9, 1 / 16.f * 2));
+
+	sprite->setAnimationParams(TOUCHING_GROUND_MIRROR, 20, true, 0, STAND_LEFT);
+	//sprite->addKeyframe(TOUCHING_GROUND_MIRROR, glm::vec2(1 / 16.f * 4, 1 / 16.f * 2));
+	//sprite->addKeyframe(TOUCHING_GROUND_MIRROR, glm::vec2(1 / 16.f * 5, 1 / 16.f * 2));
+	sprite->addKeyframe(TOUCHING_GROUND_MIRROR, glm::vec2(1 / 16.f * 6, 1 / 16.f * 2));
+	sprite->addKeyframe(TOUCHING_GROUND_MIRROR, glm::vec2(1 / 16.f * 7, 1 / 16.f * 2));
+	sprite->addKeyframe(TOUCHING_GROUND_MIRROR, glm::vec2(1 / 16.f * 8, 1 / 16.f * 2));
+	sprite->addKeyframe(TOUCHING_GROUND_MIRROR, glm::vec2(1 / 16.f * 9, 1 / 16.f * 2));
 
 
 	sprite->setAnimationParams(CROUCH_LEFT, 8, true, 3);
@@ -148,10 +174,11 @@ void Player::update(int deltaTime)
 	
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
-		if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT || sprite->animation() == STAND_LEFT) {
+		if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STAND_RIGHT || sprite->animation() == STAND_LEFT || 
+			sprite->animation() == TOUCHING_GROUND || sprite->animation() == TOUCHING_GROUND_MIRROR) {
 			sprite->changeAnimation(MOVE_LEFT);
-			rightSight = false;
 		}
+		rightSight = false;
 		posCharacter.x -= moveSpeed;
 		if (map->collisionMoveLeft(posCharacter + colliderOffset, colliderSize, bJumping))
 		{
@@ -161,10 +188,11 @@ void Player::update(int deltaTime)
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 	{
-		if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_RIGHT || sprite->animation() == STAND_LEFT) {
+		if (sprite->animation() == MOVE_LEFT || sprite->animation() == STAND_RIGHT || sprite->animation() == STAND_LEFT ||
+			sprite->animation() == TOUCHING_GROUND || sprite->animation() == TOUCHING_GROUND_MIRROR) {
 			sprite->changeAnimation(MOVE_RIGHT);
-			rightSight = true;
 		}
+		rightSight = true;
 		posCharacter.x += moveSpeed;
 		if (map->collisionMoveRight(posCharacter + colliderOffset, colliderSize, bJumping))
 		{
@@ -296,29 +324,40 @@ void Player::update(int deltaTime)
 					rightSight = true;
 				}
 			}
-			else
-			{
-				if (rightSight && (sprite->animation() != STAND_RIGHT)) sprite->changeAnimation(STAND_RIGHT);
-				else if (!rightSight && (sprite->animation() != STAND_LEFT)) sprite->changeAnimation(STAND_LEFT);
+			else //TOCANDO EL SUELO sin tocar ninguna tecla
+			{	
+				int anim = -1;
+				int animMirror = -1;
+				int startFrame = 0;
+
+				//Tocando el suelo luego de caer
+				if (sprite->animation() == FALLING3 || sprite->animation() == FALLING_MIRROR3 || sprite->animation() == FALLING_NO_JUMP || sprite->animation() == FALLING_NO_JUMP_MIRROR) {
+					anim = TOUCHING_GROUND;
+					animMirror = TOUCHING_GROUND_MIRROR;
+				}
+				else if (sprite->animation() == MOVE_LEFT || sprite->animation() == MOVE_RIGHT || sprite->animation() == CROUCH_LEFT || sprite->animation() == CROUCH_RIGHT) {
+					anim = STAND_RIGHT;
+					animMirror = STAND_LEFT;
+				}
+				else if (sprite->animation() >= FALLING1 && sprite->animation() <= FALLING_MIRROR2) {
+					anim = TOUCHING_GROUND;
+					animMirror = TOUCHING_GROUND_MIRROR;
+					startFrame = 2;
+				}
+
+				if (anim != -1 && rightSight && (sprite->animation() != anim)) sprite->changeAnimation(anim, startFrame);
+				else if (animMirror != -1 && !rightSight && (sprite->animation() != animMirror)) sprite->changeAnimation(animMirror, startFrame);
 			}
 		}
 		else {
-			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
-				rightSight = true;
-				sprite->changeAnimation(FALLING3);
-			}
-			else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
-				rightSight = false;
-				sprite->changeAnimation(FALLING_MIRROR3);
-			}
-			else {
-				if (rightSight) sprite->changeAnimation(FALLING3);
-				else sprite->changeAnimation(FALLING_MIRROR3);
-			}
+				if (rightSight) {
+					if (sprite->animation() != FALLING_NO_JUMP) sprite->changeAnimation(FALLING_NO_JUMP);
+				}
+				else {
+					if (sprite->animation() != FALLING_NO_JUMP_MIRROR) sprite->changeAnimation(FALLING_NO_JUMP_MIRROR);
+				}
 		}
-		
 	}
-
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
 }
 

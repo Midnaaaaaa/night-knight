@@ -60,7 +60,15 @@ void Sprite::update(int deltaTime)
 				cout << "hola";
 			}
 			currentKeyframe++;
-			if (currentKeyframe >= frameCount) currentKeyframe = loopStart;
+			if (currentKeyframe >= frameCount) {
+				int nextAnim = animations[currentAnimation].nextAnimation;
+				if (nextAnim == -1)
+					currentKeyframe = loopStart;
+				else {
+					changeAnimation(nextAnim);
+				}
+
+			}
 			
 		}
 		texCoordDispl = animations[currentAnimation].keyframeDispl[currentKeyframe];
@@ -92,12 +100,13 @@ void Sprite::setNumberAnimations(int nAnimations)
 	animations.resize(nAnimations);
 }
 
-void Sprite::setAnimationParams(int animId, int keyframesPerSec, bool mirror, int loopStart)
+void Sprite::setAnimationParams(int animId, int keyframesPerSec, bool mirror, int loopStart, int nextAnimation)
 {
 	if (animId < int(animations.size())) {
 		animations[animId].millisecsPerKeyframe = 1000.f / keyframesPerSec;
 		animations[animId].loopStart = loopStart;
 		animations[animId].mirror = mirror;
+		animations[animId].nextAnimation = nextAnimation;
 	}
 }
 
