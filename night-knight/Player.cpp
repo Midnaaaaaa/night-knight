@@ -169,11 +169,12 @@ void Player::loadAnimations() {
 	sprite->addKeyframe(CROUCH_RIGHT, glm::vec2(1 / 16.f * 2, 1 / 16.f * 2));
 	sprite->addKeyframe(CROUCH_RIGHT, glm::vec2(1 / 16.f * 3, 1 / 16.f * 2));
 
-	sprite->setAnimationParams(MUELTO, 8, false, 3);
-	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 0, 1 / 16.f * 2));
-	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 1, 1 / 16.f * 2));
-	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 2, 1 / 16.f * 2));
-	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 3, 1 / 16.f * 2));
+	sprite->setAnimationParams(MUELTO, 16, false, 4);
+	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 10, 1 / 16.f * 2));
+	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 11, 1 / 16.f * 2));
+	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 12, 1 / 16.f * 2));
+	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 13, 1 / 16.f * 2));
+	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 14, 1 / 16.f * 2));
 
 	sprite->changeAnimation(STAND_RIGHT);
 }
