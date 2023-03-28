@@ -120,11 +120,19 @@ void Vampir::loadAnimations() {
 	sprite->setNumberAnimations(2);
 
 	sprite->setAnimationParams(MOVE_LEFT, 10, true);
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.25f, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 1, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 2, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 3, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 4, 0.0f));
 
 
 	sprite->setAnimationParams(MOVE_RIGHT, 10, false);
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1/8.f * 1, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 2, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 3, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 4, 0.0f));
 
 	sprite->changeAnimation(rightSight);
 }
