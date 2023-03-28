@@ -232,7 +232,7 @@ void Scene::spawnDoor() {
 	door->setAnimationParams(DOOR_CLOSED, 1, false);
 	door->addKeyframe(DOOR_CLOSED, glm::vec2(0.0f, 0.0f));
 
-	door->setAnimationParams(DOOR_OPENED, 8, false, 2);
+	door->setAnimationParams(DOOR_OPENED, 6, false, 2);
 	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 1, 0.0f));
 	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 2, 0.0f));
 	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 3, 0.0f));
