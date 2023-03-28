@@ -25,6 +25,7 @@ public:
 private:
 	virtual void loadAnimations();
 	void respawn();
+	void muelto();
 
 	//bool damaged = false;
 	int damagedTimer;

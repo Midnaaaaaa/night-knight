@@ -238,7 +238,7 @@ void Player::update(int deltaTime)
 			jumpAngle = (180 - jumpAngle);
 		}
 
-		if(jumpAngle == 180)
+		if(jumpAngle == 180 && sprite->animation() != MUELTO)
 		{
 			bJumping = false;
 			posCharacter.y = startY;
@@ -260,7 +260,7 @@ void Player::update(int deltaTime)
 			}
 		}
 		//Cambiar animaciones de salto
-		if (jumpAngle < 90) {
+		if (jumpAngle < 90 && sprite->animation() != MUELTO) {
 			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
 				rightSight = true;
 				sprite->changeAnimation(JUMP_ASCENDING_RIGHT);
@@ -278,7 +278,7 @@ void Player::update(int deltaTime)
 				else if(!rightSight && sprite->animation() != JUMP_ASCENDING_MIRROR) sprite->changeAnimation(JUMP_ASCENDING_MIRROR);
 			}
 		}
-		else if (jumpAngle < 135) {
+		else if (jumpAngle < 135 && sprite->animation() != MUELTO) {
 			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
 				rightSight = true;
 				sprite->changeAnimation(FALLING1);
@@ -292,7 +292,7 @@ void Player::update(int deltaTime)
 				else sprite->changeAnimation(FALLING_MIRROR1);
 			}
 		}
-		else if (jumpAngle > 135 && jumpAngle < 150) {
+		else if (jumpAngle < 150 && sprite->animation() != MUELTO) {
 			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
 				rightSight = true;
 				sprite->changeAnimation(FALLING2);
@@ -306,7 +306,7 @@ void Player::update(int deltaTime)
 				else sprite->changeAnimation(FALLING_MIRROR2);
 			}
 		}
-		else if (jumpAngle > 150 && jumpAngle < 180) {
+		else if (jumpAngle > 150 && jumpAngle < 180 && sprite->animation() != MUELTO) {
 			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
 				rightSight = true;
 				sprite->changeAnimation(FALLING3);
@@ -402,9 +402,7 @@ void Player::checkCollisionUnder() {
 			map->reduceNumberOfPlatforms();
 		}
 		else if (tileCol == TILE_SPIKE && !isHurted()) { //Pinxo
-			damagedTimer = DAMAGED_TIME;
-			moveSpeed = 0;
-			sprite->changeAnimation(MUELTO);
+			muelto();
 		}
 	}
 }
@@ -413,6 +411,12 @@ void Player::render() {
 	if ((damagedTimer % 8) < 4) {
 		sprite->render();
 	}
+}
+
+void Player::muelto() {
+	damagedTimer = DAMAGED_TIME;
+	moveSpeed = 0;
+	sprite->changeAnimation(MUELTO);
 }
 
 
@@ -424,7 +428,7 @@ bool Player::checkCollisionWithRect(const glm::ivec2& leftTop, const glm::ivec2&
 	glm::ivec2 p0(posCharacter.x + colliderOffset.x, posCharacter.y + colliderOffset.y);
 	glm::ivec2 p1(posCharacter.x + colliderOffset.x + colliderSize.x, posCharacter.y + colliderOffset.y + colliderSize.y);
 	if (p0.x < rightBottom.x && p1.x > leftTop.x && p0.y < rightBottom.y && p1.y > leftTop.y) {
-		if (type == TYPE_ENEMY) damagedTimer = DAMAGED_TIME;
+		if (type == TYPE_ENEMY) muelto();
 		return true;
 	}
 	return false;
