@@ -401,9 +401,18 @@ void Player::checkCollisionUnder() {
 			map->modifyTileMap((posCharacter.y + colliderOffset.y + colliderSize.y) / tileSize, (posCharacter.x + colliderOffset.x + offset) / tileSize, /*4 * 8 + 5*/ -16);
 			map->reduceNumberOfPlatforms();
 		}
-		else if (tileCol == TILE_SPIKE && !isHurted()) { //Pinxo
+
+	}
+
+
+	//los puntos de colision estan mas hacia el centro
+	for (int i = 0; i < 2; ++i) {
+		int offset = (i == 0) ? 6 : colliderSize.x - 7;
+		int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x + offset, posCharacter.y + colliderOffset.y), glm::ivec2(1, colliderSize.y), nullptr);
+		if (tileCol == TILE_SPIKE && !isHurted()) { //Pinxo
 			muelto();
 		}
+
 	}
 }
 
