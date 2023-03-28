@@ -14,9 +14,14 @@
 #define INIT_PLAYER_X_TILES 2
 #define INIT_PLAYER_Y_TILES 9
 
-enum SpriteAnimations{
+enum KeyAnimations {
 	IDLE_KEY
 };
+
+enum DoorAnimations {
+	DOOR_CLOSED, DOOR_OPENED
+};
+
 
 
 Scene::Scene()
@@ -48,6 +53,8 @@ void Scene::init()
 	map = TileMap::createTileMap("levels/level28.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	objectsSpritesheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgSpritesheet.loadFromFile("images/bg28.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	doorSpritesheet.loadFromFile("images/door.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
 	bg = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(32*map->getTileSize(), 22*map->getTileSize()), glm::ivec2(1,1), &bgSpritesheet, &texProgram);
 	//bg->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
 	
@@ -78,7 +85,7 @@ void Scene::init()
 
 	//Objetos (sprites)
 	key = nullptr;
-
+	spawnDoor();
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
@@ -89,6 +96,12 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
+
+	if (Game::instance().getKey('k') && !keyCollected) {
+		spawnKey();
+	}
+
+	door->update(deltaTime);
 	player->update(deltaTime);
 	for (Enemy* e : enemies)
 	{
@@ -111,6 +124,14 @@ void Scene::update(int deltaTime)
 			keyCollected = true;
 			key->free();
 			key = nullptr;
+			door->changeAnimation(DOOR_OPENED, 0);
+		}
+	}
+	if (door->animation() == DOOR_OPENED) {
+		glm::vec2 topLeft = door->getPosition();
+		glm::vec2 bottomRight = topLeft + door->getSpriteSize();
+		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
+			//HACER QUE ACABE EL NIVEL
 		}
 	}
 	
@@ -121,7 +142,6 @@ void Scene::render()
 {
 	bg->render();
 
-
 	glm::mat4 modelview;
 
 	texProgram.use();
@@ -131,7 +151,9 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
+	door->render();
 	player->render();
+
 	for (Enemy* e : enemies)
 	{
 		e->render();
@@ -145,6 +167,7 @@ void Scene::render()
 void Scene::initShaders()
 {
 	Shader vShader, fShader;
+
 
 	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
 	if(!vShader.isCompiled())
@@ -177,7 +200,7 @@ void Scene::spawnKey() {
 	key->setDisplacement(glm::vec2(1 / 8.f * 2, 1 / 8.f * 1));
 	key->setPosition(glm::ivec2(28.5 * map->getTileSize(), 18.5 * map->getTileSize()));
 	key->setNumberAnimations(1);
-	key->setAnimationParams(IDLE_KEY, 15, true);
+	key->setAnimationParams(IDLE_KEY, 15, false);
 	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 2, 1 / 8.f * 1));
 	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 3, 1 / 8.f * 1));
 	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 4, 1 / 8.f * 1));
@@ -197,3 +220,20 @@ void Scene::spawnKey() {
 	key->changeAnimation(IDLE_KEY);
 }
 
+
+void Scene::spawnDoor() {
+	door = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), &doorSpritesheet, &texProgram);
+	door->setDisplacement(glm::vec2(0.0f, 0.0f));
+	door->setPosition(glm::ivec2(20 * map->getTileSize(), 3 * map->getTileSize()));
+	door->setNumberAnimations(2);
+	door->setAnimationParams(DOOR_CLOSED, 1, false);
+	door->addKeyframe(DOOR_CLOSED, glm::vec2(0.0f, 0.0f));
+
+	door->setAnimationParams(DOOR_OPENED, 8, false, 2);
+	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 1, 0.0f));
+	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 2, 0.0f));
+	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 3, 0.0f));
+
+	door->changeAnimation(DOOR_CLOSED, 0);
+
+}
