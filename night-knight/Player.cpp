@@ -25,6 +25,7 @@ enum CharacterAnims
 
 void Player::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram) {
 	Character::init(tileMapPos, rightSight, spriteFile, colliderSize, colliderOffset, pixelSize, texSize, shaderProgram);
+	vidas = 3;
 	respawn();
 }
 
@@ -423,6 +424,7 @@ void Player::render() {
 }
 
 void Player::muelto() {
+	if (godMode) return;
 	damagedTimer = DAMAGED_TIME;
 	moveSpeed = 0;
 	sprite->changeAnimation(MUELTO);
@@ -441,6 +443,13 @@ bool Player::checkCollisionWithRect(const glm::ivec2& leftTop, const glm::ivec2&
 		return true;
 	}
 	return false;
+}
+
+bool Player::inGodMode() {
+	return godMode;
+}
+void Player::setGodMode(bool b) {
+	godMode = b;
 }
 
 

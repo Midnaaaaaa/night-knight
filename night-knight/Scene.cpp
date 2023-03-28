@@ -100,6 +100,9 @@ void Scene::update(int deltaTime)
 	if (Game::instance().getKey('k') && !keyCollected) {
 		spawnKey();
 	}
+	if (Game::instance().getKey('g')) {
+		player->setGodMode(!player->inGodMode());
+	}
 
 	door->update(deltaTime);
 	player->update(deltaTime);

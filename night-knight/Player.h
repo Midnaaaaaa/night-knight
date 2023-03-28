@@ -19,7 +19,8 @@ public:
 	void checkCollisionUnder();
 	bool isHurted();
 	bool checkCollisionWithRect(const glm::ivec2 &leftTop, const glm::ivec2 &rightBottom, int type);
-
+	bool inGodMode();
+	void setGodMode(bool b);
 
 
 private:
@@ -29,6 +30,10 @@ private:
 
 	//bool damaged = false;
 	int damagedTimer;
+
+	bool godMode;
+
+	int vidas;
 };
 
 
