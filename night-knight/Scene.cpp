@@ -6,6 +6,8 @@
 #include "Esquelet.h"
 #include "Vampir.h"
 #include "Fantasma.h"
+#include <GL/glew.h>
+#include <GL/glut.h>
 
 
 #define SCREEN_X 32*2
@@ -14,8 +16,12 @@
 #define INIT_PLAYER_X_TILES 2
 #define INIT_PLAYER_Y_TILES 9
 
-enum SpriteAnimations{
+enum KeyAnimations{
 	IDLE_KEY
+};
+
+enum DoorAnimations {
+	DOOR_CLOSED, DOOR_OPENED
 };
 
 
@@ -48,6 +54,7 @@ void Scene::init()
 	map = TileMap::createTileMap("levels/level28.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	objectsSpritesheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgSpritesheet.loadFromFile("images/bg28.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	doorSpritesheet.loadFromFile("images/door.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bg = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(32*map->getTileSize(), 22*map->getTileSize()), glm::ivec2(1,1), &bgSpritesheet, &texProgram);
 	//bg->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
 	
@@ -69,15 +76,16 @@ void Scene::init()
 
 	//Player
 	player = new Player();
-	player->setTileMap(map);
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/soma-animations.png", glm::ivec2(16,32), glm::ivec2(8,32), glm::ivec2(32,64), glm::vec2(1/16.f, 1/16.f), texProgram);
 
-	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	//player->setSpeed(2);
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	player->setTileMap(map);
+	player->setSpeed(2);
 
 
 	//Objetos (sprites)
 	key = nullptr;
+	spawnDoor();
 
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
@@ -88,6 +96,13 @@ void Scene::init()
 
 void Scene::update(int deltaTime)
 {
+
+	if (Game::instance().getKey('k')) {
+		spawnKey();
+	}
+
+
+
 	currentTime += deltaTime;
 	player->update(deltaTime);
 	for (Enemy* e : enemies)
@@ -111,6 +126,7 @@ void Scene::update(int deltaTime)
 			keyCollected = true;
 			key->free();
 			key = nullptr;
+			door->changeAnimation(DOOR_OPENED);
 		}
 	}
 	
@@ -121,6 +137,9 @@ void Scene::render()
 {
 	bg->render();
 
+	if (door != nullptr) {
+		door->render();
+	}
 
 	glm::mat4 modelview;
 
@@ -195,5 +214,22 @@ void Scene::spawnKey() {
 	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 0, 1 / 8.f * 2));
 	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 7, 1 / 8.f * 1));
 	key->changeAnimation(IDLE_KEY);
+}
+
+void Scene::spawnDoor() {
+	door = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(32, 32), glm::vec2(1/4.f, 1/4.f), &doorSpritesheet, &texProgram);
+	door->setDisplacement(glm::vec2(0.0f, 0.0f));
+	door->setPosition(glm::ivec2(20 * map->getTileSize(), 3 * map->getTileSize()));
+	door->setNumberAnimations(2);
+	door->setAnimationParams(DOOR_CLOSED, 1, true);
+	door->addKeyframe(DOOR_CLOSED, glm::vec2(0.0f, 0.0f));
+
+	door->setAnimationParams(DOOR_OPENED, 1, true, 2);
+	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 1, 0.0f));
+	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 2, 0.0f));
+	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 3, 0.0f));
+
+	door->changeAnimation(DOOR_CLOSED);
+
 }
 

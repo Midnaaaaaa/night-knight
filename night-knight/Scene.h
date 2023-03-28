@@ -26,9 +26,10 @@ public:
 private:
 	void initShaders();
 	void spawnKey();
+	void spawnDoor();
 
 private:
-	Texture bgSpritesheet, objectsSpritesheet;
+	Texture bgSpritesheet, objectsSpritesheet, doorSpritesheet;
 	Sprite *bg;
 	TileMap *map;
 	Player *player;
@@ -38,6 +39,7 @@ private:
 	glm::mat4 projection;
 
 	Sprite* key;
+	Sprite* door;
 
 	bool keyCollected;
 
