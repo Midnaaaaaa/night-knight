@@ -16,17 +16,20 @@
 #define TYPE_GEM 3
 #define TYPE_STOPWATCH 4
 
-#define DAMAGED_INMUNITY_TIME 4 * 1000
+#define DAMAGED_TIME 2 * 1000
 
 enum CharacterAnims
 {
-	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT, JUMP_ASCENDING, JUMP_ASCENDING_RIGHT, JUMP_ASCENDING_LEFT, JUMP_ASCENDING_MIRROR, FALLING1, FALLING_MIRROR1, FALLING2, FALLING_MIRROR2, FALLING_NO_JUMP, FALLING_NO_JUMP_MIRROR, FALLING3, FALLING_MIRROR3, TOUCHING_GROUND, TOUCHING_GROUND_MIRROR
+	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT, JUMP_ASCENDING, JUMP_ASCENDING_RIGHT, JUMP_ASCENDING_LEFT, JUMP_ASCENDING_MIRROR, FALLING1, FALLING_MIRROR1, FALLING2, FALLING_MIRROR2, FALLING_NO_JUMP, FALLING_NO_JUMP_MIRROR, FALLING3, FALLING_MIRROR3, TOUCHING_GROUND, TOUCHING_GROUND_MIRROR, MUELTO
 };
 
-
+void Player::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram) {
+	Character::init(tileMapPos, rightSight, spriteFile, colliderSize, colliderOffset, pixelSize, texSize, shaderProgram);
+	respawn();
+}
 
 void Player::loadAnimations() {
-	sprite->setNumberAnimations(20);
+	sprite->setNumberAnimations(21);
 
 	sprite->setAnimationParams(STAND_LEFT, 4, true);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.0f, 0.0f));
@@ -166,14 +169,31 @@ void Player::loadAnimations() {
 	sprite->addKeyframe(CROUCH_RIGHT, glm::vec2(1 / 16.f * 2, 1 / 16.f * 2));
 	sprite->addKeyframe(CROUCH_RIGHT, glm::vec2(1 / 16.f * 3, 1 / 16.f * 2));
 
+	sprite->setAnimationParams(MUELTO, 8, false, 3);
+	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 0, 1 / 16.f * 2));
+	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 1, 1 / 16.f * 2));
+	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 2, 1 / 16.f * 2));
+	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 3, 1 / 16.f * 2));
+
 	sprite->changeAnimation(STAND_RIGHT);
 }
 
+void Player::respawn() {
+	damagedTimer = 0;
+	setPosition(glm::vec2(2 * map->getTileSize(), 9 * map->getTileSize()));
+	moveSpeed = 2;
+	sprite->changeAnimation(STAND_RIGHT);
+}
 
 void Player::update(int deltaTime)
 {	
 
-	if (damagedTimer > 0) damagedTimer -= deltaTime;
+	if (damagedTimer > 0) {
+		damagedTimer -= deltaTime;
+		if (damagedTimer < 0) {
+			respawn();
+		}
+	}
 
 
 	sprite->update(deltaTime);
@@ -306,7 +326,7 @@ void Player::update(int deltaTime)
 		checkCollisionUnder();
 
 		//Colision con suelo fuera del salto
-		if(map->collisionMoveDown(posCharacter + colliderOffset, colliderSize, &posCharacter.y) != 0)
+		if(map->collisionMoveDown(posCharacter + colliderOffset, colliderSize, &posCharacter.y) != 0 && sprite->animation() != MUELTO)
 		{
 			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
@@ -359,7 +379,7 @@ void Player::update(int deltaTime)
 				else if (animMirror != -1 && !rightSight && (sprite->animation() != animMirror)) sprite->changeAnimation(animMirror, startFrame);
 			}
 		}
-		else {
+		else if (sprite->animation() != MUELTO) {
 			if (rightSight) {
 				if (sprite->animation() != FALLING_NO_JUMP) sprite->changeAnimation(FALLING_NO_JUMP);
 			}
@@ -380,22 +400,30 @@ void Player::checkCollisionUnder() {
 			map->modifyTileMap((posCharacter.y + colliderOffset.y + colliderSize.y) / tileSize, (posCharacter.x + colliderOffset.x + offset) / tileSize, /*4 * 8 + 5*/ -16);
 			map->reduceNumberOfPlatforms();
 		}
-		else if (tileCol == TILE_SPIKE) { //Pinxo
-			damagedTimer = DAMAGED_INMUNITY_TIME;
+		else if (tileCol == TILE_SPIKE && !isHurted()) { //Pinxo
+			damagedTimer = DAMAGED_TIME;
+			moveSpeed = 0;
+			sprite->changeAnimation(MUELTO);
 		}
+	}
+}
+
+void Player::render() {
+	if ((damagedTimer % 8) < 4) {
+		sprite->render();
 	}
 }
 
 
 bool Player::isHurted() {
-	return damagedTimer <= 0;
+	return damagedTimer > 0;
 }
 
 bool Player::checkCollisionWithRect(const glm::ivec2& leftTop, const glm::ivec2& rightBottom, int type) {
 	glm::ivec2 p0(posCharacter.x + colliderOffset.x, posCharacter.y + colliderOffset.y);
 	glm::ivec2 p1(posCharacter.x + colliderOffset.x + colliderSize.x, posCharacter.y + colliderOffset.y + colliderSize.y);
 	if (p0.x < rightBottom.x && p1.x > leftTop.x && p0.y < rightBottom.y && p1.y > leftTop.y) {
-		if (type == TYPE_ENEMY) damagedTimer = DAMAGED_INMUNITY_TIME;
+		if (type == TYPE_ENEMY) damagedTimer = DAMAGED_TIME;
 		return true;
 	}
 	return false;
