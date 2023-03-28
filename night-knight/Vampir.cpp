@@ -33,7 +33,7 @@ void Vampir::update(int deltaTime) {
 	sprite->update(deltaTime);
 	timer += deltaTime;
 
-	if (timer > 6500 && not wantsToTransform) {
+	if (timer > 6500 && !wantsToTransform) {
 		if (isBat) wantsToTransform = true;
 		else isBat = true;
 		timer = 0;

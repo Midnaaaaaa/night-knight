@@ -16,6 +16,8 @@
 #define TYPE_GEM 3
 #define TYPE_STOPWATCH 4
 
+#define DAMAGED_INMUNITY_TIME 4 * 1000
+
 enum CharacterAnims
 {
 	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT, JUMP_ASCENDING, JUMP_ASCENDING_RIGHT, JUMP_ASCENDING_LEFT, JUMP_ASCENDING_MIRROR, FALLING1, FALLING_MIRROR1, FALLING2, FALLING_MIRROR2, FALLING_NO_JUMP, FALLING_NO_JUMP_MIRROR, FALLING3, FALLING_MIRROR3, TOUCHING_GROUND, TOUCHING_GROUND_MIRROR
@@ -170,6 +172,10 @@ void Player::loadAnimations() {
 
 void Player::update(int deltaTime)
 {	
+
+	if (damagedTimer > 0) damagedTimer -= deltaTime;
+
+
 	sprite->update(deltaTime);
 	
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && (sprite->animation() != CROUCH_LEFT && sprite->animation() != CROUCH_RIGHT))
@@ -225,7 +231,7 @@ void Player::update(int deltaTime)
 
 			posCharacter.y = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
 
-			checkCollisionWithPlatform();
+			checkCollisionUnder();
 
 			if (jumpAngle > 90) {
 				int tileCol = map->collisionMoveDown(posCharacter + colliderOffset, colliderSize, &posCharacter.y);
@@ -297,7 +303,9 @@ void Player::update(int deltaTime)
 	else
 	{
 		posCharacter.y += FALL_STEP;
-		checkCollisionWithPlatform();
+		checkCollisionUnder();
+
+		//Colision con suelo fuera del salto
 		if(map->collisionMoveDown(posCharacter + colliderOffset, colliderSize, &posCharacter.y) != 0)
 		{
 			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
@@ -363,7 +371,7 @@ void Player::update(int deltaTime)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
 }
 
-void Player::checkCollisionWithPlatform() {
+void Player::checkCollisionUnder() {
 	int tileSize = map->getTileSize();
 	for (int i = 0; i < 2; ++i) {
 		int offset = (i == 0) ? 0 : colliderSize.x - 1;
@@ -372,19 +380,22 @@ void Player::checkCollisionWithPlatform() {
 			map->modifyTileMap((posCharacter.y + colliderOffset.y + colliderSize.y) / tileSize, (posCharacter.x + colliderOffset.x + offset) / tileSize, /*4 * 8 + 5*/ -16);
 			map->reduceNumberOfPlatforms();
 		}
+		else if (tileCol == TILE_SPIKE) { //Pinxo
+			damagedTimer = DAMAGED_INMUNITY_TIME;
+		}
 	}
 }
 
 
 bool Player::isHurted() {
-	return hurted;
+	return damagedTimer <= 0;
 }
 
 bool Player::checkCollisionWithRect(const glm::ivec2& leftTop, const glm::ivec2& rightBottom, int type) {
 	glm::ivec2 p0(posCharacter.x + colliderOffset.x, posCharacter.y + colliderOffset.y);
 	glm::ivec2 p1(posCharacter.x + colliderOffset.x + colliderSize.x, posCharacter.y + colliderOffset.y + colliderSize.y);
 	if (p0.x < rightBottom.x && p1.x > leftTop.x && p0.y < rightBottom.y && p1.y > leftTop.y) {
-		if (type == TYPE_ENEMY) hurted = true;
+		if (type == TYPE_ENEMY) damagedTimer = DAMAGED_INMUNITY_TIME;
 		return true;
 	}
 	return false;

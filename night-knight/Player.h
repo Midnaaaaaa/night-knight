@@ -14,13 +14,14 @@ class Player : public Character
 public:
 	virtual void update(int deltaTime);
 
-	void checkCollisionWithPlatform();
+	void checkCollisionUnder();
 	bool isHurted();
 	bool checkCollisionWithRect(const glm::ivec2 &leftTop, const glm::ivec2 &rightBottom, int type);
 
 private:
 	virtual void loadAnimations();
-	bool hurted = false;
+	//bool damaged = false;
+	int damagedTimer;
 };
 
 

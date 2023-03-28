@@ -56,9 +56,7 @@ void Sprite::update(int deltaTime)
 			int frameCount = animations[currentAnimation].keyframeDispl.size();
 			int loopStart = animations[currentAnimation].loopStart;
 			loopStart = (loopStart < frameCount) ? loopStart : frameCount; //Para que no se pase
-			if (frameCount > 15) {
-				cout << "hola";
-			}
+
 			currentKeyframe++;
 			if (currentKeyframe >= frameCount) {
 				int nextAnim = animations[currentAnimation].nextAnimation;

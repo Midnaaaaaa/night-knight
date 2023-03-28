@@ -9,7 +9,7 @@ private:
 	bool wantsToTransform = false;
 	bool goesUp = true;
 
-	float timer = 0;
+	int timer = 0;
 
 };
 
