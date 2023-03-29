@@ -15,20 +15,10 @@ void Menu::init()
 
 void Menu::update(int deltaTime)
 {
-
 }
 
 void Menu::render()
 {
-	for (Sprite* s : images)
-	{
-		s->render();
-	}
-	for (pair<string, glm::ivec2> text : texts)
-	{
-		textObj.render(text.first, text.second, 16, glm::vec4(1,1,1,1));
-	}
-	titleObj.render("Night Knight", glm::ivec2(0, 0), 32, glm::vec4(0.7, 0.2, 0.1, 1));
 }
 
 void Menu::initShaders()
