@@ -63,7 +63,7 @@ void Scene::init()
 
 	//Enemigos
 	Vampir *prueba = new Vampir();
-	prueba->init(glm::ivec2(SCREEN_X, SCREEN_Y), false, "images/bub.png", glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), texProgram);
+	prueba->init(glm::ivec2(SCREEN_X, SCREEN_Y), false, "images/vampir.png", glm::ivec2(18, 32), glm::ivec2(8, 0), glm::ivec2(32, 32), glm::vec2(1 / 8.f, 1 / 4.f), texProgram);
 	prueba->setPosition(glm::vec2(10 * map->getTileSize(), 3 * map->getTileSize()));
 	prueba->setTileMap(map);
 	enemies.push_back(prueba);
@@ -75,6 +75,13 @@ void Scene::init()
 	prueba1->setTileMap(map);
 	enemies.push_back(prueba1);
 	
+
+	Esquelet* prueba2 = new Esquelet();
+	prueba2->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/esquelet.png", glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 6.f, 1 / 2.f), texProgram);
+	prueba2->setPosition(glm::vec2(10 * map->getTileSize(), 6 * map->getTileSize()));
+	prueba2->setTileMap(map);
+	enemies.push_back(prueba2);
+
 
 	//Player
 	player = new Player();
@@ -265,7 +272,7 @@ void Scene::spawnDoor() {
 	door->setAnimationParams(DOOR_CLOSED, 1, false);
 	door->addKeyframe(DOOR_CLOSED, glm::vec2(0.0f, 0.0f));
 
-	door->setAnimationParams(DOOR_OPENED, 8, false, 2);
+	door->setAnimationParams(DOOR_OPENED, 6, false, 2);
 	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 1, 0.0f));
 	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 2, 0.0f));
 	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 3, 0.0f));
