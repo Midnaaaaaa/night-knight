@@ -151,6 +151,7 @@
     <ClInclude Include="Esquelet.h" />
     <ClInclude Include="Fantasma.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
