@@ -57,9 +57,18 @@ Scene::~Scene()
 	if (key != nullptr) {
 		key->free();
 	}
+	if (door != nullptr) {
+		door->free();
+	}
 	for (Enemy* e : enemies) {
 		delete e;
 	}
+	while (!objects.empty()) {
+		Item item = objects.front();
+		objects.pop_front();
+		item.sprite->free();
+	}
+	texProgram.free();
 }
 
 
