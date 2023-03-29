@@ -259,6 +259,9 @@ void Scene::render()
 
 		return;
 	}
+	//La misma camara ortogonal para TODOS
+	texProgram.setUniformMatrix4f("projection", projection);
+
 
 	//Render normal
 	bg->render();
@@ -268,6 +271,8 @@ void Scene::render()
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+	texProgram.setUniform1i("effectId", -1);
+	texProgram.setUniform1i("effectTimer", 0);
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
@@ -289,7 +294,7 @@ void Scene::render()
 		i.sprite->render();
 	}
 
-	text.render("REBORN", glm::vec2(4,4), 32, glm::vec4(1,1,1,1));
+	text.render("REBORN", glm::vec2(50.f,50.f), 32, glm::vec4(1,1,1,1));
 }
 
 void Scene::initShaders()

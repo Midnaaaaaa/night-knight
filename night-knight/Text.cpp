@@ -84,16 +84,16 @@ int Text::getSize() const
 
 void Text::render(char c, const glm::vec2 &pixel, int size, const glm::vec4 &color)
 {
-	int vp[4];
+	//int vp[4];
 	glm::mat4 projection, modelview;
 	glm::vec2 minTexCoord, maxTexCoord;
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	program.use();
-	glGetIntegerv(GL_VIEWPORT, vp);
-	projection = glm::ortho(0.f, float(vp[2] - 1), float(vp[3] - 1), 0.f);
-	program.setUniformMatrix4f("projection", projection);
+	//glGetIntegerv(GL_VIEWPORT, vp);
+	//projection = glm::ortho(0.f, float(vp[2] - 1), float(vp[3] - 1), 0.f);
+	//program.setUniformMatrix4f("projection", projection);
 	program.setUniform4f("color", color.r, color.g, color.b, color.a);
 	modelview = glm::mat4(1.0f);
 	modelview = glm::translate(modelview, glm::vec3(pixel.x, pixel.y - size, 0.f));
@@ -103,22 +103,23 @@ void Text::render(char c, const glm::vec2 &pixel, int size, const glm::vec4 &col
 	maxTexCoord = glm::vec2(float(chars[c-32].tx + chars[c-32].sx) / textureSize, float(chars[c-32].ty + chars[c-32].sy) / textureSize);
 	program.setUniform2f("minTexCoord", minTexCoord.s, minTexCoord.t);
 	program.setUniform2f("maxTexCoord", maxTexCoord.s, maxTexCoord.t);
-	quad->render();
+	quad->render(textureAtlas);
 	glDisable(GL_BLEND);
 }
 
 void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm::vec4 &color)
 {
-	int vp[4];
+	//int vp[4];
 	glm::mat4 projection, modelview;
 	glm::vec2 minTexCoord, maxTexCoord, pos = pixel;
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	program.use();
-	glGetIntegerv(GL_VIEWPORT, vp);
-	projection = glm::ortho(0.f, float(vp[2] - 1), float(vp[3] - 1), 0.f);
-	program.setUniformMatrix4f("projection", projection);
+	//glGetIntegerv(GL_VIEWPORT, vp);
+	//projection = glm::ortho(0.f, float(vp[2] - 1), float(vp[3] - 1), 0.f);
+	//No xd
+	//program.setUniformMatrix4f("projection", projection);
 	program.setUniform4f("color", color.r, color.g, color.b, color.a);
 
 	for(unsigned int i=0; i<str.length(); i++)
@@ -131,7 +132,7 @@ void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm
 		maxTexCoord = glm::vec2(float(chars[str[i]-32].tx + chars[str[i]-32].sx) / textureSize, float(chars[str[i]-32].ty + chars[str[i]-32].sy) / textureSize);
 		program.setUniform2f("minTexCoord", minTexCoord.s, minTexCoord.t);
 		program.setUniform2f("maxTexCoord", maxTexCoord.s, maxTexCoord.t);
-		quad->render();
+		quad->render(textureAtlas);
 		pos.x += (float(size) / fontSize) * chars[str[i]-32].ax;
 	}
 
