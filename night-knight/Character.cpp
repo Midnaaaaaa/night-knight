@@ -16,10 +16,11 @@ void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string sprit
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
 
 	this->freezeTimer = 0;
+	this->effectDelay = 0;
 	this->effectTimer = 0;
 	this->effectId = -1;
 
-	//freeze(10000, false);
+	freeze(10000, true);
 }
 
 Character::~Character() {
@@ -28,7 +29,7 @@ Character::~Character() {
 
 
 void Character::render() {
-	sprite->render(effectId, effectTimer);
+	sprite->render((effectDelay <= 0) ? effectId : -1, effectTimer);
 }
 
 void Character::setTileMap(TileMap* tileMap)
@@ -60,9 +61,14 @@ void Character::freeze(int milisec, bool tremolar) {
 	moveSpeedBase = moveSpeed;
 	moveSpeed = 0;
 	if (tremolar) {
-		effectTimer = 1000;
-		effectId = EFFECT_SHAKE;
+		effect(EFFECT_SHAKE, 2000, milisec - 2000);
 	}
+}
+
+void Character::effect(int id, int duration, int delay) {
+	this->effectId = id;
+	this->effectTimer = duration;
+	this->effectDelay = delay;
 }
 
 void Character::updateTimers(int deltaTime) {
@@ -74,7 +80,15 @@ void Character::updateTimers(int deltaTime) {
 		}
 	}
 
-	if (effectTimer > 0) {
+	if (effectDelay > 0) {
+		effectDelay -= deltaTime;
+		if (effectDelay < 0) {
+			effectDelay = 0;
+		}
+	}
+
+	//Si no queda Delay, empieza el effectTimer
+	if (effectDelay <= 0 && effectTimer > 0) {
 		effectTimer -= deltaTime;
 		if (effectTimer < 0) {
 			effectTimer = 0;

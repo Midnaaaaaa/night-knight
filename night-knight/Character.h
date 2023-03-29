@@ -21,6 +21,7 @@ public:
 	glm::ivec2 getSize() const;
 
 	void freeze(int milisec, bool tremolar);
+	void effect(int id, int duration, int delay = 0);
 
 	~Character();
 
@@ -44,7 +45,7 @@ protected:
 
 	glm::ivec2 colliderSize, colliderOffset;
 
-	int effectTimer, effectId;
+	int effectDelay, effectTimer, effectId;
 
 };
 
