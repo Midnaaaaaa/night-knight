@@ -20,7 +20,6 @@ void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string sprit
 	this->effectTimer = 0;
 	this->effectId = -1;
 
-	freeze(10000, true);
 }
 
 Character::~Character() {
@@ -58,7 +57,7 @@ glm::ivec2 Character::getSize() const{
 
 void Character::freeze(int milisec, bool tremolar) {
 	freezeTimer = milisec;
-	moveSpeedBase = moveSpeed;
+	if(moveSpeed != 0) moveSpeedBase = moveSpeed;
 	moveSpeed = 0;
 	if (tremolar) {
 		effect(EFFECT_SHAKE, 2000, milisec - 2000);

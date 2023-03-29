@@ -7,6 +7,11 @@
 #include "Vampir.h"
 #include "Fantasma.h"
 
+#define MIN_TIME_WITHOUT_SPAWN 8  * 1000
+#define MAX_TIME_WITHOUT_SPAWN 16 * 1000
+
+#define MIN_TIME_TO_DESPAWN 4  * 1000
+#define MAX_TIME_TO_DESPAWN 8 * 1000
 
 #define SCREEN_X 32*2
 #define SCREEN_Y 16*2
@@ -21,6 +26,19 @@ enum KeyAnimations {
 enum DoorAnimations {
 	DOOR_CLOSED, DOOR_OPENED
 };
+
+enum HourglassAnimations {
+	IDLE_HOURGLASS
+};
+
+enum GemAnimations {
+	IDLE_GEM
+};
+
+enum Items {
+	HOURGLASS, GEM
+};
+
 
 
 
@@ -115,6 +133,36 @@ void Scene::update(int deltaTime)
 	//	timer = 4000;
 	//	timerFunc = gameOver;
 	//}
+	if (spawnTimer == -1) {
+		spawnTimer = rand() % (MAX_TIME_WITHOUT_SPAWN - MIN_TIME_WITHOUT_SPAWN + 1) + MIN_TIME_WITHOUT_SPAWN;
+		spawnTimer += currentTime;
+	}
+	if (currentTime >= spawnTimer) {
+		int objectToSpawn = rand() % 2;
+		switch (objectToSpawn)
+		{
+			case HOURGLASS:
+				Item hourglass = spawnHourglass(glm::vec2(28.5, 18.5));
+				objects.push_back(hourglass);
+				break;
+			case GEM:
+				Item gem = spawnGem(glm::vec2(10, 6));
+				objects.push_back(gem);
+				break;
+		}
+		despawnTimer = rand() % (MAX_TIME_TO_DESPAWN - MIN_TIME_TO_DESPAWN + 1) + MIN_TIME_TO_DESPAWN;
+		despawnTimer += currentTime;
+		spawnTimer = -1;
+	}
+	if (currentTime >= despawnTimer && despawnTimer != -1) {
+		if (!objects.empty()) {
+			Item obj;
+			obj = objects.front();
+			objects.pop_front();
+			obj.sprite->free();
+		}
+		despawnTimer = -1;
+	}
 
 
 	if (Game::instance().getKey('k') && !keyCollected) {
@@ -142,11 +190,9 @@ void Scene::update(int deltaTime)
 		}
 	}
 
-
 	if (map->getNumOfTilesRemaining() == 0 && !keyCollected && key == nullptr) {
 		spawnKey();
 	}
-
 
 	player->update(deltaTime);
 
@@ -162,6 +208,31 @@ void Scene::update(int deltaTime)
 			door->changeAnimation(DOOR_OPENED, 0);
 		}
 	}
+
+	for (std::deque<Item>::iterator it = objects.begin(); it != objects.end(); ++it) {
+		it->sprite->update(deltaTime);
+		glm::vec2 topLeft = it->sprite->getPosition();
+		glm::vec2 bottomRight = topLeft + it->sprite->getSpriteSize();
+		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
+			switch (it->id)
+			{
+			case GEM:
+				//Augmenta puntos
+				break;
+			case HOURGLASS:
+				for (Enemy* e : enemies)
+				{
+					e->freeze(5000, true);
+				}
+				break;
+			}
+			it->sprite->free();
+			it = objects.erase(it);
+			if (it == objects.end()) break;
+		}
+	}
+
+
 
 	door->update(deltaTime);
 	//Colision puerta
@@ -205,12 +276,16 @@ void Scene::render()
 	if (key != nullptr) {
 		key->render();
 	}
+
+	for (Item i : objects)
+	{
+		i.sprite->render();
+	}
 }
 
 void Scene::initShaders()
 {
 	Shader vShader, fShader;
-
 
 	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
 	if(!vShader.isCompiled())
@@ -278,5 +353,48 @@ void Scene::spawnDoor() {
 	door->addKeyframe(DOOR_OPENED, glm::vec2(1 / 4.f * 3, 0.0f));
 
 	door->changeAnimation(DOOR_CLOSED, 0);
+}
 
+
+
+Item Scene::spawnHourglass(glm::vec2 pos) {
+	Item hourglass;
+	hourglass.sprite = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(16, 16), glm::vec2(1 / 8.f, 1 / 8.f), &objectsSpritesheet, &texProgram);
+	hourglass.id = HOURGLASS;
+	hourglass.sprite->setDisplacement(glm::vec2(1/8.f * 5, 0.0f));
+	hourglass.sprite->setPosition(glm::ivec2 (pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+	hourglass.sprite->setNumberAnimations(1);
+	hourglass.sprite->setAnimationParams(IDLE_HOURGLASS, 8, false);
+	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 6, 0.0f));
+	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 7, 0.0f));
+	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 6, 0.0f));
+	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 5, 0.0f));
+	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(0.0f, 1/8.f * 1));
+	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 1, 1 / 8.f * 1));
+	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 0, 1 / 8.f * 1));
+	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 5, 0.0f));
+	
+	hourglass.sprite->changeAnimation(IDLE_HOURGLASS);
+	return hourglass;
+}
+
+Item Scene::spawnGem(glm::vec2 pos) {
+	Item gem;
+	gem.sprite = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(16, 16), glm::vec2(1 / 8.f, 1 / 8.f), &objectsSpritesheet, &texProgram);
+	gem.id = GEM;
+	gem.sprite->setDisplacement(glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	gem.sprite->setPosition(glm::ivec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+	gem.sprite->setNumberAnimations(1);
+	gem.sprite->setAnimationParams(IDLE_GEM, 8, false);
+	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
+	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
+	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+
+	gem.sprite->changeAnimation(IDLE_GEM);
+	return gem;
 }
