@@ -20,7 +20,7 @@ void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string sprit
 	this->effectTimer = 0;
 	this->effectId = -1;
 
-	freeze(10000, true);
+	freeze(3000, true);
 }
 
 Character::~Character() {
