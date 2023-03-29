@@ -118,6 +118,12 @@ void Scene::init()
 	currentTime = 0.0f;
 
 	keyCollected = false;
+
+	//// Select which font you want to use
+	//if (!text.init("fonts/OpenSans-Regular.ttf", glm::ivec2(SCREEN_X, SCREEN_Y)))
+	//	//if(!text.init("fonts/OpenSans-Bold.ttf"))
+	//	//if(!text.init("fonts/DroidSerif.ttf"))
+	//	cout << "Could not load font!!!" << endl;
 }
 
 void Scene::update(int deltaTime)

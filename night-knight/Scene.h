@@ -7,6 +7,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Text.h"
 #include "Item.h"
 
 // Scene contains all the entities of our game.
@@ -55,6 +56,8 @@ private:
 	int timer, pauseTimer, gameOverTimer;
 	bool gameOver;
 	void(Scene::*timerFunc)();
+
+	Text text;
 };
 
 

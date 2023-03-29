@@ -57,6 +57,12 @@
     <ClInclude Include="Fantasma.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
     <ClInclude Include="Item.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -102,6 +108,12 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Fantasma.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
