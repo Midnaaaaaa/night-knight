@@ -119,11 +119,11 @@ void Scene::init()
 
 	keyCollected = false;
 
-	//// Select which font you want to use
-	//if (!text.init("fonts/OpenSans-Regular.ttf", glm::ivec2(SCREEN_X, SCREEN_Y)))
-	//	//if(!text.init("fonts/OpenSans-Bold.ttf"))
-	//	//if(!text.init("fonts/DroidSerif.ttf"))
-	//	cout << "Could not load font!!!" << endl;
+	// Select which font you want to use
+	if (!text.init("fonts/OpenSans-Regular.ttf", glm::ivec2(SCREEN_X, SCREEN_Y)))
+		//if(!text.init("fonts/OpenSans-Bold.ttf"))
+		//if(!text.init("fonts/DroidSerif.ttf"))
+		cout << "Could not load font!!!" << endl;
 }
 
 void Scene::update(int deltaTime)
@@ -149,11 +149,11 @@ void Scene::update(int deltaTime)
 		switch (objectToSpawn)
 		{
 			case HOURGLASS:
-				Item hourglass = spawnHourglass(glm::vec2(platform.x + 0.5, platform.y - 1));
+				Item hourglass = spawnHourglass(glm::vec2(platform.x + 0.5, platform.y - 1.5));
 				objects.push_back(hourglass);
 				break;
 			case GEM:
-				Item gem = spawnGem(glm::vec2(platform.x + 0.5, platform.y - 1));
+				Item gem = spawnGem(glm::vec2(platform.x + 0.5, platform.y - 1.5));
 				objects.push_back(gem);
 				break;
 		}
@@ -288,6 +288,8 @@ void Scene::render()
 	{
 		i.sprite->render();
 	}
+
+	text.render("REBORN", glm::vec2(4,4), 32, glm::vec4(1,1,1,1));
 }
 
 void Scene::initShaders()
