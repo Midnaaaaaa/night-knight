@@ -3,7 +3,7 @@
 #include "Sprite.h"
 #include "TileMap.h"
 
-enum {
+enum Effects {
 	EFFECT_BLINK, EFFECT_SHAKE
 };
 
