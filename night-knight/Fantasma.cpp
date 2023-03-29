@@ -9,6 +9,8 @@ enum CharacterAnims
 void Fantasma::update(int deltaTime) {
 	sprite->update(deltaTime);
 
+	updateTimers(deltaTime);
+
 	//Igual que el fantasma
 	glm::ivec2 nextPos;
 	nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;

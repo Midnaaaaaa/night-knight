@@ -39,6 +39,7 @@ posCharacter = nextPos;
 
 void Vampir::update(int deltaTime) {
 	sprite->update(deltaTime);
+	updateTimers(deltaTime);
 	timer += deltaTime;
 
 	if (timer > 6500 && !wantsToTransform) {

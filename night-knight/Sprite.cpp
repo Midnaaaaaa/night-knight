@@ -73,11 +73,13 @@ void Sprite::update(int deltaTime)
 	}
 }
 
-void Sprite::render() const
+void Sprite::render(int effectId, int effectTimer) const
 {
 	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(position.x + tileMapDispl.x, position.y + tileMapDispl.y, 0.f));
 	shaderProgram->setUniformMatrix4f("modelview", modelview);
 	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
+	shaderProgram->setUniform1i("effectId", effectId);
+	shaderProgram->setUniform1i("effectTimer", effectTimer);
 	glEnable(GL_TEXTURE_2D);
 	texture->use();
 	glBindVertexArray(vao);

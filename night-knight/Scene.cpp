@@ -47,6 +47,8 @@ Scene::~Scene()
 
 void Scene::init()
 {
+	pauseTimer = 0;
+	timer = 0;
 
 	initShaders();
 
@@ -97,6 +99,17 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 
+	//UPDATE TIMERS
+	//if (timer >= currentTime) {
+	//	(this->*timerFunc)();
+	//}
+
+	//if (player->isGameOver()) {
+	//	timer = 4000;
+	//	timerFunc = gameOver;
+	//}
+
+
 	if (Game::instance().getKey('k') && !keyCollected) {
 		spawnKey();
 	}
@@ -104,8 +117,13 @@ void Scene::update(int deltaTime)
 		player->setGodMode(!player->inGodMode());
 	}
 
-	door->update(deltaTime);
-	player->update(deltaTime);
+	if (gameOver) {
+		//Esperar unos segundos, seguimos actualizando todo
+
+		//Ya ha pasado el tiempo, ya no actualizamos
+		if (currentTime - gameOverTimer < 0) return;
+	}
+
 	for (Enemy* e : enemies)
 	{
 		e->update(deltaTime);
@@ -113,12 +131,19 @@ void Scene::update(int deltaTime)
 		glm::ivec2 bottomRight = topLeft + e->getSize();
 		if (!player->isHurted()) {
 			//1 means TYPE_ENEMY
-			bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);	
+			bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);
 		}
 	}
+
+
 	if (map->getNumOfTilesRemaining() == 0 && !keyCollected && key == nullptr) {
 		spawnKey();
 	}
+
+
+	player->update(deltaTime);
+
+	//Update llave
 	if (key != nullptr && !keyCollected) {
 		key->update(deltaTime);
 		glm::vec2 topLeft = key->getPosition();
@@ -130,6 +155,9 @@ void Scene::update(int deltaTime)
 			door->changeAnimation(DOOR_OPENED, 0);
 		}
 	}
+
+	door->update(deltaTime);
+	//Colision puerta
 	if (door->animation() == DOOR_OPENED) {
 		glm::vec2 topLeft = door->getPosition();
 		glm::vec2 bottomRight = topLeft + door->getSpriteSize();
@@ -137,12 +165,17 @@ void Scene::update(int deltaTime)
 			//HACER QUE ACABE EL NIVEL
 		}
 	}
-	
-
 }
 
 void Scene::render()
 {
+	//Render de game over
+	if (gameOver) {
+
+		return;
+	}
+
+	//Render normal
 	bg->render();
 
 	glm::mat4 modelview;

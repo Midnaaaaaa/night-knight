@@ -184,11 +184,15 @@ void Player::respawn() {
 	damagedTimer = 0;
 	setPosition(glm::vec2(2 * map->getTileSize(), 9 * map->getTileSize()));
 	moveSpeed = 2;
+	moveSpeedMax = 2;
 	sprite->changeAnimation(STAND_RIGHT);
 }
 
 void Player::update(int deltaTime)
 {	
+	sprite->update(deltaTime);
+
+	updateTimers(deltaTime);
 
 	if (damagedTimer > 0) {
 		damagedTimer -= deltaTime;
@@ -198,7 +202,6 @@ void Player::update(int deltaTime)
 	}
 
 
-	sprite->update(deltaTime);
 	
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && (sprite->animation() != CROUCH_LEFT && sprite->animation() != CROUCH_RIGHT))
 	{
@@ -417,17 +420,18 @@ void Player::checkCollisionUnder() {
 	}
 }
 
-void Player::render() {
-	if ((damagedTimer % 8) < 4) {
-		sprite->render();
-	}
-}
+//void Player::render() {
+//	sprite->render(effectId, effectTimer);
+//}
 
 void Player::muelto() {
 	if (godMode) return;
 	damagedTimer = DAMAGED_TIME;
+	effectTimer = DAMAGED_TIME;
+	effectId = EFFECT_BLINK;
 	moveSpeed = 0;
 	sprite->changeAnimation(MUELTO);
+	vidas--;
 }
 
 
@@ -445,11 +449,15 @@ bool Player::checkCollisionWithRect(const glm::ivec2& leftTop, const glm::ivec2&
 	return false;
 }
 
-bool Player::inGodMode() {
+bool Player::inGodMode() const {
 	return godMode;
 }
 void Player::setGodMode(bool b) {
 	godMode = b;
+}
+
+bool Player::isGameOver() const {
+	return vidas <= 0;
 }
 
 

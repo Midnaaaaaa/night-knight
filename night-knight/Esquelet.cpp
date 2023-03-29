@@ -9,6 +9,7 @@ enum CharacterAnims
 
 void Esquelet::update(int deltaTime) {
 	sprite->update(deltaTime);
+	updateTimers(deltaTime);
 	bool sightChange = (map->tevacae(posCharacter, spriteSize, rightSight) || map->collisionMoveLeft(posCharacter, spriteSize, false) || map->collisionMoveRight(posCharacter, spriteSize, false));
 	if (sightChange) {
 		rightSight = !rightSight;

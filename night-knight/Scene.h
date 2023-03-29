@@ -27,6 +27,9 @@ private:
 	void initShaders();
 	void spawnKey();
 	void spawnDoor();
+	//void executeFunction(void(Scene::*)());
+
+	//void gameOver();
 
 private:
 	Texture bgSpritesheet, objectsSpritesheet, doorSpritesheet;
@@ -43,6 +46,9 @@ private:
 	Sprite* door;
 	bool keyCollected;
 
+	int timer, pauseTimer, gameOverTimer;
+	bool gameOver;
+	void(Scene::*timerFunc)();
 };
 
 

@@ -24,7 +24,7 @@ public:
 	static Sprite *createSprite(const glm::vec2& tileMapPos, const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program);
 
 	void update(int deltaTime);
-	void render() const;
+	void render(int effectId = -1, int effectTimer = 0) const;
 	void free();
 
 	void setNumberAnimations(int nAnimations);
