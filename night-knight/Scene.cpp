@@ -294,7 +294,7 @@ void Scene::render()
 		i.sprite->render();
 	}
 
-	text.render("REBORN", glm::vec2(50.f,50.f), 32, glm::vec4(1,1,1,1));
+	text.render((player->inGodMode()) ? "GOD CABRON" : "Maricon", glm::vec2(50.f, 50.f), 32, glm::vec4(1, 1, 1, 1));
 }
 
 void Scene::initShaders()
