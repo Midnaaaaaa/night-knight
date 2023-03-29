@@ -5,7 +5,7 @@
 #include "Scene.h"
 
 enum Scenes {
-	MAIN_MENU, CREDITS, HOW_TO_PLAY
+	MAIN_MENU, HOW_TO_PLAY, CREDITS
 };
 
 class Menu
@@ -21,8 +21,9 @@ public:
 private:
 	void initShaders();
 
-	vector<Sprite*> images;
-	vector<pair<string, glm::ivec2>> texts;
+	//Cada elemento del vector es el vector de cada escena
+	vector<vector<Sprite*>> images;
+	vector<vector<pair<string, glm::ivec2>>> texts;
 
 	Text titleObj;
 	Text textObj;
@@ -30,5 +31,6 @@ private:
 	ShaderProgram texProgram;
 
 	int scene;
+	int selected;
 };
 
