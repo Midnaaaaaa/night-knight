@@ -44,7 +44,7 @@ void Character::setPosition(const glm::vec2& pos)
 
 void Character::setSpeed(int speed) {
 	this->moveSpeed = speed;
-	this->moveSpeedMax = speed;
+	this->moveSpeedBase = speed;
 }
 
 glm::ivec2 Character::getPosition() const{
@@ -57,7 +57,7 @@ glm::ivec2 Character::getSize() const{
 
 void Character::freeze(int milisec, bool tremolar) {
 	freezeTimer = milisec;
-	moveSpeedMax = moveSpeed;
+	moveSpeedBase = moveSpeed;
 	moveSpeed = 0;
 	if (tremolar) {
 		effectTimer = 1000;
@@ -69,7 +69,7 @@ void Character::updateTimers(int deltaTime) {
 	if (freezeTimer > 0) {
 		freezeTimer -= deltaTime;
 		if (freezeTimer < 0) {
-			moveSpeed = moveSpeedMax;
+			moveSpeed = moveSpeedBase;
 			freezeTimer = 0;
 		}
 	}

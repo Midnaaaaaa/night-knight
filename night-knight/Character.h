@@ -30,7 +30,7 @@ protected:
 	void updateTimers(int deltaTime);
 
 	bool bJumping;
-	int moveSpeed, moveSpeedMax;
+	int moveSpeed, moveSpeedBase;
 
 	int freezeTimer;
 

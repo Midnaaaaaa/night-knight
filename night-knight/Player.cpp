@@ -184,7 +184,7 @@ void Player::respawn() {
 	damagedTimer = 0;
 	setPosition(glm::vec2(2 * map->getTileSize(), 9 * map->getTileSize()));
 	moveSpeed = 2;
-	moveSpeedMax = 2;
+	moveSpeedBase = 2;
 	sprite->changeAnimation(STAND_RIGHT);
 }
 
