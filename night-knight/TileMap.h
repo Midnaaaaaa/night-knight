@@ -50,6 +50,7 @@ public:
 
 	void reduceNumberOfPlatforms();
 	int getNumOfTilesRemaining();
+	glm::ivec2 getRandomPlatform();
 	
 private:
 	bool loadLevel(const string &levelFile);
@@ -82,6 +83,7 @@ private:
 	//[i,j] -> nTile
 	int *numTile;
 
+	vector<glm::ivec2> platformPositions;
 
 	static const vector<int> tileType;
 

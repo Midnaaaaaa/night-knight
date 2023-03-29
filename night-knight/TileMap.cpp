@@ -138,7 +138,10 @@ bool TileMap::loadLevel(const string &levelFile)
 				tile = tile * 10 + c - int('0');
 				fin.get(c);
 			}
-			if (tileType[tile] == TILE_PLATFORM) ++numPlatforms;
+			if (tileType[tile] == TILE_PLATFORM){
+				numPlatforms++;
+			}
+			if (tile == 1) platformPositions.push_back(glm::ivec2(i, j));
 			map[j * mapSize.x + i] = tile;
 		}
 	#ifndef _WIN32
@@ -374,7 +377,10 @@ void TileMap::reduceNumberOfPlatforms() {
 	numPlatforms--;
 }
 
-
+glm::ivec2 TileMap::getRandomPlatform() {
+	glm::ivec2 randomPlatform(platformPositions[rand() % platformPositions.size()]);
+	return randomPlatform;
+}
 
 
 

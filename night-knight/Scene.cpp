@@ -139,14 +139,15 @@ void Scene::update(int deltaTime)
 	}
 	if (currentTime >= spawnTimer) {
 		int objectToSpawn = rand() % 2;
+		glm::ivec2 platform = map->getRandomPlatform();
 		switch (objectToSpawn)
 		{
 			case HOURGLASS:
-				Item hourglass = spawnHourglass(glm::vec2(28.5, 18.5));
+				Item hourglass = spawnHourglass(glm::vec2(platform.x + 0.5, platform.y - 1));
 				objects.push_back(hourglass);
 				break;
 			case GEM:
-				Item gem = spawnGem(glm::vec2(10, 6));
+				Item gem = spawnGem(glm::vec2(platform.x + 0.5, platform.y - 1));
 				objects.push_back(gem);
 				break;
 		}
