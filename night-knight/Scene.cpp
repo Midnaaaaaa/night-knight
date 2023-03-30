@@ -131,7 +131,7 @@ void Scene::init()
 	keyCollected = false;
 
 	// Select which font you want to use
-	if (!text.init("fonts/ArcadeClassic.ttf", glm::ivec2(SCREEN_X, SCREEN_Y)))
+	if (!text.init("fonts/ArcadeClassic.ttf", glm::ivec2(SCREEN_X, SCREEN_Y), projection))
 		//if(!text.init("fonts/OpenSans-Bold.ttf"))
 		//if(!text.init("fonts/DroidSerif.ttf"))
 		cout << "Could not load font!!!" << endl;

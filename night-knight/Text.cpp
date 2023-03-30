@@ -32,7 +32,7 @@ Text::~Text()
 }
 
 
-bool Text::init(const char *filename, const glm::vec2& tileMapPos)
+bool Text::init(const char *filename, const glm::vec2& tileMapPos, const glm::mat4& projection)
 {
 	FT_Error error;
 	
@@ -64,6 +64,9 @@ bool Text::init(const char *filename, const glm::vec2& tileMapPos)
 	
 	quad = Sprite::createSprite(tileMapPos, geom[1], texCoords[1], &textureAtlas, &program);
 	
+	this->projection = projection;
+
+
 	return true;
 }
 
@@ -85,7 +88,7 @@ int Text::getSize() const
 void Text::render(char c, const glm::vec2 &pixel, int size, const glm::vec4 &color)
 {
 	//int vp[4];
-	glm::mat4 projection, modelview;
+	glm::mat4 modelview;
 	glm::vec2 minTexCoord, maxTexCoord;
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -110,16 +113,14 @@ void Text::render(char c, const glm::vec2 &pixel, int size, const glm::vec4 &col
 void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm::vec4 &color)
 {
 	//int vp[4];
-	glm::mat4 projection, modelview;
+	glm::mat4 modelview;
 	glm::vec2 minTexCoord, maxTexCoord, pos = pixel;
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	program.use();
 	//glGetIntegerv(GL_VIEWPORT, vp);
-	//projection = glm::ortho(0.f, float(vp[2] - 1), float(vp[3] - 1), 0.f);
-	//No xd
-	//program.setUniformMatrix4f("projection", projection);
+	program.setUniformMatrix4f("projection", projection);
 	program.setUniform4f("color", color.r, color.g, color.b, color.a);
 
 	for(unsigned int i=0; i<str.length(); i++)

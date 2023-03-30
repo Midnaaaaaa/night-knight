@@ -33,7 +33,7 @@ public:
 	Text();
 	~Text();
 	
-	bool init(const char *filename, const glm::vec2& tileMapPos);
+	bool init(const char *filename, const glm::vec2& tileMapPos, const glm::mat4& projection);
 	void destroy();
 	
 	ShaderProgram &getProgram();
@@ -56,6 +56,8 @@ private:
 
 	static bool bLibInit;
 	static FT_Library library;
+
+	glm::mat4 projection;
 	
 };
 
