@@ -123,6 +123,25 @@ void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm
 	program.setUniformMatrix4f("projection", projection);
 	program.setUniform4f("color", color.r, color.g, color.b, color.a);
 
+	string alignment = "center";
+
+	if (alignment == "center") {
+		float textWidth = 0.f;
+		for (unsigned int i = 0; i < str.length(); i++) {
+			textWidth += (float(size) / fontSize) * chars[str[i] - 32].ax;
+		}
+		pos.x -= textWidth / 2.f;
+	}
+
+	if (alignment == "right") {
+		float textWidth = 0.f;
+		for (unsigned int i = 0; i < str.length(); i++) {
+			textWidth += (float(size) / fontSize) * chars[str[i] - 32].ax;
+		}
+		pos.x -= textWidth;
+	}
+
+
 	for(unsigned int i=0; i<str.length(); i++)
 	{
 		modelview = glm::mat4(1.0f);
