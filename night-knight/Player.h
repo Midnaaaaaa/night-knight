@@ -24,6 +24,10 @@ public:
 
 	bool isGameOver() const;
 
+	int getVidas() const;
+
+	void increasePuntuacion(int valueToIncrease);
+	int getPuntuacion() const;
 
 private:
 	virtual void loadAnimations();
@@ -36,6 +40,8 @@ private:
 	bool godMode;
 
 	int vidas;
+	int puntuacion;
+
 };
 
 

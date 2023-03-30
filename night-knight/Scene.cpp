@@ -6,6 +6,8 @@
 #include "Esquelet.h"
 #include "Vampir.h"
 #include "Fantasma.h"
+#include <iomanip>
+#include <sstream>
 
 #define MIN_TIME_WITHOUT_SPAWN 8  * 1000
 #define MAX_TIME_WITHOUT_SPAWN 16 * 1000
@@ -129,7 +131,7 @@ void Scene::init()
 	keyCollected = false;
 
 	// Select which font you want to use
-	if (!text.init("fonts/StitchWarrior.ttf", glm::ivec2(SCREEN_X, SCREEN_Y)))
+	if (!text.init("fonts/ArcadeClassic.ttf", glm::ivec2(SCREEN_X, SCREEN_Y)))
 		//if(!text.init("fonts/OpenSans-Bold.ttf"))
 		//if(!text.init("fonts/DroidSerif.ttf"))
 		cout << "Could not load font!!!" << endl;
@@ -233,7 +235,7 @@ void Scene::update(int deltaTime)
 			switch (it->id)
 			{
 			case GEM:
-				//Augmenta puntos
+				player->increasePuntuacion(500);
 				break;
 			case HOURGLASS:
 				for (Enemy* e : enemies)
@@ -303,7 +305,14 @@ void Scene::render()
 		i.sprite->render();
 	}
 
-	text.render((player->inGodMode()) ? "GOD CABRON" : "Maricon", glm::vec2(50.f, 50.f), 32, glm::vec4(1, 1, 1, 1));
+	//Render de num vidas
+	text.render(to_string(player->getVidas()), glm::vec2(50.f, 50.f), 32, glm::vec4(1, 1, 1, 1));
+	
+	//Render de puntuacion
+	stringstream ss;
+	ss << setw(5) << setfill('0') << player->getPuntuacion();
+	text.render(ss.str(), glm::vec2(100.f, 50.f), 32, glm::vec4(1, 1, 1, 1));
+
 }
 
 void Scene::initShaders()

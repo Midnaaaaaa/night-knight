@@ -26,6 +26,7 @@ enum CharacterAnims
 void Player::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram) {
 	Character::init(tileMapPos, rightSight, spriteFile, colliderSize, colliderOffset, pixelSize, texSize, shaderProgram);
 	vidas = 3;
+	puntuacion = 0;
 	respawn();
 }
 
@@ -404,6 +405,7 @@ void Player::checkCollisionUnder() {
 		if (tileCol == TILE_PLATFORM) {
 			map->modifyTileMap((posCharacter.y + colliderOffset.y + colliderSize.y) / tileSize, (posCharacter.x + colliderOffset.x + offset) / tileSize, /*4 * 8 + 5*/ -16);
 			map->reduceNumberOfPlatforms();
+			increasePuntuacion(10);
 		}
 
 	}
@@ -460,3 +462,14 @@ bool Player::isGameOver() const {
 }
 
 
+int Player::getVidas() const{
+	return vidas;
+}
+
+void Player::increasePuntuacion(int valueToIncrease) {
+	puntuacion += valueToIncrease;
+}
+
+int Player::getPuntuacion() const {
+	return puntuacion;
+}

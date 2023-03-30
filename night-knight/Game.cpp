@@ -6,21 +6,27 @@
 void Game::init()
 {
 	bPlay = true;
+	playing = true;
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	menu.init();
 	scene.init();
 }
 
 bool Game::update(int deltaTime)
 {
-	scene.update(deltaTime);
-	
+	if (playing) scene.update(deltaTime);
+	else menu.update(deltaTime);
+	if (getKey('M')) {
+		playing = !playing;
+	}
 	return bPlay;
 }
 
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene.render();
+	if (playing) scene.render();
+	else menu.render();
 }
 
 void Game::keyPressed(int key)

@@ -3,6 +3,9 @@
 #include "Game.h"
 #include <GL/glut.h>
 
+#define SCREEN_X 32*2
+#define SCREEN_Y 16*2
+
 Menu::Menu()
 {
 	scene = 0;
@@ -15,11 +18,14 @@ Menu::~Menu()
 
 void Menu::init()
 {
+	textObj.init("fonts/ArcadeClassic.ttf", glm::ivec2(SCREEN_X, SCREEN_Y));
+	titleObj.init("fonts/AncientModernTales.otf", glm::ivec2(SCREEN_X, SCREEN_Y));
 	//Harcoded :+1:
 
 	//vector<pair<string, glm::ivec2>>
 	//EJEMPLO:
-	texts[MAIN_MENU] = { {"Play", glm::ivec2(0,0)}, {"How to play", glm::ivec2(0,10)} };
+	texts.push_back({ {"Play", glm::ivec2(0,0)}, {"How to play", glm::ivec2(0,10)} });
+
 }
 
 //Hacemos que devuelva un int o un bool para indicar que quiere cambiar al primer nivel?
@@ -65,10 +71,10 @@ void Menu::update(int deltaTime)
 
 void Menu::render()
 {
-	for (Sprite* s : images[scene])
-	{
-		s->render();
-	}
+	//for (Sprite* s : images[scene])
+	//{
+	//	s->render();
+	//}
 	for (pair<string, glm::ivec2> text : texts[scene])
 	{
 		textObj.render(text.first, text.second, 16, glm::vec4(1, 1, 1, 1));

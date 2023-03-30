@@ -47,6 +47,7 @@ public:
 	bool getSpecialKey(int key) const;
 
 private:
+	bool playing;
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
 	Menu menu;					      // Menu
