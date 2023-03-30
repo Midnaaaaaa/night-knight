@@ -7,7 +7,7 @@
 
 
 #define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 16*2+16*22 + 1
+#define SCREEN_HEIGHT (16*2+16*22 + 1)
 
 
 

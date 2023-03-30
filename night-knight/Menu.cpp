@@ -24,7 +24,7 @@ void Menu::init()
 
 	//vector<pair<string, glm::ivec2>>
 	//EJEMPLO:
-	texts.push_back({ {"Play", glm::ivec2(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2)}, {"How to play", glm::ivec2(40, 60)} });
+	texts.push_back({ {"Play", glm::ivec2(SCREEN_WIDTH-(SCREEN_WIDTH / 2), SCREEN_HEIGHT/2)}, {"How to play", glm::ivec2(0, 0)} });
 
 	Texture texture;
 	texture.loadFromFile("images/door.png", TEXTURE_PIXEL_FORMAT_RGBA);
