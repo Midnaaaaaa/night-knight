@@ -29,7 +29,7 @@ private:
 	Text textObj;
 
 	ShaderProgram texProgram;
-
+	glm::mat4 projection;
 	int scene;
 	int selected;
 };

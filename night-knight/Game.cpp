@@ -6,7 +6,7 @@
 void Game::init()
 {
 	bPlay = true;
-	playing = true;
+	playing = false;
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	menu.init();
 	scene.init();

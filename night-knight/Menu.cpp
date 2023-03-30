@@ -2,6 +2,8 @@
 #include <iostream>
 #include "Game.h"
 #include <GL/glut.h>
+#include <glm/gtc/matrix_transform.hpp>
+
 
 #define SCREEN_X 32*2
 #define SCREEN_Y 16*2
@@ -31,6 +33,8 @@ void Menu::init()
 //Hacemos que devuelva un int o un bool para indicar que quiere cambiar al primer nivel?
 void Menu::update(int deltaTime)
 {
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+
 	if (scene == MAIN_MENU) {
 		if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
 			if (--selected < 0) selected = 3;
