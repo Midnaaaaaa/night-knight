@@ -22,6 +22,12 @@ void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string sprit
 
 }
 
+void Character::update(int deltaTime) {
+	sprite->update(deltaTime);
+
+	updateTimers(deltaTime);
+}
+
 Character::~Character() {
 	sprite->free();
 }

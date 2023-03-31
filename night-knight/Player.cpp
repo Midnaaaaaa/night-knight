@@ -191,9 +191,7 @@ void Player::respawn() {
 
 void Player::update(int deltaTime)
 {	
-	sprite->update(deltaTime);
-
-	updateTimers(deltaTime);
+	Character::update(deltaTime);
 
 	if (damagedTimer > 0) {
 		damagedTimer -= deltaTime;
