@@ -12,6 +12,8 @@
 #define NUM_CHARACTERS (128 - 32)
 
 
+
+
 struct CharMetrics
 {
 	int tx, ty; 		// Pos x, y inside texture in pixels
@@ -39,8 +41,12 @@ public:
 	ShaderProgram &getProgram();
 	int getSize() const;
 	void render(char c, const glm::vec2 &pixel, int size, const glm::vec4 &color);
-	void render(const string &str, const glm::vec2 &pixel, int size, const glm::vec4 &color);
+	void render(const string &str, const glm::vec2 &pixel, int size, const glm::vec4 &color, int alignment = 0);
 	
+	static const int CENTERED = 1;
+	static const int LEFT_ALIGNED = 0;
+	static const int RIGHT_ALIGNED = 2;
+
 private:
 	void initShaders();
 	bool extractCharSizes(int *maxCharWidth, int *maxCharHeight);
@@ -58,6 +64,8 @@ private:
 	static FT_Library library;
 
 	glm::mat4 projection;
+
+
 	
 };
 

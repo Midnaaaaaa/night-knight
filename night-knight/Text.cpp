@@ -110,7 +110,7 @@ void Text::render(char c, const glm::vec2 &pixel, int size, const glm::vec4 &col
 	glDisable(GL_BLEND);
 }
 
-void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm::vec4 &color)
+void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm::vec4 &color, int alignment)
 {
 	//int vp[4];
 	glm::mat4 modelview;
@@ -123,9 +123,7 @@ void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm
 	program.setUniformMatrix4f("projection", projection);
 	program.setUniform4f("color", color.r, color.g, color.b, color.a);
 
-	string alignment = "center";
-
-	if (alignment == "center") {
+	if (alignment == CENTERED){
 		float textWidth = 0.f;
 		for (unsigned int i = 0; i < str.length(); i++) {
 			textWidth += (float(size) / fontSize) * chars[str[i] - 32].ax;
@@ -133,7 +131,7 @@ void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm
 		pos.x -= textWidth / 2.f;
 	}
 
-	if (alignment == "right") {
+	else if (alignment == RIGHT_ALIGNED) {
 		float textWidth = 0.f;
 		for (unsigned int i = 0; i < str.length(); i++) {
 			textWidth += (float(size) / fontSize) * chars[str[i] - 32].ax;
