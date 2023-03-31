@@ -4,7 +4,7 @@
 #include "TileMap.h"
 
 enum Effects {
-	EFFECT_BLINK, EFFECT_SHAKE
+	EFFECT_BLINK, EFFECT_SHAKE, EFFECT_SIN_Y
 };
 
 class Character
