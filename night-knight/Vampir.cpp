@@ -3,7 +3,7 @@
 
 enum CharacterAnims
 {
-	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, FLY
+	MOVE_LEFT, MOVE_RIGHT, FLY_LEFT, FLY_RIGHT
 };
 
 
@@ -98,17 +98,19 @@ void Vampir::update(int deltaTime) {
 		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;
 		nextPos.y = posCharacter.y;
 
-		if (map->collisionMoveLeft(nextPos, colliderSize, false) || map->collisionMoveRight(nextPos, colliderSize)) {
+		if (map->collisionMoveLeft(nextPos + colliderOffset, colliderSize) || map->collisionMoveRight(nextPos + colliderOffset, colliderSize)) {
 			rightSight = !rightSight;
 		}
-
+		if (rightSight && sprite->animation() != FLY_RIGHT) sprite->changeAnimation(FLY_RIGHT);
+		else if (!rightSight && sprite->animation() != FLY_LEFT) sprite->changeAnimation(FLY_LEFT);
 	}
 	else {
 		// Igual que l'esquelet
-		bool sightChange = (map->tevacae(posCharacter, spriteSize, rightSight) || map->collisionMoveLeft(posCharacter, spriteSize) || map->collisionMoveRight(posCharacter, spriteSize));
+		bool sightChange = (map->tevacae(posCharacter + colliderOffset, colliderSize, rightSight) || map->collisionMoveLeft(posCharacter + colliderOffset, colliderSize) || map->collisionMoveRight(posCharacter + colliderOffset, colliderSize));
 		if (sightChange) {
 			rightSight = !rightSight;
-			sprite->changeAnimation(rightSight);
+			if (rightSight && sprite->animation() != MOVE_RIGHT) sprite->changeAnimation(MOVE_RIGHT);
+			else if (!rightSight && sprite->animation() != MOVE_LEFT) sprite->changeAnimation(MOVE_LEFT);
 		}
 		posCharacter.x += (rightSight * 2 - 1) * moveSpeed;
 	}
@@ -117,22 +119,59 @@ void Vampir::update(int deltaTime) {
 }
 
 void Vampir::loadAnimations() {
-	sprite->setNumberAnimations(2);
+	sprite->setNumberAnimations(4);
 
 	sprite->setAnimationParams(MOVE_LEFT, 10, true);
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f, 0.0f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 1, 0.0f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 2, 0.0f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 3, 0.0f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 4, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 2, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(1 / 8.f * 1, 0.0f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f, 0.0f));
 
 
 	sprite->setAnimationParams(MOVE_RIGHT, 10, false);
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.0f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1/8.f * 1, 0.0f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 2, 0.0f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 3, 0.0f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 4, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 2, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(1 / 8.f * 1, 0.0f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.0f));
+
+	sprite->setAnimationParams(FLY_LEFT, 15, true, 3);
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(0.0f, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 1, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 2, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(0.0f, 1 / 8.f * 3));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_LEFT, glm::vec2(1 / 8.f * 2, 1 / 8.f * 2));
+
+
+	sprite->setAnimationParams(FLY_RIGHT, 15, false, 3);
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(0.0f, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 1, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 2, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(0.0f, 1 / 8.f * 3));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 2, 1 / 8.f * 2));
 
 	sprite->changeAnimation(rightSight);
 }

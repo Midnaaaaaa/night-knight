@@ -92,8 +92,8 @@ void Scene::init()
 
 	//Enemigos
 	Vampir *prueba = new Vampir();
-	prueba->init(glm::ivec2(SCREEN_X, SCREEN_Y), false, "images/vampir.png", glm::ivec2(18, 32), glm::ivec2(8, 0), glm::ivec2(32, 32), glm::vec2(1 / 8.f, 1 / 4.f), texProgram);
-	prueba->setPosition(glm::vec2(10 * map->getTileSize(), 3 * map->getTileSize()));
+	prueba->init(glm::ivec2(SCREEN_X, SCREEN_Y), false, "images/bat.png", glm::ivec2(21, 27), glm::ivec2(25, 37), glm::ivec2(64, 64), glm::vec2(1 / 8.f, 1 / 8.f), texProgram);
+	prueba->setPosition(glm::vec2(10 * map->getTileSize(), 1 * map->getTileSize()));
 	prueba->setTileMap(map);
 	enemies.push_back(prueba);
 
