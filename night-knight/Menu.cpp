@@ -28,12 +28,11 @@ void Menu::init()
 	//EJEMPLO:
 	texts.push_back({ {"Play", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 50)}, {"How    to    play", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100)} });
 
-	Texture texture;
-	texture.loadFromFile("images/door.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	Sprite* s = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), &texture, &texProgram);
-	s->setDisplacement(glm::vec2(0.0f, 0.0f));
-	s->setPosition(glm::ivec2(10, 10));
-	images.push_back({ s });
+	bgSpritesheet.loadFromFile("images/bg28.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	bg = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgSpritesheet, &texProgram);
+	//bg->setDisplacement(glm::vec2(0.0f, 0.0f));
+	//bg->setPosition(glm::ivec2(10, 10));
+	images.push_back({ bg });
 }
 
 //Hacemos que devuelva un int o un bool para indicar que quiere cambiar al primer nivel?
@@ -80,17 +79,18 @@ void Menu::update(int deltaTime)
 
 void Menu::render()
 {
+	texProgram.use();
+	texProgram.setUniformMatrix4f("projection", projection);
+	for (Sprite* s : images[scene])
+	{
+		s->render();
+	}
 
 	for (pair<string, glm::ivec2> text : texts[scene])
 	{
 		textObj.render(text.first, text.second, 16, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 	}
 
-	texProgram.setUniformMatrix4f("projection", projection);
-	for (Sprite* s : images[scene])
-	{
-		s->render();
-	}
 
 	if (scene == MAIN_MENU) {
 		titleObj.render("Night Knight", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 40), 64, glm::vec4(0.7, 0.2, 0.1, 1), Text::CENTERED);
@@ -98,6 +98,7 @@ void Menu::render()
 		//Renderizar "flecha". Su posicion depende de la variable "selected"
 
 	}
+
 }
 
 void Menu::initShaders()

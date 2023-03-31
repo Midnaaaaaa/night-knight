@@ -81,6 +81,7 @@ void Sprite::render(int effectId, int effectTimer) const
 	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
 	shaderProgram->setUniform1i("effectId", effectId);
 	shaderProgram->setUniform1i("effectTimer", effectTimer);
+	shaderProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 	texture->use();
 	glBindVertexArray(vao);

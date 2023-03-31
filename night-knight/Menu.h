@@ -21,6 +21,10 @@ public:
 private:
 	void initShaders();
 
+	Texture bgSpritesheet;
+
+	Sprite* bg;
+
 	//Cada elemento del vector es el vector de cada escena
 	vector<vector<Sprite*>> images;
 	vector<vector<pair<string, glm::ivec2>>> texts;
