@@ -91,6 +91,24 @@ void Sprite::render(int effectId, int effectTimer) const
 	glDisable(GL_TEXTURE_2D);
 }
 
+void Sprite::render(glm::vec4 color, int effectId, int effectTimer) const
+{
+	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(position.x + tileMapDispl.x, position.y + tileMapDispl.y, 0.f));
+	shaderProgram->use();
+	shaderProgram->setUniformMatrix4f("modelview", modelview);
+	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
+	shaderProgram->setUniform1i("effectId", effectId);
+	shaderProgram->setUniform1i("effectTimer", effectTimer);
+	shaderProgram->setUniform4f("color", color.x, color.y, color.z, color.a);
+	glEnable(GL_TEXTURE_2D);
+	texture->use();
+	glBindVertexArray(vao);
+	glEnableVertexAttribArray(posLocation);
+	glEnableVertexAttribArray(texCoordLocation);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDisable(GL_TEXTURE_2D);
+}
+
 //Render para texto, sin cambiar los uniforms porque ya se ha encargado la clase Text
 void Sprite::render(const Texture& tex) const
 {

@@ -25,6 +25,7 @@ public:
 
 	void update(int deltaTime);
 	void render(int effectId = -1, int effectTimer = 0) const;
+	void render(glm::vec4 color, int effectId = -1, int effectTimer = 0) const;
 	void render(const Texture& tex) const;
 	void free();
 

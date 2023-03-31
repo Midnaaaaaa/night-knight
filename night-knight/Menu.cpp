@@ -30,12 +30,12 @@ void Menu::init()
 	texts.resize(3);
 	images.resize(3);
 
-	texts[MAIN_MENU] = { {"Play", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 25)},
-		{"How    to    play", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 75)},
-		{"Credits", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 125)},
-		{"Exit", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 175)} };
+	texts[MAIN_MENU] = { {"Play", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 0)},
+		{"How    to    play", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 50)},
+		{"Credits", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100)},
+		{"Exit", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 150)} };
 
-	bgSpritesheet.loadFromFile("images/bg28.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	bgSpritesheet.loadFromFile("images/titlescreen.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bg = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgSpritesheet, &texProgram);
 	//bg->setDisplacement(glm::vec2(0.0f, 0.0f));
 	//bg->setPosition(glm::ivec2(10, 10));
@@ -97,7 +97,7 @@ void Menu::render()
 	texProgram.setUniformMatrix4f("projection", projection);
 	for (Sprite* s : images[scene])
 	{
-		s->render();
+		s->render(glm::vec4(0.5f));
 	}
 
 	for (int i = 0; i < texts[scene].size(); ++i)
@@ -106,12 +106,14 @@ void Menu::render()
 		if (i == selected) {
 			color = glm::vec4(0.7f, 0.8f, 0.2f, 1.f);
 		}
+		textObj.render(texts[scene][i].first, texts[scene][i].second + 1, 16, glm::vec4(0, 0, 0, 1) * 0.8f, Text::CENTERED);
 		textObj.render(texts[scene][i].first, texts[scene][i].second, 16, color, Text::CENTERED);
 	}
 
 
 	if (scene == MAIN_MENU) {
-		titleObj.render("Night Knight", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - 40), 64, glm::vec4(0.7, 0.2, 0.1, 1), Text::CENTERED);
+		titleObj.render("Night Knight", glm::ivec2(SCREEN_WIDTH / 2+2, SCREEN_HEIGHT / 2 - 65 + 2), 64, glm::vec4(0, 0, 0, 1)*0.8f, Text::CENTERED);
+		titleObj.render("Night Knight", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 65), 64, glm::vec4(0.7, 0.2, 0.1, 1), Text::CENTERED);
 
 		//Renderizar "flecha". Su posicion depende de la variable "selected"
 
