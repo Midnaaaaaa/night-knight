@@ -75,6 +75,11 @@ void Menu::update(int deltaTime)
 			scene = MAIN_MENU;
 		}
 	}
+	for (Sprite* s : images[scene])
+	{
+		s->update(deltaTime);
+	}
+
 }
 
 void Menu::render()
