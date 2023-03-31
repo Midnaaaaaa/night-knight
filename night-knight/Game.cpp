@@ -16,9 +16,18 @@ bool Game::update(int deltaTime)
 {
 	if (playing) scene.update(deltaTime);
 	else menu.update(deltaTime);
-	if (getKey('M')) {
+	if (getKeyUp('m')) {
 		playing = !playing;
 	}
+
+
+	//Update old keys
+	for (int i = 0; i < 256; ++i) {
+		old_keys[i] = keys[i];
+		old_specialKeys[i] = specialKeys[i];
+	}
+
+
 	return bPlay;
 }
 
@@ -68,9 +77,18 @@ bool Game::getKey(int key) const
 	return keys[key];
 }
 
+bool Game::getKeyUp(int key) const {
+	return keys[key] && !old_keys[key];
+}
+
 bool Game::getSpecialKey(int key) const
 {
 	return specialKeys[key];
+}
+
+bool Game::getSpecialKeyUp(int key) const
+{
+	return specialKeys[key] && !old_specialKeys[key];
 }
 
 

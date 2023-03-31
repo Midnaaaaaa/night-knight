@@ -1,4 +1,4 @@
-#include "Menu.h"
+﻿#include "Menu.h"
 #include <iostream>
 #include "Game.h"
 #include <GL/glut.h>
@@ -26,13 +26,21 @@ void Menu::init()
 
 	//vector<pair<string, glm::ivec2>>
 	//EJEMPLO:
-	texts.push_back({ {"Play", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 50)}, {"How    to    play", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100)} });
+
+	texts.resize(3);
+	images.resize(3);
+
+	texts[MAIN_MENU] = { {"Play", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 25)},
+		{"How    to    play", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 75)},
+		{"Credits", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 125)},
+		{"Exit", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 175)} };
 
 	bgSpritesheet.loadFromFile("images/bg28.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bg = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgSpritesheet, &texProgram);
 	//bg->setDisplacement(glm::vec2(0.0f, 0.0f));
 	//bg->setPosition(glm::ivec2(10, 10));
-	images.push_back({ bg });
+
+	images[MAIN_MENU] = { bg };
 }
 
 //Hacemos que devuelva un int o un bool para indicar que quiere cambiar al primer nivel?
@@ -40,15 +48,15 @@ void Menu::update(int deltaTime)
 {
 
 	if (scene == MAIN_MENU) {
-		if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+		if (Game::instance().getSpecialKeyUp(GLUT_KEY_UP)) {
 			if (--selected < 0) selected = 3;
 		}
-		else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
-			selected = selected % 4;
+		else if (Game::instance().getSpecialKeyUp(GLUT_KEY_DOWN)) {
+			selected = ++selected % 4;
 		}
 
 		//seleccionar seleccion
-		if (Game::instance().getKey('\r') || Game::instance().getKey(10) || Game::instance().getKey(' ')) {
+		if (Game::instance().getKeyUp('\r') || Game::instance().getKeyUp(10) || Game::instance().getKeyUp(' ')) {
 			switch (selected)
 			{
 			case 0: //Jugar
@@ -66,12 +74,12 @@ void Menu::update(int deltaTime)
 			}
 		}
 
-		if (Game::instance().getKey(27)) {
+		if (Game::instance().getKeyUp(27)) {
 			exit(0);
 		}
 	}
 	else { //Esc, o otra tecla, para volver
-		if (Game::instance().getKey(27)) {
+		if (Game::instance().getKeyUp(27)) {
 			scene = MAIN_MENU;
 		}
 	}
@@ -91,9 +99,13 @@ void Menu::render()
 		s->render();
 	}
 
-	for (pair<string, glm::ivec2> text : texts[scene])
+	for (int i = 0; i < texts[scene].size(); ++i)
 	{
-		textObj.render(text.first, text.second, 16, glm::vec4(1, 1, 1, 1), Text::CENTERED);
+		glm::vec4 color(1.f);
+		if (i == selected) {
+			color = glm::vec4(0.7f, 0.8f, 0.2f, 1.f);
+		}
+		textObj.render(texts[scene][i].first, texts[scene][i].second, 16, color, Text::CENTERED);
 	}
 
 

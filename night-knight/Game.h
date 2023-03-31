@@ -44,7 +44,9 @@ public:
 	void mouseRelease(int button);
 	
 	bool getKey(int key) const;
+	bool getKeyUp(int key) const;
 	bool getSpecialKey(int key) const;
+	bool getSpecialKeyUp(int key) const;
 
 private:
 	bool playing;
@@ -53,6 +55,7 @@ private:
 	Menu menu;					      // Menu
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
+	bool old_keys[256], old_specialKeys[256];
 
 };
 

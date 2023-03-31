@@ -183,10 +183,10 @@ void Scene::update(int deltaTime)
 	}
 
 
-	if (Game::instance().getKey('k') && !keyCollected) {
+	if (Game::instance().getKeyUp('k') && !keyCollected) {
 		spawnKey();
 	}
-	if (Game::instance().getKey('g')) {
+	if (Game::instance().getKeyUp('g')) {
 		player->setGodMode(!player->inGodMode());
 	}
 
@@ -271,6 +271,7 @@ void Scene::render()
 		return;
 	}
 	//La misma camara ortogonal para TODOS
+	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 
 
@@ -279,7 +280,6 @@ void Scene::render()
 
 	glm::mat4 modelview;
 
-	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	texProgram.setUniform1i("effectId", -1);
