@@ -9,6 +9,11 @@ enum CharacterAnims
 void Fantasma::update(int deltaTime) {
 	Character::update(deltaTime);
 
+	if (effectId != EFFECT_SIN_Y) {
+		effectId = EFFECT_SIN_Y;
+		effectTimer = 60*1000;
+	}
+
 	//Igual que el fantasma
 	glm::ivec2 nextPos;
 	nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;
