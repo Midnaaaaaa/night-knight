@@ -17,7 +17,7 @@ bool Game::update(int deltaTime)
 	if (playing) scene.update(deltaTime);
 	else menu.update(deltaTime);
 	if (getKeyUp('m')) {
-		playing = !playing;
+		toggleMenu();
 	}
 
 
@@ -91,7 +91,9 @@ bool Game::getSpecialKeyUp(int key) const
 	return specialKeys[key] && !old_specialKeys[key];
 }
 
-
+void Game::toggleMenu() {
+	playing = !playing;
+}
 
 
 
