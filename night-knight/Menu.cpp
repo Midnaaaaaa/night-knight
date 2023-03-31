@@ -61,6 +61,7 @@ void Menu::update(int deltaTime)
 			{
 			case 0: //Jugar
 				//return algo?
+				Game::instance().toggleMenu();
 				break;
 			case 1: //How to play?
 				scene = HOW_TO_PLAY;
@@ -69,7 +70,7 @@ void Menu::update(int deltaTime)
 				scene = CREDITS;
 				break;
 			case 3: //Salir
-				//Salir
+				exit(0);
 				break;
 			}
 		}

@@ -48,6 +48,8 @@ public:
 	bool getSpecialKey(int key) const;
 	bool getSpecialKeyUp(int key) const;
 
+	void toggleMenu();
+
 private:
 	bool playing;
 	bool bPlay;                       // Continue to play game?
