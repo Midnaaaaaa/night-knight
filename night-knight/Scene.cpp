@@ -99,7 +99,7 @@ void Scene::init()
 
 	
 	Fantasma* prueba1 = new Fantasma();
-	prueba1->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/bub.png",  glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), texProgram);
+	prueba1->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/ghost.png",  glm::ivec2(19, 27), glm::ivec2(14, 3), glm::ivec2(32, 32), glm::vec2(1 / 8.f, 1 / 2.f), texProgram);
 	prueba1->setPosition(glm::vec2(10 * map->getTileSize(), 6 * map->getTileSize()));
 	prueba1->setTileMap(map);
 	enemies.push_back(prueba1);
