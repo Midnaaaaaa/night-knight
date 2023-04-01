@@ -5,14 +5,17 @@ enum CharacterAnims
 	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT
 };
 
+void Fantasma::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram) {
+	Character::init(tileMapPos, rightSight, spriteFile, colliderSize, colliderOffset, pixelSize, texSize, shaderProgram);
+	Effect fantasmaEffect;
+	fantasmaEffect.id = EFFECT_SIN_Y;
+	fantasmaEffect.timer = 60 * 1000;
+	effectStack.push(fantasmaEffect);
+}
+
 
 void Fantasma::update(int deltaTime) {
 	Character::update(deltaTime);
-
-	if (effectId != EFFECT_SIN_Y) {
-		effectId = EFFECT_SIN_Y;
-		effectTimer = 60*1000;
-	}
 
 	//Igual que el fantasma
 	glm::ivec2 nextPos;

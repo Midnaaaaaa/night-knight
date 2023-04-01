@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="AnimKeyframes.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Esquelet.h" />
     <ClInclude Include="Fantasma.h" />

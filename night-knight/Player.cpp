@@ -427,7 +427,7 @@ void Player::checkCollisionUnder() {
 void Player::muelto() {
 	if (godMode) return;
 	damagedTimer = DAMAGED_TIME;
-	effect(EFFECT_BLINK, DAMAGED_TIME);
+	addEffect(EFFECT_BLINK, DAMAGED_TIME);
 	moveSpeed = 0;
 	sprite->changeAnimation(MUELTO);
 	vidas--;
