@@ -324,6 +324,125 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, boo
 	return false;
 }
 
+
+// Collision tests for axis aligned bounding boxes with collider offsets
+
+bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize, bool bJumping) const
+{
+	int x, y0, y1;
+
+	x = (pos.x + colliderOffset.x) / tileSize;
+	y0 = (pos.y + colliderOffset.y) / tileSize;
+	y1 = (pos.y + colliderOffset.y + colliderSize.y - 1) / tileSize;
+	for (int y = y0; y <= y1; y++)
+	{
+		int tile = map[y * mapSize.x + x];
+		int type = tileType[tile];
+		switch (type)
+		{
+		case TILE_NOT_SOLID:
+			break;
+		case TILE_PLATFORM:
+		case TILE_PLATFORM_ACTIVATED:
+			if (bJumping) break;
+		case TILE_SOLID:
+		case TILE_SPIKE:
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize, bool bJumping) const
+{
+	int x, y0, y1;
+
+	x = (pos.x + colliderOffset.x + colliderSize.x - 1) / tileSize;
+	y0 = (pos.y + colliderOffset.y) / tileSize;
+	y1 = (pos.y + colliderOffset.y + colliderSize.y - 1) / tileSize;
+	for (int y = y0; y <= y1; y++)
+	{
+		int tile = map[y * mapSize.x + x];
+		int type = tileType[tile];
+		switch (type)
+		{
+		case TILE_NOT_SOLID:
+			break;
+		case TILE_PLATFORM:
+		case TILE_PLATFORM_ACTIVATED:
+			if (bJumping) break;
+		case TILE_SOLID:
+		case TILE_SPIKE:
+			return true;
+		}
+	}
+
+	return false;
+}
+
+int TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize, int* posY) const
+{
+	int x0, x1, y;
+	int offsetY = (posY != nullptr) ? (pos.y + colliderOffset.y) - *posY : 0;
+	x0 = (pos.x + colliderOffset.x) / tileSize;
+	x1 = (pos.x + colliderOffset.x + colliderSize.x - 1) / tileSize;
+	y = (pos.y + colliderOffset.y + colliderSize.y - 1) / tileSize;
+	for (int x = x0; x <= x1; x++)
+	{
+		int tile = map[y * mapSize.x + x];
+		int type = tileType[tile];
+		switch (type)
+		{
+		case TILE_NOT_SOLID:
+			break;
+		case TILE_SOLID:
+		case TILE_PLATFORM:
+		case TILE_PLATFORM_ACTIVATED:
+		case TILE_SPIKE:
+			if (posY == nullptr) {
+				return type;
+			}
+			else if ((pos.y + colliderOffset.y) - tileSize * y + colliderSize.y <= 4)
+			{
+				*posY = tileSize * y - colliderSize.y - offsetY;
+				return type;
+			}
+		}
+	}
+
+	return 0;
+}
+
+bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize, bool ignorePlatform) const
+{
+	int x0, x1, y;
+
+	x0 = (pos.x + colliderOffset.x) / tileSize;
+	x1 = (pos.x + colliderOffset.x + colliderSize.x - 1) / tileSize;
+	y = (pos.y + colliderOffset.y) / tileSize;
+	for (int x = x0; x <= x1; x++)
+	{
+		int tile = map[y * mapSize.x + x];
+		int type = tileType[tile];
+		switch (type)
+		{
+		case TILE_NOT_SOLID:
+			break;
+		case TILE_PLATFORM:
+		case TILE_PLATFORM_ACTIVATED:
+			if (ignorePlatform)
+				break;
+		case TILE_SOLID:
+		case TILE_SPIKE:
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
 void TileMap::modifyTileMap(int i, int j, int newTile) {
 	if (newTile < 0) newTile = map[mapSize.x * i + j] + (-newTile); //XD confia
 	map[mapSize.x * i + j] = newTile;

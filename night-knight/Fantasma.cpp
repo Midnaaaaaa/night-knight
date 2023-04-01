@@ -9,7 +9,7 @@ void Fantasma::init(const glm::ivec2& tileMapPos, bool rightSight, string sprite
 	Character::init(tileMapPos, rightSight, spriteFile, colliderSize, colliderOffset, pixelSize, texSize, shaderProgram);
 	Effect fantasmaEffect;
 	fantasmaEffect.id = EFFECT_SIN_Y;
-	fantasmaEffect.timer = 60 * 1000;
+	fantasmaEffect.timer = 120 * 1000;
 	effectStack.push(fantasmaEffect);
 }
 
@@ -22,8 +22,18 @@ void Fantasma::update(int deltaTime) {
 	nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;
 	nextPos.y = posCharacter.y + (!goesUp * 2 - 1) * moveSpeed;
 
-	bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), glm::ivec2(spriteSize.x, 1));
-	bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), glm::ivec2(spriteSize.x, 1));
+	/*
+	--------------
+	|		|
+	|		|
+	|_______|
+	---------------
+
+	colliders justo fuera del collider para poder detectar que entra "justo" entre las plataformas
+	*/
+
+	bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), colliderOffset, glm::ivec2(colliderSize.x, 1));
+	bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), colliderOffset, glm::ivec2(colliderSize.x, 1));
 
 	if (nextPos.x < map->LEFT_WALL || nextPos.x + spriteSize.x > map->RIGHT_WALL) {
 		rightSight = !rightSight;

@@ -5,5 +5,5 @@ using namespace std;
 
 struct Effect
 {
-	int timer, id, priority;
+	int timer, id;
 };

@@ -7,6 +7,10 @@ public:
 	virtual void update(int deltaTime);
 private:
 	virtual void loadAnimations();
+
+	void transformBat();
+	void transformVampir();
+
 	bool isBat;
 	bool wantsToTransform;
 	bool goesUp;

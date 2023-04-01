@@ -43,7 +43,9 @@ void Vampir::update(int deltaTime) {
 
 	if (timer > 6500 && !wantsToTransform) {
 		if (isBat) wantsToTransform = true;
-		else isBat = true;
+		else {
+			transformBat();
+		}
 		timer = 0;
 	}
 
@@ -60,8 +62,8 @@ void Vampir::update(int deltaTime) {
 		colliders justo fuera del collider para poder detectar que entra "justo" entre las plataformas
 		*/
 
-		bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), glm::ivec2(colliderSize.x, 1));
-		bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), glm::ivec2(colliderSize.x, 1));
+		bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), colliderOffset, glm::ivec2(colliderSize.x, 1));
+		bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + colliderSize.y), colliderOffset, glm::ivec2(colliderSize.x, 1));
 		if (collisionUp && collisionDown) {
 			goesUp = !goesUp;
 			posCharacter.x += (rightSight * 2 - 1) * moveSpeed;
@@ -74,14 +76,12 @@ void Vampir::update(int deltaTime) {
 		
 
 
-			bool collisionUp = map->collisionMoveUp(nextPos, glm::ivec2(colliderSize.x, 1));
-			bool collisionDown = map->collisionMoveDown(glm::ivec2(nextPos.x, nextPos.y + spriteSize.y - 1), glm::ivec2(colliderSize.x, 1));
+			bool collisionUp = map->collisionMoveUp(nextPos, colliderOffset, glm::ivec2(colliderSize.x, 1));
+			bool collisionDown = map->collisionMoveDown(glm::ivec2(nextPos.x, nextPos.y + colliderSize.y - 1), colliderOffset, glm::ivec2(colliderSize.x, 1));
 
 
 			if (wantsToTransform && collisionDown) {
-				wantsToTransform = false;
-				isBat = false;
-				timer = 0;
+				transformVampir();
 				nextPos.y = posCharacter.y; //No cambiamos la y
 			}
 			else if (goesUp && collisionUp || !goesUp && collisionDown) {
@@ -98,15 +98,17 @@ void Vampir::update(int deltaTime) {
 		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;
 		nextPos.y = posCharacter.y;
 
-		if (map->collisionMoveLeft(nextPos + colliderOffset, colliderSize) || map->collisionMoveRight(nextPos + colliderOffset, colliderSize)) {
+		if (map->collisionMoveLeft(nextPos, colliderOffset, colliderSize) || map->collisionMoveRight(nextPos, colliderOffset, colliderSize)) {
 			rightSight = !rightSight;
 		}
-		if (rightSight && sprite->animation() != FLY_RIGHT) sprite->changeAnimation(FLY_RIGHT);
-		else if (!rightSight && sprite->animation() != FLY_LEFT) sprite->changeAnimation(FLY_LEFT);
+
+		//Puede ser que en medio del if se haya transformado en man, hay que comprobarlo.
+		if (rightSight && isBat && sprite->animation() != FLY_RIGHT) sprite->changeAnimation(FLY_RIGHT);
+		else if (!rightSight && isBat && sprite->animation() != FLY_LEFT) sprite->changeAnimation(FLY_LEFT);
 	}
 	else {
 		// Igual que l'esquelet
-		bool sightChange = (map->tevacae(posCharacter + colliderOffset, colliderSize, rightSight) || map->collisionMoveLeft(posCharacter + colliderOffset, colliderSize) || map->collisionMoveRight(posCharacter + colliderOffset, colliderSize));
+		bool sightChange = (map->tevacae(posCharacter + colliderOffset, colliderSize, rightSight) || map->collisionMoveLeft(posCharacter, colliderOffset, colliderSize) || map->collisionMoveRight(posCharacter, colliderOffset, colliderSize));
 		if (sightChange) {
 			rightSight = !rightSight;
 			if (rightSight && sprite->animation() != MOVE_RIGHT) sprite->changeAnimation(MOVE_RIGHT);
@@ -116,6 +118,27 @@ void Vampir::update(int deltaTime) {
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
+}
+
+void Vampir::transformBat() {
+	isBat = true;
+
+	colliderSize = glm::ivec2(13, 32);
+	colliderOffset = glm::ivec2(26, 24);
+}
+void Vampir::transformVampir() {
+	wantsToTransform = false;
+	isBat = false;
+	timer = 0;
+
+	posCharacter.y -= spriteSize.y - (colliderOffset.y + colliderSize.y); //Corregir posicion Y
+
+	colliderSize = glm::ivec2(21, 27);
+	colliderOffset = glm::ivec2(25, 37);
+
+	if (rightSight && sprite->animation() != MOVE_RIGHT) sprite->changeAnimation(MOVE_RIGHT);
+	else if (!rightSight && sprite->animation() != MOVE_LEFT) sprite->changeAnimation(MOVE_LEFT);
+
 }
 
 void Vampir::loadAnimations() {
