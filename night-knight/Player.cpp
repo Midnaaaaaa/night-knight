@@ -401,7 +401,10 @@ void Player::checkCollisionUnder() {
 		int offset = (i == 0) ? 0 : colliderSize.x - 1;
 		int tileCol = map->collisionMoveDown(glm::ivec2(posCharacter.x + colliderOffset.x + offset, posCharacter.y + colliderOffset.y), glm::ivec2(1, colliderSize.y));
 		if (tileCol == TILE_PLATFORM) {
-			map->modifyTileMap((posCharacter.y + colliderOffset.y + colliderSize.y) / tileSize, (posCharacter.x + colliderOffset.x + offset) / tileSize, /*4 * 8 + 5*/ -16);
+			int tile = map->modifyTileMap((posCharacter.y + colliderOffset.y + colliderSize.y) / tileSize, (posCharacter.x + colliderOffset.x + offset) / tileSize, /*4 * 8 + 5*/ -16);
+			//                                                                                     (tile * -2 - 3) ----> [1 2] -> [+1 -1] | [1 2] *-2 [-2 -4] +3 [1 -1]
+			map->modifyTileMap((posCharacter.y + colliderOffset.y + colliderSize.y) / tileSize, ((posCharacter.x + colliderOffset.x + offset) / tileSize) + (tile * -2 + 3), /*4 * 8 + 5*/ -16);
+			map->reduceNumberOfPlatforms();
 			map->reduceNumberOfPlatforms();
 			increasePuntuacion(10);
 		}

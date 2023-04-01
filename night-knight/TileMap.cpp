@@ -443,7 +443,8 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& colliderO
 }
 
 
-void TileMap::modifyTileMap(int i, int j, int newTile) {
+int TileMap::modifyTileMap(int i, int j, int newTile) {
+	int oldTile = map[mapSize.x * i + j];
 	if (newTile < 0) newTile = map[mapSize.x * i + j] + (-newTile); //XD confia
 	map[mapSize.x * i + j] = newTile;
 
@@ -474,6 +475,8 @@ void TileMap::modifyTileMap(int i, int j, int newTile) {
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * 24 * numTile[i*mapSize.x + j], sizeof(float) * 24, &vertices[0]);
+
+	return oldTile;
 }
 
 bool TileMap::tevacae(const glm::ivec2& pos, const glm::ivec2& size, bool rightSight) const {

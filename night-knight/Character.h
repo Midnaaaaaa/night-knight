@@ -20,7 +20,9 @@ public:
 	void setPosition(const glm::vec2& pos);
 	void setSpeed(int speed);
 	glm::ivec2 getPosition() const;
-	glm::ivec2 getSize() const;
+	glm::ivec2 getSpriteSize() const;
+	glm::ivec2 getColliderPos() const;
+	glm::ivec2 getColliderSize() const;
 
 	void freeze(int milisec, bool tremolar);
 	void addEffect(int id, int duration, int delay = 0);

@@ -64,7 +64,14 @@ glm::ivec2 Character::getPosition() const{
 	return posCharacter;
 }
 
-glm::ivec2 Character::getSize() const{
+glm::ivec2 Character::getSpriteSize() const{
+	return colliderSize;
+}
+
+glm::ivec2 Character::getColliderPos() const {
+	return posCharacter + colliderOffset;
+}
+glm::ivec2 Character::getColliderSize() const {
 	return colliderSize;
 }
 

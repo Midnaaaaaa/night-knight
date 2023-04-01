@@ -200,8 +200,8 @@ void Scene::update(int deltaTime)
 	for (Enemy* e : enemies)
 	{
 		e->update(deltaTime);
-		glm::ivec2 topLeft = e->getPosition();
-		glm::ivec2 bottomRight = topLeft + e->getSize();
+		glm::ivec2 topLeft = e->getColliderPos();
+		glm::ivec2 bottomRight = topLeft + e->getColliderSize();
 		if (!player->isHurted()) {
 			//1 means TYPE_ENEMY
 			bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);
