@@ -37,8 +37,12 @@ enum GemAnimations {
 	IDLE_GEM
 };
 
+enum ClockAnimations {
+	IDLE_CLOCK
+};
+
 enum Items {
-	HOURGLASS, GEM
+	HOURGLASS, GEM, CLOCK
 };
 
 
@@ -155,7 +159,7 @@ void Scene::update(int deltaTime)
 		spawnTimer += currentTime;
 	}
 	if (currentTime >= spawnTimer) {
-		int objectToSpawn = rand() % 2;
+		int objectToSpawn = rand() % 3;
 		glm::ivec2 platform = map->getRandomPlatform();
 		switch (objectToSpawn)
 		{
@@ -166,6 +170,10 @@ void Scene::update(int deltaTime)
 			case GEM:
 				Item gem = spawnGem(glm::vec2(platform.x + 0.5, platform.y - 1.5));
 				objects.push_back(gem);
+				break;
+			case CLOCK:
+				Item clock = spawnClock(glm::vec2(platform.x + 0.5, platform.y - 1.5));
+				objects.push_back(clock);
 				break;
 		}
 		despawnTimer = rand() % (MAX_TIME_TO_DESPAWN - MIN_TIME_TO_DESPAWN + 1) + MIN_TIME_TO_DESPAWN;
@@ -242,6 +250,9 @@ void Scene::update(int deltaTime)
 				{
 					e->freeze(5000, true);
 				}
+				break;
+			case CLOCK:
+				//poner el timer del stage a full;
 				break;
 			}
 			it->sprite->free();
@@ -429,4 +440,25 @@ Item Scene::spawnGem(glm::vec2 pos) {
 
 	gem.sprite->changeAnimation(IDLE_GEM);
 	return gem;
+}
+
+Item Scene::spawnClock(glm::vec2 pos) {
+	Item clock;
+	clock.sprite = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(16, 16), glm::vec2(1 / 8.f, 1 / 8.f), &objectsSpritesheet, &texProgram);
+	clock.id = CLOCK;
+	clock.sprite->setDisplacement(glm::vec2(1 / 8.f * 0, 1 / 8.f * 3));
+	clock.sprite->setPosition(glm::ivec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+	clock.sprite->setNumberAnimations(1);
+	clock.sprite->setAnimationParams(IDLE_CLOCK, 8, false);
+	clock.sprite->addKeyframe(IDLE_CLOCK, glm::vec2(1 / 8.f * 0, 1 / 8.f * 3));
+	clock.sprite->addKeyframe(IDLE_CLOCK, glm::vec2(1 / 8.f * 1, 1 / 8.f * 3));
+	clock.sprite->addKeyframe(IDLE_CLOCK, glm::vec2(1 / 8.f * 2, 1 / 8.f * 3));
+	clock.sprite->addKeyframe(IDLE_CLOCK, glm::vec2(1 / 8.f * 3, 1 / 8.f * 3));
+	clock.sprite->addKeyframe(IDLE_CLOCK, glm::vec2(1 / 8.f * 4, 1 / 8.f * 3));
+	clock.sprite->addKeyframe(IDLE_CLOCK, glm::vec2(1 / 8.f * 5, 1 / 8.f * 3));
+	clock.sprite->addKeyframe(IDLE_CLOCK, glm::vec2(1 / 8.f * 6, 1 / 8.f * 3));
+	clock.sprite->addKeyframe(IDLE_CLOCK, glm::vec2(1 / 8.f * 7, 1 / 8.f * 3));
+	
+	clock.sprite->changeAnimation(IDLE_CLOCK);
+	return clock;
 }

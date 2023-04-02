@@ -31,6 +31,7 @@ private:
 	void spawnDoor();
 	Item spawnHourglass(glm::vec2 pos);
 	Item spawnGem(glm::vec2 pos);
+	Item spawnClock(glm::vec2 pos);
 	//void executeFunction(void(Scene::*)());
 
 	//void gameOver();
