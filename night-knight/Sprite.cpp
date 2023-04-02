@@ -73,8 +73,16 @@ void Sprite::update(int deltaTime)
 	}
 }
 
-void Sprite::render(int effectId, int effectTimer) const
+void Sprite::render() const
 {
+	int effectId = -1;
+	int effectTimer = 0;
+	if (!effectStack.empty()) {
+		const Effect& e = effectStack.top();
+		effectId = e.id;
+		effectTimer = e.timer;
+	}
+
 	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(position.x + tileMapDispl.x, position.y + tileMapDispl.y, 0.f));
 	shaderProgram->use();
 	shaderProgram->setUniformMatrix4f("modelview", modelview);
@@ -185,3 +193,32 @@ glm::vec2 Sprite::getPosition() {
 
 
 glm::vec2 Sprite::getSpriteSize() { return spriteSize; }
+
+
+void Sprite::addEffect(int id, int duration, int delay) {
+	Effect e;
+	e.id = id;
+	e.timer = duration;
+
+	effectStack.push(e);
+
+	if (delay > 0) {
+		Effect delayEffect;
+		delayEffect.id = -1;
+		delayEffect.timer = delay;
+
+		effectStack.push(delayEffect);
+	}
+}
+
+void Sprite::updateTimers(int deltaTime) {
+	if (!effectStack.empty()) {
+		Effect& e = effectStack.top();
+		if (e.timer > 0) {
+			e.timer -= deltaTime;
+			if (e.timer < 0) {
+				effectStack.pop();
+			}
+		}
+	}
+}

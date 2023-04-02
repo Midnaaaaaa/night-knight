@@ -2,8 +2,7 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
-#include "Effect.h"
-#include <stack>
+
 
 enum Effects {
 	EFFECT_BLINK, EFFECT_SHAKE, EFFECT_SIN_Y
@@ -49,7 +48,6 @@ protected:
 
 	glm::ivec2 colliderSize, colliderOffset;
 
-	stack<Effect> effectStack;
 	//int effectDelay, effectTimer, effectId;
 
 };

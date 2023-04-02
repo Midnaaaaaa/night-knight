@@ -9,8 +9,8 @@
 #include <iomanip>
 #include <sstream>
 
-#define MIN_TIME_WITHOUT_SPAWN 8  * 1000
-#define MAX_TIME_WITHOUT_SPAWN 16 * 1000
+#define MIN_TIME_WITHOUT_SPAWN 1  * 1000
+#define MAX_TIME_WITHOUT_SPAWN 1 * 1000
 
 #define MIN_TIME_TO_DESPAWN 4  * 1000
 #define MAX_TIME_TO_DESPAWN 8 * 1000
@@ -360,25 +360,7 @@ void Scene::spawnKey() {
 	key = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(16, 16), glm::vec2(1/8.f, 1/8.f), &objectsSpritesheet, &texProgram);
 	key->setDisplacement(glm::vec2(1 / 8.f * 2, 1 / 8.f * 1));
 	key->setPosition(glm::ivec2(28.5 * map->getTileSize(), 18.5 * map->getTileSize()));
-	key->setNumberAnimations(1);
-	key->setAnimationParams(IDLE_KEY, 15, false);
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 2, 1 / 8.f * 1));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 3, 1 / 8.f * 1));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 4, 1 / 8.f * 1));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 5, 1 / 8.f * 1));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 6, 1 / 8.f * 1));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 5, 1 / 8.f * 1));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 4, 1 / 8.f * 1));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 3, 1 / 8.f * 1));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 2, 1 / 8.f * 1));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 7, 1 / 8.f * 1));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 0, 1 / 8.f * 2));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 1, 1 / 8.f * 2));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 2, 1 / 8.f * 2));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 1, 1 / 8.f * 2));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 0, 1 / 8.f * 2));
-	key->addKeyframe(IDLE_KEY, glm::vec2(1 / 8.f * 7, 1 / 8.f * 1));
-	key->changeAnimation(IDLE_KEY);
+	key->addEffect(EFFECT_SIN_Y, 120 * 1000);
 }
 
 
@@ -406,18 +388,8 @@ Item Scene::spawnHourglass(glm::vec2 pos) {
 	hourglass.id = HOURGLASS;
 	hourglass.sprite->setDisplacement(glm::vec2(1/8.f * 5, 0.0f));
 	hourglass.sprite->setPosition(glm::ivec2 (pos.x * map->getTileSize(), pos.y * map->getTileSize()));
-	hourglass.sprite->setNumberAnimations(1);
-	hourglass.sprite->setAnimationParams(IDLE_HOURGLASS, 8, false);
-	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 6, 0.0f));
-	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 7, 0.0f));
-	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 6, 0.0f));
-	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 5, 0.0f));
-	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(0.0f, 1/8.f * 1));
-	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 1, 1 / 8.f * 1));
-	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 0, 1 / 8.f * 1));
-	hourglass.sprite->addKeyframe(IDLE_HOURGLASS, glm::vec2(1 / 8.f * 5, 0.0f));
-	
-	hourglass.sprite->changeAnimation(IDLE_HOURGLASS);
+	hourglass.sprite->addEffect(EFFECT_SIN_Y, 120 * 1000);
+
 	return hourglass;
 }
 
@@ -427,18 +399,8 @@ Item Scene::spawnGem(glm::vec2 pos) {
 	gem.id = GEM;
 	gem.sprite->setDisplacement(glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
 	gem.sprite->setPosition(glm::ivec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
-	gem.sprite->setNumberAnimations(1);
-	gem.sprite->setAnimationParams(IDLE_GEM, 8, false);
-	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
-	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
-	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
-	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
-	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
-	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
-	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
-	gem.sprite->addKeyframe(IDLE_GEM, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	gem.sprite->addEffect(EFFECT_SIN_Y, 120 * 1000);
 
-	gem.sprite->changeAnimation(IDLE_GEM);
 	return gem;
 }
 
@@ -460,5 +422,8 @@ Item Scene::spawnClock(glm::vec2 pos) {
 	clock.sprite->addKeyframe(IDLE_CLOCK, glm::vec2(1 / 8.f * 7, 1 / 8.f * 3));
 	
 	clock.sprite->changeAnimation(IDLE_CLOCK);
+
+	clock.sprite->addEffect(EFFECT_SIN_Y, 120 * 1000);
+
 	return clock;
 }

@@ -25,6 +25,7 @@ void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string sprit
 void Character::update(int deltaTime) {
 	updateTimers(deltaTime);
 
+	sprite->updateTimers(deltaTime);
 	if (freezeTimer == 0)
 		sprite->update(deltaTime);
 
@@ -36,11 +37,7 @@ Character::~Character() {
 
 
 void Character::render() {
-	if (!effectStack.empty()) {
-		Effect& e = effectStack.top();
-		sprite->render(e.id, e.timer);
-	}
-	else sprite->render();
+	sprite->render();
 	//sprite->render((effectDelay <= 0) ? effectId : -1, effectTimer);
 }
 
@@ -85,22 +82,7 @@ void Character::freeze(int milisec, bool tremolar) {
 }
 
 void Character::addEffect(int id, int duration, int delay) {
-	Effect e;
-	e.id = id;
-	e.timer = duration;
-
-	effectStack.push(e);
-
-	if (delay > 0) {
-		Effect delayEffect;
-		delayEffect.id = -1;
-		delayEffect.timer = delay;
-
-		effectStack.push(delayEffect);
-	}
-	//this->effectId = id;
-	//this->effectTimer = duration;
-	//this->effectDelay = delay;
+	sprite->addEffect(id, duration, delay);
 }
 
 void Character::updateTimers(int deltaTime) {
@@ -109,16 +91,6 @@ void Character::updateTimers(int deltaTime) {
 		if (freezeTimer < 0) {
 			moveSpeed = moveSpeedBase;
 			freezeTimer = 0;
-		}
-	}
-
-	if (!effectStack.empty()) {
-		Effect& e = effectStack.top();
-		if (e.timer > 0) {
-			e.timer -= deltaTime;
-			if (e.timer < 0) {
-				effectStack.pop();
-			}
 		}
 	}
 }

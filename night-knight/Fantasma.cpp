@@ -7,10 +7,7 @@ enum CharacterAnims
 
 void Fantasma::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram) {
 	Character::init(tileMapPos, rightSight, spriteFile, colliderSize, colliderOffset, pixelSize, texSize, shaderProgram);
-	Effect fantasmaEffect;
-	fantasmaEffect.id = EFFECT_SIN_Y;
-	fantasmaEffect.timer = 120 * 1000;
-	effectStack.push(fantasmaEffect);
+	addEffect(EFFECT_SIN_Y, 120 * 1000);
 }
 
 

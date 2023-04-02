@@ -7,6 +7,8 @@
 #include "Texture.h"
 #include "ShaderProgram.h"
 #include "AnimKeyframes.h"
+#include "Effect.h"
+#include <stack>
 
 
 // This class is derived from code seen earlier in TexturedQuad but it is also
@@ -24,7 +26,7 @@ public:
 	static Sprite *createSprite(const glm::vec2& tileMapPos, const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program);
 
 	void update(int deltaTime);
-	void render(int effectId = -1, int effectTimer = 0) const;
+	void render() const;
 	void render(glm::vec4 color, int effectId = -1, int effectTimer = 0) const;
 	void render(const Texture& tex) const;
 	void free();
@@ -41,7 +43,11 @@ public:
 	glm::vec2 getPosition();
 	glm::vec2 getSpriteSize();
 
+	void addEffect(int id, int duration, int delay = 0);
+	void updateTimers(int deltaTime);
+
 private:
+
 	Texture *texture;
 	ShaderProgram *shaderProgram;
 	GLuint vao;
@@ -54,6 +60,9 @@ private:
 	vector<AnimKeyframes> animations;
 	glm::vec2 spriteSize;
 	glm::vec2 sizeOfEachTile;
+
+	stack<Effect> effectStack;
+
 
 };
 
