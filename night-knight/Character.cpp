@@ -24,7 +24,14 @@ void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string sprit
 
 void Character::update(int deltaTime) {
 	updateTimers(deltaTime);
-	sprite->update(deltaTime, freezeTimer == 0);
+	
+	//parche
+	//if (freezeTimer == 0 && moveSpeed == 0) {
+	//	//Bug
+	//	moveSpeed = moveSpeedBase;
+	//}
+
+	sprite->update(deltaTime, freezeTimer != 0);
 }
 
 Character::~Character() {
@@ -69,6 +76,16 @@ glm::ivec2 Character::getColliderSize() const {
 }
 
 void Character::freeze(int milisec, bool tremolar) {
+
+	//Estaban ya congelaos
+	if (freezeTimer > 0 && tremolar) {
+		sprite->refreshFreezeEffect(2000, milisec - 2000);
+		freezeTimer = milisec;
+		if (moveSpeed != 0) moveSpeedBase = moveSpeed;
+		moveSpeed = 0;
+		return;
+	}
+
 	freezeTimer = milisec;
 	if(moveSpeed != 0) moveSpeedBase = moveSpeed;
 	moveSpeed = 0;
@@ -82,7 +99,7 @@ void Character::addEffect(int id, int duration, int delay) {
 }
 
 void Character::updateTimers(int deltaTime) {
-	if (freezeTimer > 0) {
+	if (freezeTimer != 0) {
 		freezeTimer -= deltaTime;
 		if (freezeTimer < 0) {
 			moveSpeed = moveSpeedBase;

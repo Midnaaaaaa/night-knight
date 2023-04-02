@@ -79,7 +79,7 @@ void Sprite::render() const
 	int effectId = -1;
 	int effectTimer = 0;
 	if (!effectStack.empty()) {
-		const Effect& e = effectStack.top();
+		const Effect& e = effectStack.back();
 		effectId = e.id;
 		effectTimer = e.timer;
 	}
@@ -201,24 +201,50 @@ void Sprite::addEffect(int id, int duration, int delay) {
 	e.id = id;
 	e.timer = duration;
 
-	effectStack.push(e);
+	effectStack.push_back(e);
 
 	if (delay > 0) {
 		Effect delayEffect;
 		delayEffect.id = -1;
 		delayEffect.timer = delay;
 
-		effectStack.push(delayEffect);
+		effectStack.push_back(delayEffect);
 	}
+}
+
+void Sprite::refreshFreezeEffect(int duration, int delay) {
+	//Cleanup stack
+	int i = 0;
+
+	int elemToDelete = 1;
+
+	//Encuentra indice
+	while (i < effectStack.size() - 1) {
+		if (effectStack[i].id == EFFECT_SHAKE) {
+			if (i + 1 <= effectStack.size() && effectStack[i + 1].id == -1) elemToDelete = 2;
+			break;
+		}
+		++i;
+	}
+
+	//Mueve
+	for (; i < effectStack.size() - elemToDelete; ++i) {
+		effectStack[i] = effectStack[i + elemToDelete];
+	}
+
+	while (elemToDelete-- > 0)
+		effectStack.pop_back();
+
+	addEffect(EFFECT_SHAKE, duration, delay);
 }
 
 void Sprite::updateTimers(int deltaTime) {
 	if (!effectStack.empty()) {
-		Effect& e = effectStack.top();
+		Effect& e = effectStack.back();
 		if (e.timer > 0) {
 			e.timer -= deltaTime;
 			if (e.timer < 0) {
-				effectStack.pop();
+				effectStack.pop_back();
 			}
 		}
 	}
