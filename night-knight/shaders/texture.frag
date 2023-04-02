@@ -9,6 +9,9 @@ uniform int effectId;
 in vec2 texCoordFrag;
 out vec4 outColor;
 
+const float PI = 3.1415926535897932384626433832795;
+
+
 void main()
 {
 	// Discard fragment if texture sample has alpha < 0.5
@@ -23,6 +26,9 @@ void main()
 		if ((effectTimer % 100) < 50)
 			discard;
 	}
+    else if (effectId == 3) { //?
+        texCoord.x = texCoord.x + sin((effectTimer)/1000.f*2*PI + int( 100*texCoord.y*2*PI )) * 0.01 * sin(-effectTimer * (PI/4000.f));
+    }
 
 	vec4 texColor = texture(tex, texCoord);
 	if(texColor.a < 0.5f)

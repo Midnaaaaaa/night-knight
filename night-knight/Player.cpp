@@ -196,6 +196,7 @@ void Player::respawn() {
 	moveSpeed = 2;
 	moveSpeedBase = 2;
 	sprite->changeAnimation(STAND_RIGHT);
+	addEffect(EFFECT_SPAWN, 2*1000);
 }
 
 void Player::update(int deltaTime)
@@ -482,7 +483,7 @@ int Player::getVidas() const{
 }
 
 void Player::increasePuntuacion(int valueToIncrease) {
-	if (puntuacion % PUNTS_TO_VIDA_EXTRA < (puntuacion + valueToIncrease) % PUNTS_TO_VIDA_EXTRA) ++vidas;
+	if (puntuacion % PUNTS_TO_VIDA_EXTRA > (puntuacion + valueToIncrease) % PUNTS_TO_VIDA_EXTRA) ++vidas;
 	puntuacion += valueToIncrease;
 }
 
