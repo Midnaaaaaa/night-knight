@@ -29,6 +29,8 @@ public:
 	void increasePuntuacion(int valueToIncrease);
 	int getPuntuacion() const;
 
+	void morir();
+
 private:
 	virtual void loadAnimations();
 	void respawn();

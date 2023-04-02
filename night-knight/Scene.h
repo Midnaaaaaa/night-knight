@@ -18,7 +18,7 @@ class Scene
 {
 
 public:
-	Scene();
+	Scene(int level);
 	~Scene();
 
 	void init();
@@ -38,6 +38,8 @@ private:
 	//void gameOver();
 
 private:
+	int level;
+
 	Texture bgSpritesheet, objectsSpritesheet, doorSpritesheet, particleSpritesheet;
 
 	Sprite *bg;
@@ -48,6 +50,8 @@ private:
 	float currentTime;
 	glm::mat4 projection;
 
+	Enemy* asesino;
+
 	Sprite* key;
 	Sprite* door;
 	Sprite* particleDoor;
@@ -57,7 +61,7 @@ private:
 	deque<Item> objects; 
 	int stageTimer, gameOverTimer, stageCompletedTimer;
 	bool gameOver, stageCompleted;
-	void(Scene::*timerFunc)();
+	//void(Scene::*timerFunc)();
 
 	Text text;
 };

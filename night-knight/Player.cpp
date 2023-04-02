@@ -202,7 +202,7 @@ void Player::update(int deltaTime)
 
 	if (damagedTimer > 0) {
 		damagedTimer -= deltaTime;
-		if (damagedTimer < 0) {
+		if (damagedTimer <= 0 && vidas > 0) {
 			respawn();
 		}
 	}
@@ -437,16 +437,20 @@ void Player::checkCollisionUnder() {
 void Player::muelto() {
 	if (godMode) return;
 	damagedTimer = DAMAGED_TIME;
-	addEffect(EFFECT_BLINK, DAMAGED_TIME);
 	moveSpeed = 0;
 	if(rightSight) sprite->changeAnimation(MUELTO);
 	else sprite->changeAnimation(MUELTO_MIRROR);
-	vidas--;
+	if (--vidas <= 0) {
+		morir();
+	}
+	else {
+		addEffect(EFFECT_BLINK, DAMAGED_TIME);
+	}
 }
 
 
 bool Player::isHurted() {
-	return damagedTimer > 0;
+	return damagedTimer > 0 || vidas <= 0;
 }
 
 bool Player::checkCollisionWithRect(const glm::ivec2& leftTop, const glm::ivec2& rightBottom, int type) {
@@ -481,4 +485,10 @@ void Player::increasePuntuacion(int valueToIncrease) {
 
 int Player::getPuntuacion() const {
 	return puntuacion;
+}
+
+void Player::morir()
+{
+	sprite->setAnimationParams(MUELTO, 3, false, 4);
+	sprite->setAnimationParams(MUELTO_MIRROR, 3, true, 4);
 }

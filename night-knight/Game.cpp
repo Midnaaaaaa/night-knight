@@ -9,12 +9,13 @@ void Game::init()
 	playing = false;
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	menu.init();
-	scene.init();
+	scene = new Scene(1);
+	scene->init();
 }
 
 bool Game::update(int deltaTime)
 {
-	if (playing) scene.update(deltaTime);
+	if (playing) scene->update(deltaTime);
 	else menu.update(deltaTime);
 	if (getKeyUp('m')) {
 		toggleMenu();
@@ -34,7 +35,7 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	if (playing) scene.render();
+	if (playing) scene->render();
 	else menu.render();
 }
 
@@ -97,11 +98,16 @@ void Game::toggleMenu() {
 
 void Game::exitLevel()
 {
-	scene.~Scene();
-	//Scene newScene();
-	scene = Scene();
-	scene.init();
+	delete scene;
+	scene = new Scene(1);
+	scene->init();
 	playing = false;
+}
+
+void Game::changeLevel(int level)
+{
+	scene = new Scene(level);
+	scene->init();
 }
 
 

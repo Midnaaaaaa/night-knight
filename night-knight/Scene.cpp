@@ -45,10 +45,11 @@ enum Items {
 
 
 
-Scene::Scene()
+Scene::Scene(int level)
 {
 	map = NULL;
 	player = NULL;
+	this->level = level;
 }
 
 Scene::~Scene()
@@ -67,7 +68,7 @@ Scene::~Scene()
 		delete e;
 	}
 	while (!objects.empty()) {
-		Item item = objects.front();
+		Item& item = objects.front();
 		objects.pop_front();
 		item.sprite->free();
 	}
@@ -84,9 +85,9 @@ void Scene::init()
 
 	initShaders();
 
-	map = TileMap::createTileMap("levels/level28.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/level" + to_string(level) + ".txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	objectsSpritesheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	bgSpritesheet.loadFromFile("images/bg28.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	bgSpritesheet.loadFromFile("images/bg" + to_string(level) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
 	doorSpritesheet.loadFromFile("images/door.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	particleSpritesheet.loadFromFile("images/particles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
@@ -167,9 +168,9 @@ void Scene::update(int deltaTime)
 	}
 	else if (gameOver) {
 		gameOverTimer -= deltaTime;
-
+		player->update(deltaTime);
 		if (gameOverTimer <= 0) {
-			Game::instance().toggleMenu();
+			Game::instance().exitLevel();
 		}
 		return;
 	}
@@ -226,6 +227,7 @@ void Scene::update(int deltaTime)
 		glm::ivec2 bottomRight = topLeft + e->getColliderSize();
 		if (!player->isHurted()) {
 			bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);
+			if (wasHit) asesino = e;
 		}
 	}
 
@@ -304,6 +306,12 @@ void Scene::update(int deltaTime)
 void Scene::render()
 {
 	//Render de game over
+
+	if (gameOver) {
+		player->render();
+		if (asesino != nullptr) asesino->render();
+		return;
+	}
 
 	//La misma camara ortogonal para TODOS
 	texProgram.use();
