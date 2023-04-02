@@ -5,9 +5,9 @@ enum CharacterAnims
 	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT
 };
 
-void Fantasma::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram) {
-	Character::init(tileMapPos, rightSight, spriteFile, colliderSize, colliderOffset, pixelSize, texSize, shaderProgram);
-	addEffect(EFFECT_SIN_Y, 120 * 1000);
+void Fantasma::init(const glm::ivec2& tileMapPos, bool rightSight, ShaderProgram& shaderProgram) {
+	Character::init(tileMapPos, rightSight, "images/ghost.png", glm::ivec2(19, 27), glm::ivec2(14, 3), glm::ivec2(32, 32), glm::vec2(1 / 8.f, 1 / 2.f), shaderProgram);
+	addEffect(EFFECT_SIN_Y, 200 * 1000);
 }
 
 

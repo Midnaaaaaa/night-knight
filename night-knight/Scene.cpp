@@ -107,21 +107,21 @@ void Scene::init()
 
 	//Enemigos
 	Vampir *prueba = new Vampir();
-	prueba->init(glm::ivec2(SCREEN_X, SCREEN_Y), false, "images/bat.png", glm::ivec2(21, 27), glm::ivec2(25, 37), glm::ivec2(64, 64), glm::vec2(1 / 8.f, 1 / 8.f), texProgram);
+	prueba->init(glm::ivec2(SCREEN_X, SCREEN_Y), false, texProgram);
 	prueba->setPosition(glm::vec2(10 * map->getTileSize(), 1 * map->getTileSize()));
 	prueba->setTileMap(map);
 	enemies.push_back(prueba);
 
 	
 	Fantasma* prueba1 = new Fantasma();
-	prueba1->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/ghost.png",  glm::ivec2(19, 27), glm::ivec2(14, 3), glm::ivec2(32, 32), glm::vec2(1 / 8.f, 1 / 2.f), texProgram);
+	prueba1->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, texProgram);
 	prueba1->setPosition(glm::vec2(10 * map->getTileSize(), 6 * map->getTileSize()));
 	prueba1->setTileMap(map);
 	enemies.push_back(prueba1);
 	
 
 	Esquelet* prueba2 = new Esquelet();
-	prueba2->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/esquelet.png", glm::ivec2(32, 32), glm::ivec2(0, 0), glm::ivec2(32, 32), glm::vec2(1 / 6.f, 1 / 2.f), texProgram);
+	prueba2->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, texProgram);
 	prueba2->setPosition(glm::vec2(10 * map->getTileSize(), 6 * map->getTileSize()));
 	prueba2->setTileMap(map);
 	enemies.push_back(prueba2);

@@ -7,8 +7,8 @@ enum CharacterAnims
 };
 
 
-void Vampir::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram) {
-	Character::init(tileMapPos, rightSight, spriteFile, colliderSize, colliderOffset, pixelSize, texSize, shaderProgram);
+void Vampir::init(const glm::ivec2& tileMapPos, bool rightSight, ShaderProgram& shaderProgram) {
+	Character::init(tileMapPos, rightSight, "images/bat.png", glm::ivec2(21, 27), glm::ivec2(25, 37), glm::ivec2(64, 64), glm::vec2(1 / 8.f, 1 / 8.f), shaderProgram);
 	isBat = false;
 	wantsToTransform = false;
 	goesUp = true;
