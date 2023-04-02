@@ -32,12 +32,13 @@ private:
 	Item spawnHourglass(glm::vec2 pos);
 	Item spawnGem(glm::vec2 pos);
 	Item spawnClock(glm::vec2 pos);
+	void spawnDoorParticle(glm::vec2 pos);
 	//void executeFunction(void(Scene::*)());
 
 	//void gameOver();
 
 private:
-	Texture bgSpritesheet, objectsSpritesheet, doorSpritesheet;
+	Texture bgSpritesheet, objectsSpritesheet, doorSpritesheet, particleSpritesheet;
 
 	Sprite *bg;
 	TileMap *map;
@@ -49,13 +50,13 @@ private:
 
 	Sprite* key;
 	Sprite* door;
-
+	Sprite* particleDoor;
 
 	bool keyCollected;
 	int spawnTimer = -1, despawnTimer = -1;
 	deque<Item> objects; 
-	int stageTimer, gameOverTimer;
-	bool gameOver;
+	int stageTimer, gameOverTimer, stageCompletedTimer;
+	bool gameOver, stageCompleted;
 	void(Scene::*timerFunc)();
 
 	Text text;
