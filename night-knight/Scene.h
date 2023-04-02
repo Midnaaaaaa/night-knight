@@ -33,6 +33,7 @@ private:
 	Item spawnGem(glm::vec2 pos);
 	Item spawnClock(glm::vec2 pos);
 	void spawnDoorParticle(glm::vec2 pos);
+	void spawnCor();
 	//void executeFunction(void(Scene::*)());
 
 	//void gameOver();
@@ -40,7 +41,7 @@ private:
 private:
 	int level;
 
-	Texture bgSpritesheet, objectsSpritesheet, doorSpritesheet, particleSpritesheet;
+	Texture bgSpritesheet, objectsSpritesheet, doorSpritesheet, particleSpritesheet, corSpritesheet;
 
 	Sprite *bg;
 	TileMap *map;
@@ -55,6 +56,10 @@ private:
 	Sprite* key;
 	Sprite* door;
 	Sprite* particleDoor;
+	Sprite* cor;
+
+	glm::vec2 doorPos, keyPos, initPlayerPos;
+
 
 	bool keyCollected;
 	int spawnTimer = -1, despawnTimer = -1;

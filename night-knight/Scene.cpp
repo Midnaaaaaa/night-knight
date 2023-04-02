@@ -18,8 +18,7 @@
 #define SCREEN_X 32*2
 #define SCREEN_Y 16*2
 
-#define INIT_PLAYER_X_TILES 2
-#define INIT_PLAYER_Y_TILES 9
+
 
 
 enum KeyAnimations {
@@ -42,6 +41,9 @@ enum Items {
 	HOURGLASS, GEM, CLOCK
 };
 
+enum CorAnimations{
+	COR_FULL, COR_75, COR_50, COR_POCHO	
+};
 
 
 
@@ -58,6 +60,8 @@ Scene::~Scene()
 		delete map;
 	if(player != NULL)
 		delete player;
+	if (cor != NULL)
+		delete cor;
 	if (key != nullptr) {
 		key->free();
 	}
@@ -81,7 +85,7 @@ void Scene::init()
 	stageTimer = 60000;
 	stageCompleted = false;
 	stageCompletedTimer = 4000;
-	gameOverTimer = 4000;
+	gameOverTimer = 5000;
 
 	initShaders();
 
@@ -90,10 +94,14 @@ void Scene::init()
 	bgSpritesheet.loadFromFile("images/bg" + to_string(level) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
 	doorSpritesheet.loadFromFile("images/door.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	particleSpritesheet.loadFromFile("images/particles.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	corSpritesheet.loadFromFile("images/cor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	bg = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(32*map->getTileSize(), 22*map->getTileSize()), glm::ivec2(1,1), &bgSpritesheet, &texProgram);
 	//bg->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
 	
+	initPlayerPos = glm::vec2(2, 9);
+	doorPos = glm::vec2(20, 3);
+	keyPos = glm::vec2(28.5, 18.5);
 
 	//Enemigos
 	Vampir *prueba = new Vampir();
@@ -129,6 +137,7 @@ void Scene::init()
 	//Objetos (sprites)
 	key = nullptr;
 	spawnDoor();
+	spawnCor();
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
@@ -310,6 +319,9 @@ void Scene::render()
 	if (gameOver) {
 		player->render();
 		if (asesino != nullptr) asesino->render();
+		if (gameOverTimer <= 3000) {
+			text.render("GAME    OVER", glm::vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 32, glm::vec4(1, 1, 1, 1), Text::CENTERED);
+		}
 		return;
 	}
 
@@ -333,6 +345,7 @@ void Scene::render()
 	map->render();
 	door->render();
 	player->render();
+	cor->render();
 	if (particleDoor != nullptr) {
 		particleDoor->render();
 	}
@@ -352,21 +365,23 @@ void Scene::render()
 	}
 
 	//Render de num vidas
-	text.render(to_string(player->getVidas()), glm::vec2(SCREEN_X, 30.f), 32, glm::vec4(1, 1, 1, 1));
+	text.render("x" + to_string(player->getVidas()), glm::vec2(SCREEN_X + 26, 30.f), 26, glm::vec4(1, 1, 1, 1));
 	
 	//Render de puntuacion
 	stringstream ss;
 
-	ss << setw(5) << setfill('0') << player->getPuntuacion();
-	text.render(ss.str(), glm::vec2(100.f, 30.f), 32, glm::vec4(1, 1, 1, 1));
+	ss << setw(6) << setfill('0') << player->getPuntuacion();
+	text.render(ss.str(), glm::vec2(150.f, 30.f), 26, glm::vec4(1, 1, 1, 1));
 
 
 
 	text.render(to_string(stageTimer/1000), glm::vec2(SCREEN_WIDTH/2, 30.f), 32, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 
 	if (stageCompletedTimer <= 3000 && stageCompleted) {
-		text.render("STAGE    CLEAR", glm::vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 32, glm::vec4(1, 1, 1, 1), Text::CENTERED);
+		text.render("STAGE    CLEAR", glm::vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 26, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 	}
+
+	text.render("STAGE " + to_string(level), glm::vec2(SCREEN_X + map->getTileSize() * 32, 30.f), 26, glm::vec4(1, 1, 1, 1), Text::RIGHT_ALIGNED);
 }
 
 void Scene::initShaders()
@@ -402,7 +417,7 @@ void Scene::initShaders()
 void Scene::spawnKey() {
 	key = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(16, 16), glm::vec2(1/8.f, 1/8.f), &objectsSpritesheet, &texProgram);
 	key->setDisplacement(glm::vec2(1 / 8.f * 2, 1 / 8.f * 1));
-	key->setPosition(glm::ivec2(28.5 * map->getTileSize(), 18.5 * map->getTileSize()));
+	key->setPosition(glm::ivec2(keyPos.x * map->getTileSize(), keyPos.y * map->getTileSize()));
 	key->addEffect(EFFECT_SIN_Y, 120 * 1000);
 }
 
@@ -410,7 +425,7 @@ void Scene::spawnKey() {
 void Scene::spawnDoor() {
 	door = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(32, 32), glm::vec2(1 / 4.f, 1 / 4.f), &doorSpritesheet, &texProgram);
 	door->setDisplacement(glm::vec2(0.0f, 0.0f));
-	door->setPosition(glm::ivec2(20 * map->getTileSize(), 3 * map->getTileSize()));
+	door->setPosition(glm::ivec2(doorPos.x * map->getTileSize(), doorPos.y * map->getTileSize()));
 	door->setNumberAnimations(2);
 	door->setAnimationParams(DOOR_CLOSED, 1, false);
 	door->addKeyframe(DOOR_CLOSED, glm::vec2(0.0f, 0.0f));
@@ -489,4 +504,21 @@ void Scene::spawnDoorParticle(glm::vec2 pos) {
 	particleDoor->addKeyframe(DOOR_PARTICLE, glm::vec2(1 / 16.f * 8, 0.0f));
 
 	particleDoor->changeAnimation(DOOR_PARTICLE);
+}
+
+void Scene::spawnCor()
+{
+	cor = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(27, 27), glm::vec2(1 / 8.f, 1/1.f), &corSpritesheet, &texProgram);
+	cor->setDisplacement(glm::vec2(1 / 8.f * 0, 0.0f));
+	cor->setPosition(glm::ivec2(0, -1.65 * map->getTileSize()));
+	cor->setNumberAnimations(4);
+	cor->setAnimationParams(COR_FULL, 1, false);
+	cor->addKeyframe(COR_FULL, glm::vec2(0, 0.0f));
+	cor->setAnimationParams(COR_75, 1, false);
+	cor->addKeyframe(COR_75, glm::vec2(1 / 8.f * 1, 0.0f));
+	cor->setAnimationParams(COR_50, 1, false);
+	cor->addKeyframe(COR_50, glm::vec2(1 / 8.f * 2, 0.0f));
+	cor->setAnimationParams(COR_POCHO, 1, false);
+	cor->addKeyframe(COR_POCHO, glm::vec2(1 / 8.f * 3, 0.0f));
+	cor->changeAnimation(COR_FULL);
 }
