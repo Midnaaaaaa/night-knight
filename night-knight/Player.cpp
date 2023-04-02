@@ -27,7 +27,7 @@ enum CharacterAnims
 
 void Player::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram) {
 	Character::init(tileMapPos, rightSight, spriteFile, colliderSize, colliderOffset, pixelSize, texSize, shaderProgram);
-	vidas = 3;
+	vidas = 4;
 	puntuacion = 0;
 	respawn();
 }
