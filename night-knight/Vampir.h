@@ -8,6 +8,8 @@ public:
 private:
 	virtual void loadAnimations();
 
+	virtual void updateTimers(int deltaTime);
+
 	void transformBat();
 	void transformVampir();
 
@@ -15,7 +17,7 @@ private:
 	bool wantsToTransform;
 	bool goesUp;
 
-	int timer;
+	int timer, transformTimer;
 
 };
 

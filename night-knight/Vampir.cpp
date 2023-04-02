@@ -1,5 +1,6 @@
 #include "Vampir.h"
 
+#define TRANSFORM_TIME 1000
 
 enum CharacterAnims
 {
@@ -44,7 +45,9 @@ void Vampir::update(int deltaTime) {
 	if (timer > 6500 && !wantsToTransform) {
 		if (isBat) wantsToTransform = true;
 		else {
-			transformBat();
+			//transformBat();
+			addEffect(EFFECT_SPAWN, TRANSFORM_TIME);
+			transformTimer = TRANSFORM_TIME/2;
 		}
 		timer = 0;
 	}
@@ -80,8 +83,11 @@ void Vampir::update(int deltaTime) {
 			bool collisionDown = map->collisionMoveDown(glm::ivec2(nextPos.x, nextPos.y + colliderSize.y - 1), colliderOffset, glm::ivec2(colliderSize.x, 1));
 
 
-			if (wantsToTransform && collisionDown) {
+			if (wantsToTransform && collisionDown && transformTimer == 0) {
 				transformVampir();
+				//Empieza la transformacion en el MAN, pero la skin le cambia luego
+				addEffect(EFFECT_SPAWN, TRANSFORM_TIME);
+				transformTimer = TRANSFORM_TIME/2;
 				nextPos.y = posCharacter.y; //No cambiamos la y
 			}
 			else if (goesUp && collisionUp || !goesUp && collisionDown) {
@@ -136,8 +142,9 @@ void Vampir::transformVampir() {
 	colliderSize = glm::ivec2(21, 27);
 	colliderOffset = glm::ivec2(25, 37);
 
-	if (rightSight && sprite->animation() != MOVE_RIGHT) sprite->changeAnimation(MOVE_RIGHT);
-	else if (!rightSight && sprite->animation() != MOVE_LEFT) sprite->changeAnimation(MOVE_LEFT);
+	//Cambio la animacion del MAN cuando se acabe el timer
+	//if (rightSight && sprite->animation() != MOVE_RIGHT) sprite->changeAnimation(MOVE_RIGHT);
+	//else if (!rightSight && sprite->animation() != MOVE_LEFT) sprite->changeAnimation(MOVE_LEFT);
 
 }
 
@@ -197,4 +204,19 @@ void Vampir::loadAnimations() {
 	sprite->addKeyframe(FLY_RIGHT, glm::vec2(1 / 8.f * 2, 1 / 8.f * 2));
 
 	sprite->changeAnimation(rightSight);
+}
+
+void Vampir::updateTimers(int deltaTime) {
+	if (transformTimer != 0) {
+		transformTimer -= deltaTime;
+		if (transformTimer <= 0) {
+			if (sprite->animation() == FLY_LEFT || sprite->animation() == FLY_RIGHT) {//transformVampir();
+				//Ya es MAN en verdad, pero con skin de Bat
+				if (rightSight && sprite->animation() != MOVE_RIGHT) sprite->changeAnimation(MOVE_RIGHT);
+				else if (!rightSight && sprite->animation() != MOVE_LEFT) sprite->changeAnimation(MOVE_LEFT);
+			}
+			else transformBat();
+			transformTimer = 0;
+		}
+	}
 }

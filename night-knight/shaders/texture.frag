@@ -11,6 +11,7 @@ out vec4 outColor;
 
 const float PI = 3.1415926535897932384626433832795;
 
+const int effect3Duration = 1000;
 
 void main()
 {
@@ -27,7 +28,7 @@ void main()
 			discard;
 	}
     else if (effectId == 3) { //?
-        texCoord.x = texCoord.x + sin((effectTimer)/1000.f*2*PI + int( 100*texCoord.y*2*PI )) * 0.01 * sin(-effectTimer * (PI/4000.f));
+        texCoord.x = texCoord.x + sin((effectTimer)/1000.f*2*PI + int( 100*texCoord.y*2*PI )) * 0.01 * sin(-effectTimer * (PI/(effect3Duration*1.f)));
     }
 
 	vec4 texColor = texture(tex, texCoord);
