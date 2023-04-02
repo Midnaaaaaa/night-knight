@@ -20,7 +20,7 @@
 
 enum CharacterAnims
 {
-	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT, JUMP_ASCENDING, JUMP_ASCENDING_RIGHT, JUMP_ASCENDING_LEFT, JUMP_ASCENDING_MIRROR, FALLING1, FALLING_MIRROR1, FALLING2, FALLING_MIRROR2, FALLING_NO_JUMP, FALLING_NO_JUMP_MIRROR, FALLING3, FALLING_MIRROR3, TOUCHING_GROUND, TOUCHING_GROUND_MIRROR, MUELTO
+	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT, JUMP_ASCENDING, JUMP_ASCENDING_RIGHT, JUMP_ASCENDING_LEFT, JUMP_ASCENDING_MIRROR, FALLING1, FALLING_MIRROR1, FALLING2, FALLING_MIRROR2, FALLING_NO_JUMP, FALLING_NO_JUMP_MIRROR, FALLING3, FALLING_MIRROR3, TOUCHING_GROUND, TOUCHING_GROUND_MIRROR, MUELTO, MUELTO_MIRROR
 };
 
 void Player::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram) {
@@ -31,7 +31,7 @@ void Player::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFi
 }
 
 void Player::loadAnimations() {
-	sprite->setNumberAnimations(21);
+	sprite->setNumberAnimations(22);
 
 	sprite->setAnimationParams(STAND_LEFT, 4, true);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.0f, 0.0f));
@@ -178,6 +178,13 @@ void Player::loadAnimations() {
 	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 13, 1 / 16.f * 2));
 	sprite->addKeyframe(MUELTO, glm::vec2(1 / 16.f * 14, 1 / 16.f * 2));
 
+	sprite->setAnimationParams(MUELTO_MIRROR, 16, true, 4);
+	sprite->addKeyframe(MUELTO_MIRROR, glm::vec2(1 / 16.f * 10, 1 / 16.f * 2));
+	sprite->addKeyframe(MUELTO_MIRROR, glm::vec2(1 / 16.f * 11, 1 / 16.f * 2));
+	sprite->addKeyframe(MUELTO_MIRROR, glm::vec2(1 / 16.f * 12, 1 / 16.f * 2));
+	sprite->addKeyframe(MUELTO_MIRROR, glm::vec2(1 / 16.f * 13, 1 / 16.f * 2));
+	sprite->addKeyframe(MUELTO_MIRROR, glm::vec2(1 / 16.f * 14, 1 / 16.f * 2));
+
 	sprite->changeAnimation(STAND_RIGHT);
 }
 
@@ -241,7 +248,7 @@ void Player::update(int deltaTime)
 			jumpAngle = (180 - jumpAngle);
 		}
 
-		if(jumpAngle == 180 && sprite->animation() != MUELTO)
+		if(jumpAngle == 180 && sprite->animation() != MUELTO && sprite->animation() != MUELTO_MIRROR)
 		{
 			bJumping = false;
 			posCharacter.y = startY;
@@ -263,7 +270,7 @@ void Player::update(int deltaTime)
 			}
 		}
 		//Cambiar animaciones de salto
-		if (jumpAngle < 90 && sprite->animation() != MUELTO) {
+		if (jumpAngle < 90 && sprite->animation() != MUELTO && sprite->animation() != MUELTO_MIRROR) {
 			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
 				rightSight = true;
 				sprite->changeAnimation(JUMP_ASCENDING_RIGHT);
@@ -281,7 +288,7 @@ void Player::update(int deltaTime)
 				else if(!rightSight && sprite->animation() != JUMP_ASCENDING_MIRROR) sprite->changeAnimation(JUMP_ASCENDING_MIRROR);
 			}
 		}
-		else if (jumpAngle < 135 && sprite->animation() != MUELTO) {
+		else if (jumpAngle < 135 && sprite->animation() != MUELTO && sprite->animation() != MUELTO_MIRROR) {
 			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
 				rightSight = true;
 				sprite->changeAnimation(FALLING1);
@@ -295,7 +302,7 @@ void Player::update(int deltaTime)
 				else sprite->changeAnimation(FALLING_MIRROR1);
 			}
 		}
-		else if (jumpAngle < 150 && sprite->animation() != MUELTO) {
+		else if (jumpAngle < 150 && sprite->animation() != MUELTO && sprite->animation() != MUELTO_MIRROR) {
 			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
 				rightSight = true;
 				sprite->changeAnimation(FALLING2);
@@ -309,7 +316,7 @@ void Player::update(int deltaTime)
 				else sprite->changeAnimation(FALLING_MIRROR2);
 			}
 		}
-		else if (jumpAngle > 150 && jumpAngle < 180 && sprite->animation() != MUELTO) {
+		else if (jumpAngle > 150 && jumpAngle < 180 && sprite->animation() != MUELTO && sprite->animation() != MUELTO_MIRROR) {
 			if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
 				rightSight = true;
 				sprite->changeAnimation(FALLING3);
@@ -330,7 +337,7 @@ void Player::update(int deltaTime)
 		checkCollisionUnder();
 
 		//Colision con suelo fuera del salto
-		if(map->collisionMoveDown(posCharacter, colliderOffset, colliderSize, &posCharacter.y) != 0 && sprite->animation() != MUELTO)
+		if(map->collisionMoveDown(posCharacter, colliderOffset, colliderSize, &posCharacter.y) != 0 && sprite->animation() != MUELTO && sprite->animation() != MUELTO_MIRROR)
 		{
 			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
@@ -383,7 +390,7 @@ void Player::update(int deltaTime)
 				else if (animMirror != -1 && !rightSight && (sprite->animation() != animMirror)) sprite->changeAnimation(animMirror, startFrame);
 			}
 		}
-		else if (sprite->animation() != MUELTO) {
+		else if (sprite->animation() != MUELTO && sprite->animation() != MUELTO_MIRROR) {
 			if (rightSight) {
 				if (sprite->animation() != FALLING_NO_JUMP) sprite->changeAnimation(FALLING_NO_JUMP);
 			}
@@ -432,7 +439,8 @@ void Player::muelto() {
 	damagedTimer = DAMAGED_TIME;
 	addEffect(EFFECT_BLINK, DAMAGED_TIME);
 	moveSpeed = 0;
-	sprite->changeAnimation(MUELTO);
+	if(rightSight) sprite->changeAnimation(MUELTO);
+	else sprite->changeAnimation(MUELTO_MIRROR);
 	vidas--;
 }
 
