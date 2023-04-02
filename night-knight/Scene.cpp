@@ -80,6 +80,7 @@ void Scene::init()
 	stageTimer = 60000;
 	stageCompleted = false;
 	stageCompletedTimer = 4000;
+	gameOverTimer = 4000;
 
 	initShaders();
 
@@ -154,23 +155,25 @@ void Scene::update(int deltaTime)
 				enemies.pop_back();
 			}
 		}
-		
-
 		if (stageTimer / 1000 > 0 && stageCompletedTimer <= 1000) {
-			int aux = stageTimer / 1000;
-			stageTimer -= deltaTime * 20;
-			player->increasePuntuacion((aux - stageTimer/1000)*10);
+			int stageTimerActual = stageTimer / 1000;
+			stageTimer -= deltaTime * 20; 
+			player->increasePuntuacion((stageTimerActual - stageTimer/1000)*10);
 		}
 		if (stageCompletedTimer <= 0) {
+			
 		}
-
 		return;
 	}
 	else if (gameOver) {
+		gameOverTimer -= deltaTime;
 
+		if (gameOverTimer <= 0) {
+			Game::instance().toggleMenu();
+		}
 		return;
 	}
-
+	
 	stageTimer -= deltaTime;
 	if (spawnTimer == -1) {
 		spawnTimer = rand() % (MAX_TIME_WITHOUT_SPAWN - MIN_TIME_WITHOUT_SPAWN + 1) + MIN_TIME_WITHOUT_SPAWN;
@@ -214,13 +217,6 @@ void Scene::update(int deltaTime)
 	}
 	if (Game::instance().getKeyUp('g')) {
 		player->setGodMode(!player->inGodMode());
-	}
-
-	if (gameOver) {
-		//Esperar unos segundos, seguimos actualizando todo
-
-		//Ya ha pasado el tiempo, ya no actualizamos
-		if (currentTime - gameOverTimer < 0) return;
 	}
 
 	for (Enemy* e : enemies)
@@ -302,15 +298,13 @@ void Scene::update(int deltaTime)
 	//	timer = 4000;
 	//	timerFunc = gameOver;
 	//}
+	
 }
 
 void Scene::render()
 {
 	//Render de game over
-	if (gameOver) {
 
-		return;
-	}
 	//La misma camara ortogonal para TODOS
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
