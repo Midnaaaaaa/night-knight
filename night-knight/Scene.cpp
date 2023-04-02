@@ -21,6 +21,7 @@
 #define INIT_PLAYER_X_TILES 2
 #define INIT_PLAYER_Y_TILES 9
 
+
 enum KeyAnimations {
 	IDLE_KEY
 };
@@ -80,8 +81,7 @@ Scene::~Scene()
 
 void Scene::init()
 {
-	pauseTimer = 0;
-	timer = 0;
+	stageTimer = 60000;
 
 	initShaders();
 
@@ -144,6 +144,7 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
+	stageTimer -= deltaTime;
 
 	//UPDATE TIMERS
 	//if (timer >= currentTime) {
@@ -211,7 +212,6 @@ void Scene::update(int deltaTime)
 		glm::ivec2 topLeft = e->getColliderPos();
 		glm::ivec2 bottomRight = topLeft + e->getColliderSize();
 		if (!player->isHurted()) {
-			//1 means TYPE_ENEMY
 			bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);
 		}
 	}
@@ -252,7 +252,7 @@ void Scene::update(int deltaTime)
 				}
 				break;
 			case CLOCK:
-				//poner el timer del stage a full;
+				stageTimer += 15000;
 				break;
 			}
 			it->sprite->free();
@@ -260,8 +260,6 @@ void Scene::update(int deltaTime)
 			if (it == objects.end()) break;
 		}
 	}
-
-
 
 	door->update(deltaTime);
 	//Colision puerta
@@ -272,6 +270,10 @@ void Scene::update(int deltaTime)
 			//HACER QUE ACABE EL NIVEL
 		}
 	}
+
+	if (stageTimer <= 0 || player->isGameOver()) gameOver = true;
+
+
 }
 
 void Scene::render()
@@ -317,12 +319,14 @@ void Scene::render()
 	}
 
 	//Render de num vidas
-	text.render(to_string(player->getVidas()), glm::vec2(50.f, 50.f), 32, glm::vec4(1, 1, 1, 1));
+	text.render(to_string(player->getVidas()), glm::vec2(SCREEN_X, 30.f), 32, glm::vec4(1, 1, 1, 1));
 	
 	//Render de puntuacion
 	stringstream ss;
 	ss << setw(5) << setfill('0') << player->getPuntuacion();
-	text.render(ss.str(), glm::vec2(100.f, 50.f), 32, glm::vec4(1, 1, 1, 1));
+	text.render(ss.str(), glm::vec2(100.f, 30.f), 32, glm::vec4(1, 1, 1, 1));
+
+	text.render(to_string(stageTimer/1000), glm::vec2(SCREEN_WIDTH/2, 30.f), 32, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 
 }
 
