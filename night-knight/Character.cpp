@@ -101,7 +101,7 @@ void Character::addEffect(int id, int duration, int delay) {
 void Character::updateTimers(int deltaTime) {
 	if (freezeTimer != 0) {
 		freezeTimer -= deltaTime;
-		if (freezeTimer < 0) {
+		if (freezeTimer <= 0) {
 			moveSpeed = moveSpeedBase;
 			freezeTimer = 0;
 		}
