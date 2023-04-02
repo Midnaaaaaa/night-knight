@@ -14,6 +14,9 @@
 // This class is derived from code seen earlier in TexturedQuad but it is also
 // able to manage animations stored as a spritesheet. 
 
+enum Effects {
+	EFFECT_BLINK, EFFECT_SHAKE, EFFECT_SIN_Y
+};
 
 class Sprite
 {
@@ -44,6 +47,7 @@ public:
 	glm::vec2 getSpriteSize();
 
 	void addEffect(int id, int duration, int delay = 0);
+	void refreshFreezeEffect(int duration, int delay);
 
 private:
 	void updateTimers(int deltaTime);
@@ -61,7 +65,7 @@ private:
 	glm::vec2 spriteSize;
 	glm::vec2 sizeOfEachTile;
 
-	stack<Effect> effectStack;
+	deque<Effect> effectStack;
 
 
 };
