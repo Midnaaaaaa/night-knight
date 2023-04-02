@@ -9,8 +9,8 @@
 #include <iomanip>
 #include <sstream>
 
-#define MIN_TIME_WITHOUT_SPAWN 1  * 1000
-#define MAX_TIME_WITHOUT_SPAWN 1 * 1000
+#define MIN_TIME_WITHOUT_SPAWN 8  * 1000
+#define MAX_TIME_WITHOUT_SPAWN 16 * 1000
 
 #define MIN_TIME_TO_DESPAWN 4  * 1000
 #define MAX_TIME_TO_DESPAWN 8 * 1000
@@ -145,7 +145,8 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 
 	if (stageCompleted) {
-
+		stageCompletedTimer -= deltaTime;
+		if (particleDoor != nullptr) particleDoor->update(deltaTime);
 		if (stageCompletedTimer <= 3500 && stageCompletedTimer >= 3000) {
 			for (int i = enemies.size() - 1; i >= 0; --i)
 			{
@@ -153,18 +154,13 @@ void Scene::update(int deltaTime)
 				enemies.pop_back();
 			}
 		}
-		//else if (stageCompletedTimer <= 2500 && stageCompletedTimer >= 2000) {
-		//	if (particleDoor == nullptr) {
-		//		glm::vec2 pos = player->getPosition();
-		//		spawnDoorParticle(pos);
-		//	}
-		//}
-		if (particleDoor != nullptr) particleDoor->update(deltaTime);
+		
 
-		//texto de stage clear
-		//suma de puntos
-
-		stageCompletedTimer -= deltaTime;
+		if (stageTimer / 1000 > 0 && stageCompletedTimer <= 1000) {
+			int aux = stageTimer / 1000;
+			stageTimer -= deltaTime * 20;
+			player->increasePuntuacion((aux - stageTimer/1000)*10);
+		}
 		if (stageCompletedTimer <= 0) {
 		}
 	}
@@ -358,12 +354,15 @@ void Scene::render()
 	
 	//Render de puntuacion
 	stringstream ss;
+
 	ss << setw(5) << setfill('0') << player->getPuntuacion();
 	text.render(ss.str(), glm::vec2(100.f, 30.f), 32, glm::vec4(1, 1, 1, 1));
 
+
+
 	text.render(to_string(stageTimer/1000), glm::vec2(SCREEN_WIDTH/2, 30.f), 32, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 
-	if (stageCompletedTimer <= 3000) {
+	if (stageCompletedTimer <= 3000 && stageCompleted) {
 		text.render("STAGE    CLEAR", glm::vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 32, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 	}
 }
