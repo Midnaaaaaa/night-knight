@@ -18,7 +18,7 @@
 #define SCREEN_X 32*2
 #define SCREEN_Y 16*2
 
-#define STAGE_TIMER 10000
+#define STAGE_TIMER 60000
 
 
 
