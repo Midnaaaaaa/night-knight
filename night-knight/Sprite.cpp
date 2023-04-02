@@ -84,6 +84,16 @@ void Sprite::render() const
 		effectTimer = e.timer;
 	}
 
+	int shakeCount = 0;
+	int menouno = 0;
+	for (const Effect& e : effectStack) {
+		if (e.id == EFFECT_SHAKE) ++shakeCount;
+		if (e.id == -1) ++menouno;
+		if (shakeCount > 1 || menouno > 1) {
+			cout << endl;
+		}
+	}
+
 	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(position.x + tileMapDispl.x, position.y + tileMapDispl.y, 0.f));
 	shaderProgram->use();
 	shaderProgram->setUniformMatrix4f("modelview", modelview);
@@ -243,7 +253,7 @@ void Sprite::updateTimers(int deltaTime) {
 		Effect& e = effectStack.back();
 		if (e.timer > 0) {
 			e.timer -= deltaTime;
-			if (e.timer < 0) {
+			if (e.timer <= 0) {
 				effectStack.pop_back();
 			}
 		}
