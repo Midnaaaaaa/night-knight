@@ -12,6 +12,9 @@ void main()
 	// Use minTexCoord and maxTexCoord to determine the sample textures coordinates
 	// inside the font texture atlas. Use that texel to determine transparency
 	// combining it with the incoming color.
+
+	if(mod(int(gl_FragCoord.y),2) != 0) discard;
+
 	vec2 texCoord = texCoordFrag * (maxTexCoord - minTexCoord) + minTexCoord;
 	outColor = color * vec4(1, 1, 1, texture(tex, texCoord).r);
 }

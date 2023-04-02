@@ -14,6 +14,9 @@ void main()
 	// Discard fragment if texture sample has alpha < 0.5
 	// otherwise compose the texture sample with the fragment's interpolated color
 
+
+	if(mod(int(gl_FragCoord.y),2) != 0) discard;
+
 	vec2 texCoord = texCoordFrag;
 
 	if (effectId == 0) { //Blink
@@ -24,6 +27,7 @@ void main()
 	vec4 texColor = texture(tex, texCoord);
 	if(texColor.a < 0.5f)
 		discard;
+
 	outColor = color * texColor;
 }
 
