@@ -54,7 +54,7 @@ private:
 	bool keyCollected;
 	int spawnTimer = -1, despawnTimer = -1;
 	deque<Item> objects; 
-	int timer, pauseTimer, gameOverTimer;
+	int stageTimer, gameOverTimer;
 	bool gameOver;
 	void(Scene::*timerFunc)();
 
