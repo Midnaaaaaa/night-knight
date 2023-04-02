@@ -30,11 +30,11 @@ public:
 	int getPuntuacion() const;
 
 	void morir();
+	void muelto();
 
 private:
 	virtual void loadAnimations();
 	void respawn();
-	void muelto();
 
 	//bool damaged = false;
 	int damagedTimer;

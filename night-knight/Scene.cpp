@@ -18,6 +18,8 @@
 #define SCREEN_X 32*2
 #define SCREEN_Y 16*2
 
+#define STAGE_TIMER 10000
+
 
 
 
@@ -82,7 +84,7 @@ Scene::~Scene()
 
 void Scene::init()
 {
-	stageTimer = 60000;
+	stageTimer = STAGE_TIMER;
 	stageCompleted = false;
 	stageCompletedTimer = 4000;
 	gameOverTimer = 5000;
@@ -296,8 +298,11 @@ void Scene::update(int deltaTime)
 			spawnDoorParticle(pos);
 		}
 	}
-
-	if (stageTimer <= 0 || player->isGameOver()) gameOver = true;
+	if (player->isGameOver() || stageTimer <= 0 && player->getVidas() == 1) gameOver = true;
+	else if (stageTimer <= 0) {
+		player->muelto();
+		stageTimer = STAGE_TIMER;
+	}
 
 
 	//UPDATE TIMERS
@@ -376,8 +381,16 @@ void Scene::render()
 	text.render(ss.str(), glm::vec2(150.f, 30.f), 26, glm::vec4(1, 1, 1, 1));
 
 
+	if (stageTimer < 20000 && stageTimer > 5000) {
+		text.render(to_string(stageTimer / 1000), glm::vec2(SCREEN_WIDTH / 2, 30.f), 32, glm::vec4(1, 1, 0, 1), Text::CENTERED);
+	}
+	else if (stageTimer < 5000){
+		text.render(to_string(stageTimer / 1000), glm::vec2(SCREEN_WIDTH / 2, 30.f), 32, glm::vec4(0.7, 0.2, 0.1, 1), Text::CENTERED);
+	}
+	else {
+		text.render(to_string(stageTimer / 1000), glm::vec2(SCREEN_WIDTH / 2, 30.f), 32, glm::vec4(1, 1, 1, 1), Text::CENTERED);
+	}
 
-	text.render(to_string(stageTimer/1000), glm::vec2(SCREEN_WIDTH/2, 30.f), 32, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 
 	if (stageCompletedTimer <= 3000 && stageCompleted) {
 		text.render("STAGE    CLEAR", glm::vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 26, glm::vec4(1, 1, 1, 1), Text::CENTERED);
