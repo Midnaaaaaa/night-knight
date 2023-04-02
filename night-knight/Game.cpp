@@ -95,5 +95,14 @@ void Game::toggleMenu() {
 	playing = !playing;
 }
 
+void Game::exitLevel()
+{
+	scene.~Scene();
+	//Scene newScene();
+	scene = Scene();
+	scene.init();
+	playing = false;
+}
+
 
 

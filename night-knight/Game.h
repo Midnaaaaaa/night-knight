@@ -50,6 +50,8 @@ public:
 
 	void toggleMenu();
 
+	void exitLevel();
+
 private:
 	bool playing;
 	bool bPlay;                       // Continue to play game?

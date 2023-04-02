@@ -163,145 +163,145 @@ void Scene::update(int deltaTime)
 		}
 		if (stageCompletedTimer <= 0) {
 		}
+
+		return;
 	}
 	else if (gameOver) {
 
 		return;
 	}
-	else {
-		stageTimer -= deltaTime;
-		if (spawnTimer == -1) {
-			spawnTimer = rand() % (MAX_TIME_WITHOUT_SPAWN - MIN_TIME_WITHOUT_SPAWN + 1) + MIN_TIME_WITHOUT_SPAWN;
-			spawnTimer += currentTime;
+
+	stageTimer -= deltaTime;
+	if (spawnTimer == -1) {
+		spawnTimer = rand() % (MAX_TIME_WITHOUT_SPAWN - MIN_TIME_WITHOUT_SPAWN + 1) + MIN_TIME_WITHOUT_SPAWN;
+		spawnTimer += currentTime;
+	}
+	if (currentTime >= spawnTimer) {
+		int objectToSpawn = rand() % 3;
+		glm::ivec2 platform = map->getRandomPlatform();
+		switch (objectToSpawn)
+		{
+		case HOURGLASS:
+			Item hourglass = spawnHourglass(glm::vec2(platform.x + 0.5, platform.y - 1.5));
+			objects.push_back(hourglass);
+			break;
+		case GEM:
+			Item gem = spawnGem(glm::vec2(platform.x + 0.5, platform.y - 1.5));
+			objects.push_back(gem);
+			break;
+		case CLOCK:
+			Item clock = spawnClock(glm::vec2(platform.x + 0.5, platform.y - 1.5));
+			objects.push_back(clock);
+			break;
 		}
-		if (currentTime >= spawnTimer) {
-			int objectToSpawn = rand() % 3;
-			glm::ivec2 platform = map->getRandomPlatform();
-			switch (objectToSpawn)
+		despawnTimer = rand() % (MAX_TIME_TO_DESPAWN - MIN_TIME_TO_DESPAWN + 1) + MIN_TIME_TO_DESPAWN;
+		despawnTimer += currentTime;
+		spawnTimer = -1;
+	}
+	if (currentTime >= despawnTimer && despawnTimer != -1) {
+		if (!objects.empty()) {
+			Item obj;
+			obj = objects.front();
+			objects.pop_front();
+			obj.sprite->free();
+		}
+		despawnTimer = -1;
+	}
+
+
+	if (Game::instance().getKeyUp('k') && !keyCollected) {
+		spawnKey();
+	}
+	if (Game::instance().getKeyUp('g')) {
+		player->setGodMode(!player->inGodMode());
+	}
+
+	if (gameOver) {
+		//Esperar unos segundos, seguimos actualizando todo
+
+		//Ya ha pasado el tiempo, ya no actualizamos
+		if (currentTime - gameOverTimer < 0) return;
+	}
+
+	for (Enemy* e : enemies)
+	{
+		e->update(deltaTime);
+		glm::ivec2 topLeft = e->getColliderPos();
+		glm::ivec2 bottomRight = topLeft + e->getColliderSize();
+		if (!player->isHurted()) {
+			bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);
+		}
+	}
+
+	if (map->getNumOfTilesRemaining() == 0 && !keyCollected && key == nullptr) {
+		spawnKey();
+	}
+
+	player->update(deltaTime);
+
+	//Update llave
+	if (key != nullptr && !keyCollected) {
+		key->update(deltaTime);
+		glm::vec2 topLeft = key->getPosition();
+		glm::vec2 bottomRight = topLeft + key->getSpriteSize();
+		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
+			keyCollected = true;
+			key->free();
+			key = nullptr;
+			door->changeAnimation(DOOR_OPENED, 0);
+		}
+	}
+
+	for (std::deque<Item>::iterator it = objects.begin(); it != objects.end(); ++it) {
+		it->sprite->update(deltaTime);
+		glm::vec2 topLeft = it->sprite->getPosition();
+		glm::vec2 bottomRight = topLeft + it->sprite->getSpriteSize();
+		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
+			switch (it->id)
 			{
-			case HOURGLASS:
-				Item hourglass = spawnHourglass(glm::vec2(platform.x + 0.5, platform.y - 1.5));
-				objects.push_back(hourglass);
-				break;
 			case GEM:
-				Item gem = spawnGem(glm::vec2(platform.x + 0.5, platform.y - 1.5));
-				objects.push_back(gem);
+				player->increasePuntuacion(500);
+				break;
+			case HOURGLASS:
+				for (Enemy* e : enemies)
+				{
+					e->freeze(5000, true);
+				}
 				break;
 			case CLOCK:
-				Item clock = spawnClock(glm::vec2(platform.x + 0.5, platform.y - 1.5));
-				objects.push_back(clock);
+				stageTimer += 15000;
 				break;
 			}
-			despawnTimer = rand() % (MAX_TIME_TO_DESPAWN - MIN_TIME_TO_DESPAWN + 1) + MIN_TIME_TO_DESPAWN;
-			despawnTimer += currentTime;
-			spawnTimer = -1;
+			it->sprite->free();
+			it = objects.erase(it);
+			if (it == objects.end()) break;
 		}
-		if (currentTime >= despawnTimer && despawnTimer != -1) {
-			if (!objects.empty()) {
-				Item obj;
-				obj = objects.front();
-				objects.pop_front();
-				obj.sprite->free();
-			}
-			despawnTimer = -1;
-		}
-
-
-		if (Game::instance().getKeyUp('k') && !keyCollected) {
-			spawnKey();
-		}
-		if (Game::instance().getKeyUp('g')) {
-			player->setGodMode(!player->inGodMode());
-		}
-
-		if (gameOver) {
-			//Esperar unos segundos, seguimos actualizando todo
-
-			//Ya ha pasado el tiempo, ya no actualizamos
-			if (currentTime - gameOverTimer < 0) return;
-		}
-
-		for (Enemy* e : enemies)
-		{
-			e->update(deltaTime);
-			glm::ivec2 topLeft = e->getColliderPos();
-			glm::ivec2 bottomRight = topLeft + e->getColliderSize();
-			if (!player->isHurted()) {
-				bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);
-			}
-		}
-
-		if (map->getNumOfTilesRemaining() == 0 && !keyCollected && key == nullptr) {
-			spawnKey();
-		}
-
-		player->update(deltaTime);
-
-		//Update llave
-		if (key != nullptr && !keyCollected) {
-			key->update(deltaTime);
-			glm::vec2 topLeft = key->getPosition();
-			glm::vec2 bottomRight = topLeft + key->getSpriteSize();
-			if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
-				keyCollected = true;
-				key->free();
-				key = nullptr;
-				door->changeAnimation(DOOR_OPENED, 0);
-			}
-		}
-
-		for (std::deque<Item>::iterator it = objects.begin(); it != objects.end(); ++it) {
-			it->sprite->update(deltaTime);
-			glm::vec2 topLeft = it->sprite->getPosition();
-			glm::vec2 bottomRight = topLeft + it->sprite->getSpriteSize();
-			if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
-				switch (it->id)
-				{
-				case GEM:
-					player->increasePuntuacion(500);
-					break;
-				case HOURGLASS:
-					for (Enemy* e : enemies)
-					{
-						e->freeze(5000, true);
-					}
-					break;
-				case CLOCK:
-					stageTimer += 15000;
-					break;
-				}
-				it->sprite->free();
-				it = objects.erase(it);
-				if (it == objects.end()) break;
-			}
-		}
-
-		door->update(deltaTime);
-		//Colision puerta
-		if (door->animation() == DOOR_OPENED) {
-			glm::vec2 topLeft = door->getPosition();
-			glm::vec2 bottomRight = topLeft + door->getSpriteSize();
-			if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
-				stageCompleted = true;
-				glm::vec2 pos = player->getPosition();
-				spawnDoorParticle(pos);
-			}
-		}
-
-		if (stageTimer <= 0 || player->isGameOver()) gameOver = true;
-
-		return;
-
-		//UPDATE TIMERS
-		//if (timer >= currentTime) {
-		//	(this->*timerFunc)();
-		//}
-
-		//if (player->isGameOver()) {
-		//	timer = 4000;
-		//	timerFunc = gameOver;
-		//}
 	}
+
+	door->update(deltaTime);
+	//Colision puerta
+	if (door->animation() == DOOR_OPENED) {
+		glm::vec2 topLeft = door->getPosition();
+		glm::vec2 bottomRight = topLeft + door->getSpriteSize();
+		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
+			stageCompleted = true;
+			glm::vec2 pos = player->getPosition();
+			spawnDoorParticle(pos);
+		}
+	}
+
+	if (stageTimer <= 0 || player->isGameOver()) gameOver = true;
+
+
+	//UPDATE TIMERS
+	//if (timer >= currentTime) {
+	//	(this->*timerFunc)();
+	//}
+
+	//if (player->isGameOver()) {
+	//	timer = 4000;
+	//	timerFunc = gameOver;
+	//}
 }
 
 void Scene::render()
@@ -330,7 +330,7 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	door->render();
-	if(player != nullptr) player->render();
+	player->render();
 	if (particleDoor != nullptr) {
 		particleDoor->render();
 	}

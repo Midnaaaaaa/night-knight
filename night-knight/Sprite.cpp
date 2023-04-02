@@ -84,6 +84,7 @@ void Sprite::render() const
 		effectTimer = e.timer;
 	}
 
+	//--------------------DEBUG-------------------------
 	int shakeCount = 0;
 	int menouno = 0;
 	for (const Effect& e : effectStack) {
@@ -93,6 +94,8 @@ void Sprite::render() const
 			cout << endl;
 		}
 	}
+	//--------------------DEBUG-------------------------
+
 
 	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(position.x + tileMapDispl.x, position.y + tileMapDispl.y, 0.f));
 	shaderProgram->use();
