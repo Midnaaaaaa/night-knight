@@ -43,9 +43,10 @@ Sprite::Sprite(const glm::vec2& tileMapPos, const glm::vec2 &quadSize, const glm
 //	free();
 //}
 
-void Sprite::update(int deltaTime)
+void Sprite::update(int deltaTime, bool freeze)
 {
-	if(currentAnimation >= 0)
+	updateTimers(deltaTime);
+	if(currentAnimation >= 0 && !freeze)
 	{
 		timeAnimation += deltaTime;
 		while(timeAnimation > animations[currentAnimation].millisecsPerKeyframe)

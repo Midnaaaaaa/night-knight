@@ -25,7 +25,7 @@ public:
 	// Textured quads can only be created inside an OpenGL context
 	static Sprite *createSprite(const glm::vec2& tileMapPos, const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program);
 
-	void update(int deltaTime);
+	void update(int deltaTime, bool freeze = false);
 	void render() const;
 	void render(glm::vec4 color, int effectId = -1, int effectTimer = 0) const;
 	void render(const Texture& tex) const;
@@ -44,9 +44,9 @@ public:
 	glm::vec2 getSpriteSize();
 
 	void addEffect(int id, int duration, int delay = 0);
-	void updateTimers(int deltaTime);
 
 private:
+	void updateTimers(int deltaTime);
 
 	Texture *texture;
 	ShaderProgram *shaderProgram;
