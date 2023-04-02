@@ -318,7 +318,9 @@ void Scene::render()
 
 	if (gameOver) {
 		player->render();
-		if (asesino != nullptr) asesino->render();
+		
+		if(stageTimer <= 0) text.render(to_string(stageTimer / 1000), glm::vec2(SCREEN_WIDTH / 2, 30.f), 32, glm::vec4(0.7, 0.2, 0.1, 1), Text::CENTERED);
+		else if (asesino != nullptr) asesino->render();
 		if (gameOverTimer <= 3000) {
 			text.render("GAME    OVER", glm::vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 32, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 		}
