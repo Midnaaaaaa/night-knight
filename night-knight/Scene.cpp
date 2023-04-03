@@ -92,7 +92,7 @@ void Scene::init()
 {
 	stageTimer = STAGE_TIMER;
 	stageCompleted = false;
-	stageCompletedTimer = 4000;
+	stageCompletedTimer = 5000;
 	gameOverTimer = 7000;
 	freezeTimer = 0;
 	paused = false;
@@ -204,12 +204,13 @@ void Scene::update(int deltaTime)
 	if (stageCompleted) {
 		stageCompletedTimer -= deltaTime;
 		if (particleDoor != nullptr) particleDoor->update(deltaTime);
-		if (stageCompletedTimer <= 3500 && enemies.size() > 0) {
+		if (stageCompletedTimer <= 4500 && enemies.size() > 0) {
 			for (int i = enemies.size() - 1; i >= 0; --i)
 			{
 				delete enemies[i];
 				enemies.pop_back();
 			}
+			engine->play2D("sound/stageClear.ogg");
 		}
 		if (stageTimer / 1000 > 0 && stageCompletedTimer <= 1000) {
 			int stageTimerActual = stageTimer / 1000;
@@ -473,7 +474,7 @@ void Scene::render()
 
 	}
 
-	if (stageCompletedTimer <= 3000 && stageCompleted) {
+	if (stageCompletedTimer <= 4500 && stageCompleted) {
 		text.render("STAGE    CLEAR", glm::vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 26, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 	}
 
