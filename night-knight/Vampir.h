@@ -8,7 +8,7 @@ public:
 private:
 	virtual void loadAnimations();
 
-	virtual void updateTimers(int deltaTime);
+	virtual void updateTimers(int deltaTime, bool freeze);
 
 	void transformBat();
 	void transformVampir();

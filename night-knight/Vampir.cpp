@@ -40,7 +40,6 @@ posCharacter = nextPos;
 
 void Vampir::update(int deltaTime) {
 	Character::update(deltaTime);
-	timer += deltaTime;
 
 	if (timer > 6500 && !wantsToTransform) {
 		if (isBat) wantsToTransform = true;
@@ -206,8 +205,12 @@ void Vampir::loadAnimations() {
 	sprite->changeAnimation(rightSight);
 }
 
-void Vampir::updateTimers(int deltaTime) {
+void Vampir::updateTimers(int deltaTime, bool freeze) {
 	Character::updateTimers(deltaTime);
+	if (freeze) return;
+	timer += deltaTime;
+
+
 	if (transformTimer != 0) {
 		transformTimer -= deltaTime;
 		if (transformTimer <= 0) {

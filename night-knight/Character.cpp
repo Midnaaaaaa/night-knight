@@ -23,7 +23,7 @@ void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string sprit
 }
 
 void Character::update(int deltaTime) {
-	updateTimers(deltaTime);
+	updateTimers(deltaTime, freezeTimer != 0);
 	
 	//parche
 	//if (freezeTimer == 0 && moveSpeed == 0) {
@@ -98,7 +98,7 @@ void Character::addEffect(int id, int duration, int delay) {
 	sprite->addEffect(id, duration, delay);
 }
 
-void Character::updateTimers(int deltaTime) {
+void Character::updateTimers(int deltaTime, bool freeze) {
 	if (freezeTimer != 0) {
 		freezeTimer -= deltaTime;
 		if (freezeTimer <= 0) {

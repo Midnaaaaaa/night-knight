@@ -26,7 +26,7 @@ public:
 protected:
 
 	virtual void loadAnimations() = 0;
-	virtual void updateTimers(int deltaTime);
+	virtual void updateTimers(int deltaTime, bool freeze = false);
 
 	bool bJumping;
 	int moveSpeed, moveSpeedBase;
