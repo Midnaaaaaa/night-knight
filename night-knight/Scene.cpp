@@ -9,8 +9,8 @@
 #include <iomanip>
 #include <sstream>
 
-#define MIN_TIME_WITHOUT_SPAWN 1  * 1000
-#define MAX_TIME_WITHOUT_SPAWN 1 * 1000
+#define MIN_TIME_WITHOUT_SPAWN 4  * 1000
+#define MAX_TIME_WITHOUT_SPAWN 8 * 1000
 
 #define MIN_TIME_TO_DESPAWN 8  * 1000
 #define MAX_TIME_TO_DESPAWN 16 * 1000
@@ -161,7 +161,7 @@ void Scene::init()
 	puntIncr = engine->play2D("sound/bit.wav", true, true);
 	puntIncr->setVolume(0.4);
 
-	hourglassSound = engine->play2D("sound/hourglass.mp3", false, true);
+	hourglassSound = engine->play2D("sound/hourglass.mp3", true, true);
 	gemSoundSrc = engine->addSoundSourceFromFile("sound/gem.wav");
 	clockSoundSrc = engine->addSoundSourceFromFile("sound/clock.mp3");
 
@@ -296,7 +296,6 @@ void Scene::update(int deltaTime)
 		glm::vec2 topLeft = it->sprite->getPosition();
 		glm::vec2 bottomRight = topLeft + it->sprite->getSpriteSize();
 		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
-			ik_f32 vol;
 			switch (it->id)
 			{
 			case GEM:
@@ -310,14 +309,13 @@ void Scene::update(int deltaTime)
 				}
 				freezeTimer = 5000;
 				//restart sound
-				if (hourglassSound == nullptr || hourglassSound->isFinished()) {
-					hourglassSound = engine->play2D("sound/hourglass.mp3");
-				}
-				else {
-					hourglassSound->setPlayPosition(0);
-					hourglassSound->setIsPaused(false);
-				}
-				vol = bgSound->getVolume();
+				//if (hourglassSound == nullptr || hourglassSound->isFinished()) {
+				//	hourglassSound = engine->play2D("sound/hourglass.mp3");
+				//}
+				//else {
+				hourglassSound->setPlayPosition(0);
+				hourglassSound->setIsPaused(false);
+				//}
 				bgSound->setVolume(0.4);
 				break;
 			case CLOCK:

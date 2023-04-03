@@ -501,7 +501,7 @@ int Player::getVidas() const{
 void Player::increasePuntuacion(int valueToIncrease) {
 	if (puntuacion % PUNTS_TO_VIDA_EXTRA > (puntuacion + valueToIncrease) % PUNTS_TO_VIDA_EXTRA) {
 		++vidas;
-		engine->play2D("sound/door.ogg");
+		engine->play2D("sound/1up.mp3");
 	}
 	puntuacion += valueToIncrease;
 }

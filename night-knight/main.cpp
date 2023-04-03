@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Game.h"
+#include <ctime>
 
 
 //Remove console (only works in Visual Studio)
@@ -82,6 +83,7 @@ static void idleCallback()
 
 int main(int argc, char **argv)
 {
+	std::srand(std::time(nullptr));
 	// GLUT initialization
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
