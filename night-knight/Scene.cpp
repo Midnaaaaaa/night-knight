@@ -232,6 +232,7 @@ void Scene::update(int deltaTime)
 		return;
 	}
 	else if (gameOver) {
+		if (player->sePuedeMover()) player->setSpeed(0);
 		gameOverTimer -= deltaTime;
 		player->update(deltaTime);
 		if (gameOverTimer <= 4000 && gameOverSound == nullptr) {

@@ -32,6 +32,8 @@ public:
 	void morir();
 	void muelto();
 
+	bool sePuedeMover();
+
 private:
 	virtual void loadAnimations();
 	void respawn();
