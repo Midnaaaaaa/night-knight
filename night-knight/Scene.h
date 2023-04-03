@@ -25,6 +25,8 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
+	void changePauseState();
+	bool getPauseState();
 
 private:
 	void initShaders();
@@ -75,11 +77,18 @@ private:
 
 	ISoundEngine* engine;
 	ISound* bgSound;
-	ISound* puntIncr;
+	ISoundSource* puntIncrSrc;
 
-	ISound* hourglassSound;
+	ISoundSource* hourglassSrc;
 	ISoundSource* gemSoundSrc;
 	ISoundSource* clockSoundSrc;
+
+	ISound* puntIncrSound;
+
+	ISound* hourglassSound;
+
+	bool paused;
+
 };
 
 
