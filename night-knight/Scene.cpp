@@ -174,6 +174,7 @@ void Scene::updateTimers(int deltaTime) {
 			freezeTimer = 0;
 			hourglassSound->stop();
 			hourglassSound->drop();
+			hourglassSound = nullptr;
 			bgSound->setVolume(1);
 		}
 	}
@@ -281,16 +282,6 @@ void Scene::update(int deltaTime)
 		player->setGodMode(!player->inGodMode());
 	}
 
-	for (Enemy* e : enemies)
-	{
-		e->update(deltaTime);
-		glm::ivec2 topLeft = e->getColliderPos();
-		glm::ivec2 bottomRight = topLeft + e->getColliderSize();
-		if (!player->isHurted()) {
-			bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);
-			if (wasHit) asesino = e;
-		}
-	}
 
 	if (map->getNumOfTilesRemaining() == 0 && !keyCollected && key == nullptr) {
 		spawnKey();
@@ -360,6 +351,7 @@ void Scene::update(int deltaTime)
 			stageCompleted = true;
 			glm::vec2 pos = player->getPosition();
 			spawnDoorParticle(pos);
+			SoundManager::instance().pauseBgMusic(true);
 		}
 	}
 	if (player->isGameOver() || stageTimer <= 0 && player->getVidas() == 1) {
@@ -371,6 +363,16 @@ void Scene::update(int deltaTime)
 		stageTimer = STAGE_TIMER;
 	}
 
+	for (Enemy* e : enemies)
+	{
+		e->update(deltaTime);
+		glm::ivec2 topLeft = e->getColliderPos();
+		glm::ivec2 bottomRight = topLeft + e->getColliderSize();
+		if (!player->isHurted()) {
+			bool wasHit = player->checkCollisionWithRect(topLeft, bottomRight, 1);
+			if (wasHit) asesino = e;
+		}
+	}
 
 	//UPDATE TIMERS
 	//if (timer >= currentTime) {
@@ -467,6 +469,10 @@ void Scene::render()
 	}
 
 	text.render("STAGE " + to_string(level), glm::vec2(SCREEN_X + map->getTileSize() * 32, 30.f), 26, glm::vec4(1, 1, 1, 1), Text::RIGHT_ALIGNED);
+	
+	if (startTimer > 500) {
+		text.render("READY", glm::vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 26, glm::vec4(1, 1, 1, 1), Text::CENTERED);
+	}
 }
 
 void Scene::initShaders()

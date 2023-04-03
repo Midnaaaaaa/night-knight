@@ -42,5 +42,6 @@ void SoundManager::stopBgMusic() {
 	if (bgSound != nullptr) {
 		bgSound->stop();
 		bgSound->drop();
+		bgSound = nullptr;
 	}
 }
