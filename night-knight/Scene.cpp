@@ -9,8 +9,8 @@
 #include <iomanip>
 #include <sstream>
 
-#define MIN_TIME_WITHOUT_SPAWN 1  * 1000
-#define MAX_TIME_WITHOUT_SPAWN 1 * 1000
+#define MIN_TIME_WITHOUT_SPAWN 4  * 1000
+#define MAX_TIME_WITHOUT_SPAWN 8 * 1000
 
 #define MIN_TIME_TO_DESPAWN 8  * 1000
 #define MAX_TIME_TO_DESPAWN 16 * 1000
@@ -197,7 +197,7 @@ void Scene::update(int deltaTime)
 		spawnTimer += currentTime;
 	}
 	if (currentTime >= spawnTimer) {
-		int objectToSpawn = HOURGLASS;//rand() % 3;
+		int objectToSpawn = rand() % 3;
 		glm::ivec2 platform = map->getRandomPlatform();
 		switch (objectToSpawn)
 		{
