@@ -227,26 +227,28 @@ void Sprite::addEffect(int id, int duration, int delay) {
 
 void Sprite::refreshFreezeEffect(int duration, int delay) {
 	//Cleanup stack
-	int i = 0;
-
-	int elemToDelete = 1;
 
 	//Encuentra indice
-	while (i < effectStack.size() - 1) {
-		if (effectStack[i].id == EFFECT_SHAKE) {
-			if (i + 1 <= effectStack.size() && effectStack[i + 1].id == -1) elemToDelete = 2;
-			break;
+	if (!effectStack.empty()) {
+		int i = 0;
+
+		int elemToDelete = 1;
+		while (i < effectStack.size() - 1) {
+			if (effectStack[i].id == EFFECT_SHAKE) {
+				if (i + 1 <= effectStack.size() && effectStack[i + 1].id == -1) elemToDelete = 2;
+				break;
+			}
+			++i;
 		}
-		++i;
-	}
 
-	//Mueve
-	for (; i < effectStack.size() - elemToDelete; ++i) {
-		effectStack[i] = effectStack[i + elemToDelete];
-	}
+		//Mueve
+		for (; i < effectStack.size() - elemToDelete; ++i) {
+			effectStack[i] = effectStack[i + elemToDelete];
+		}
 
-	while (elemToDelete-- > 0)
-		effectStack.pop_back();
+		while (elemToDelete-- > 0)
+			effectStack.pop_back();
+	}
 
 	addEffect(EFFECT_SHAKE, duration, delay);
 }
