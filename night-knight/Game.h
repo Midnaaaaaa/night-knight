@@ -65,7 +65,8 @@ private:
 	bool old_keys[256], old_specialKeys[256];
 
 	ISoundEngine* engine;
-	ISound* bgSound;
+	ISound* menuMusic;
+	ISound** bgMusicPtr;
 
 };
 

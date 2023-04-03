@@ -13,6 +13,7 @@ Menu::Menu()
 
 Menu::~Menu()
 {
+	menuNavSrc->drop();
 }
 
 void Menu::init()
@@ -41,6 +42,10 @@ void Menu::init()
 	//bg->setPosition(glm::ivec2(10, 10));
 
 	images[MAIN_MENU] = { bg };
+
+	engine = SoundManager::instance().getSoundEngine();
+	menuNavSrc = engine->addSoundSourceFromFile("sound/menu-nav.mp3");
+	menuNavSrc->setDefaultVolume(0.3);
 }
 
 //Hacemos que devuelva un int o un bool para indicar que quiere cambiar al primer nivel?
@@ -50,9 +55,11 @@ void Menu::update(int deltaTime)
 	if (scene == MAIN_MENU) {
 		if (Game::instance().getSpecialKeyUp(GLUT_KEY_UP)) {
 			if (--selected < 0) selected = 3;
+			engine->play2D(menuNavSrc);
 		}
 		else if (Game::instance().getSpecialKeyUp(GLUT_KEY_DOWN)) {
 			selected = ++selected % 4;
+			engine->play2D(menuNavSrc);
 		}
 
 		//seleccionar seleccion

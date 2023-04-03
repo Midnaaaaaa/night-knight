@@ -36,5 +36,8 @@ private:
 	glm::mat4 projection;
 	int scene;
 	int selected;
+
+	ISoundEngine* engine;
+	ISoundSource* menuNavSrc;
 };
 

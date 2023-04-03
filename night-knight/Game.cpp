@@ -7,7 +7,9 @@ void Game::init()
 	//Hay que hacer destructora
 	SoundManager::instance().init();
 	engine = SoundManager::instance().getSoundEngine();
-	bgSound = engine->play2D("sound/FourBitsToTheLeft.mp3", true, true);
+	menuMusic = engine->play2D("sound/menu.mp3", true, false, true);
+	menuMusic->setVolume(0.3);
+	bgMusicPtr = SoundManager::instance().getBgSoundPtr();
 
 	bPlay = true;
 	playing = false;
@@ -98,7 +100,8 @@ bool Game::getSpecialKeyUp(int key) const
 
 void Game::toggleMenu() {
 	playing = !playing;
-	bgSound->setIsPaused(!playing);
+	(*bgMusicPtr)->setIsPaused(!playing);
+	menuMusic->setIsPaused(true);
 }
 
 void Game::exitLevel()
@@ -106,15 +109,19 @@ void Game::exitLevel()
 	delete scene;
 	scene = new Scene(1);
 	scene->init();
+	(*bgMusicPtr)->setPlayPosition(0);
+	(*bgMusicPtr)->setIsPaused(true);
+	menuMusic->setPlayPosition(0);
+	menuMusic->setIsPaused(false);
+
 	playing = false;
-	bgSound->setPlayPosition(0);
-	bgSound->setIsPaused(true);
 }
 
 void Game::changeLevel(int level)
 {
 	scene = new Scene(level);
 	scene->init();
+	menuMusic->setIsPaused(true);
 }
 
 
