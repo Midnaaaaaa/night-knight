@@ -4,6 +4,8 @@
 
 #include "Scene.h"
 #include "Menu.h"
+#include "SoundManager.h"
+
 
 
 #define SCREEN_WIDTH 640
@@ -61,6 +63,9 @@ private:
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 	bool old_keys[256], old_specialKeys[256];
+
+	ISoundEngine* engine;
+	ISound* bgSound;
 
 };
 

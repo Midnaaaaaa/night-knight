@@ -196,7 +196,7 @@ void Player::respawn() {
 	moveSpeed = 2;
 	moveSpeedBase = 2;
 	sprite->changeAnimation(STAND_RIGHT);
-	addEffect(EFFECT_SPAWN, 2*1000);
+	//addEffect(EFFECT_SPAWN, 2*1000);
 }
 
 void Player::update(int deltaTime)

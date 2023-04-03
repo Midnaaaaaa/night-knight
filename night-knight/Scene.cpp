@@ -79,6 +79,8 @@ Scene::~Scene()
 		item.sprite->free();
 	}
 	texProgram.free();
+
+	//bgSound->drop();
 }
 
 
@@ -151,6 +153,9 @@ void Scene::init()
 		//if(!text.init("fonts/OpenSans-Bold.ttf"))
 		//if(!text.init("fonts/DroidSerif.ttf"))
 		cout << "Could not load font!!!" << endl;
+
+	//engine = SoundManager::instance().getSoundEngine();
+	//bgSound = engine->play2D("sound/FourBitsToTheLeft.mp3");
 }
 
 void Scene::update(int deltaTime)
