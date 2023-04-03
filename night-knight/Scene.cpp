@@ -286,6 +286,7 @@ void Scene::update(int deltaTime)
 			key->free();
 			key = nullptr;
 			door->changeAnimation(DOOR_OPENED, 0);
+			engine->play2D("sound/door.ogg");
 		}
 	}
 
