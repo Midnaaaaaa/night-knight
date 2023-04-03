@@ -31,3 +31,16 @@ ISound* SoundManager::changeBgMusic(const char* file, bool loop, bool pause) {
 	//bgSound->setVolume(0.5);
 	return bgSound;
 }
+
+void SoundManager::pauseBgMusic(bool pause) {
+	if (bgSound != nullptr) {
+		bgSound->setIsPaused(pause);
+	}
+}
+
+void SoundManager::stopBgMusic() {
+	if (bgSound != nullptr) {
+		bgSound->stop();
+		bgSound->drop();
+	}
+}

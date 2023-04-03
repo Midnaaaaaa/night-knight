@@ -79,13 +79,11 @@ private:
 	ISound* bgSound;
 	ISoundSource* puntIncrSrc;
 
-	ISoundSource* hourglassSrc;
-	ISoundSource* gemSoundSrc;
-	ISoundSource* clockSoundSrc;
+	ISoundSource* hourglassSrc, * gemSoundSrc, * clockSoundSrc;
 
 	ISound* puntIncrSound;
-
 	ISound* hourglassSound;
+	ISound* gameOverSound;
 
 	bool paused;
 

@@ -81,7 +81,8 @@ Scene::~Scene()
 	texProgram.free();
 
 
-
+	engine->removeSoundSource(puntIncrSrc);
+	engine->removeSoundSource(hourglassSrc);
 	engine->removeSoundSource(gemSoundSrc);
 	engine->removeSoundSource(clockSoundSrc);
 }
@@ -153,9 +154,7 @@ void Scene::init()
 		//if(!text.init("fonts/DroidSerif.ttf"))
 		cout << "Could not load font!!!" << endl;
 
-	string levelSoundFile = "sound/lvl" + to_string(level) + ".mp3";
 	engine = SoundManager::instance().getSoundEngine();
-	bgSound = SoundManager::instance().changeBgMusic(levelSoundFile.c_str(), true, true);
 
 	puntIncrSrc = engine->addSoundSourceFromFile("sound/bit.wav");
 	puntIncrSrc->setDefaultVolume(0.4);
@@ -163,6 +162,8 @@ void Scene::init()
 	hourglassSrc = engine->addSoundSourceFromFile("sound/hourglass.mp3");
 	gemSoundSrc = engine->addSoundSourceFromFile("sound/gem.wav");
 	clockSoundSrc = engine->addSoundSourceFromFile("sound/clock.mp3");
+
+	startTimer = 3000;
 
 }
 
@@ -172,24 +173,28 @@ void Scene::updateTimers(int deltaTime) {
 		if (freezeTimer <= 0) {
 			freezeTimer = 0;
 			hourglassSound->stop();
+			hourglassSound->drop();
 			bgSound->setVolume(1);
 		}
 	}
 
 	if (startTimer != 0) {
-		startTimer -= startTimer;
+		startTimer -= deltaTime;
 		if (startTimer <= 0) {
 			startTimer = 0;
+			string levelSoundFile = "sound/lvl" + to_string(level) + ".mp3";
+			bgSound = SoundManager::instance().changeBgMusic(levelSoundFile.c_str(), true, false);
 		}
 	}
-	else
-		currentTime += deltaTime;
 }
 
 void Scene::update(int deltaTime)
 {
 	updateTimers(deltaTime);
+	if (startTimer > 0) return;
 
+
+	currentTime += deltaTime;
 	if (stageCompleted) {
 		stageCompletedTimer -= deltaTime;
 		if (particleDoor != nullptr) particleDoor->update(deltaTime);
@@ -206,12 +211,13 @@ void Scene::update(int deltaTime)
 			player->increasePuntuacion((stageTimerActual - stageTimer/1000)*10);
 			
 			if (puntIncrSound == nullptr) {
-				puntIncrSound = engine->play2D(puntIncrSrc, true);
+				puntIncrSound = engine->play2D(puntIncrSrc, true, false, true);
 			}
 
 		}
 		else if (stageTimer / 1000 <= 0) {
 			puntIncrSound->stop();
+			puntIncrSound->drop();
 			Game::instance().exitLevel();
 		}
 		return;
@@ -219,7 +225,12 @@ void Scene::update(int deltaTime)
 	else if (gameOver) {
 		gameOverTimer -= deltaTime;
 		player->update(deltaTime);
-		if (gameOverTimer <= 0) {
+		if (gameOverTimer <= 1000 && gameOverSound == nullptr) {
+			gameOverSound = engine->play2D("sound/gameOver.mp3", false, false, true);
+		}
+		else if (gameOverTimer <= -2000) {
+			gameOverSound->stop();
+			gameOverSound->drop();
 			Game::instance().exitLevel();
 		}
 		return;
@@ -321,7 +332,7 @@ void Scene::update(int deltaTime)
 				freezeTimer = 5000;
 				//restart sound
 				if (hourglassSound == nullptr || hourglassSound->isFinished()) {
-					hourglassSound = engine->play2D("sound/hourglass.mp3");
+					hourglassSound = engine->play2D("sound/hourglass.mp3", true, false, true);
 				}
 				else {
 					hourglassSound->setPlayPosition(0);
@@ -351,7 +362,10 @@ void Scene::update(int deltaTime)
 			spawnDoorParticle(pos);
 		}
 	}
-	if (player->isGameOver() || stageTimer <= 0 && player->getVidas() == 1) gameOver = true;
+	if (player->isGameOver() || stageTimer <= 0 && player->getVidas() == 1) {
+		gameOver = true;
+		SoundManager::instance().pauseBgMusic(true);
+	}
 	else if (stageTimer <= 0) {
 		player->muelto();
 		stageTimer = STAGE_TIMER;

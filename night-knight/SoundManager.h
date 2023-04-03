@@ -18,6 +18,8 @@ public:
 	ISound** getBgSoundPtr();
 
 	ISound* changeBgMusic(const char* file, bool loop = false, bool pause = false);
+	void pauseBgMusic(bool pause);
+	void stopBgMusic();
 
 private:
 	ISoundEngine* engine;

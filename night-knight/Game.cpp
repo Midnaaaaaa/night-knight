@@ -26,6 +26,7 @@ bool Game::update(int deltaTime)
 	if (getKeyUp('m') && playing) {
 		scene->changePauseState();
 		engine->setAllSoundsPaused(scene->getPauseState());
+		menuMusic->setIsPaused(true);
 	}
 
 
@@ -101,7 +102,7 @@ bool Game::getSpecialKeyUp(int key) const
 
 void Game::toggleMenu() {
 	playing = !playing;
-	(*bgMusicPtr)->setIsPaused(!playing);
+	//(*bgMusicPtr)->setIsPaused(!playing);
 	menuMusic->setIsPaused(true);
 }
 
@@ -110,8 +111,7 @@ void Game::exitLevel()
 	delete scene;
 	scene = new Scene(1);
 	scene->init();
-	(*bgMusicPtr)->setPlayPosition(0);
-	(*bgMusicPtr)->setIsPaused(true);
+	SoundManager::instance().stopBgMusic();
 	menuMusic->setPlayPosition(0);
 	menuMusic->setIsPaused(false);
 
