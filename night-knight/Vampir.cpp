@@ -207,6 +207,7 @@ void Vampir::loadAnimations() {
 }
 
 void Vampir::updateTimers(int deltaTime) {
+	Character::updateTimers(deltaTime);
 	if (transformTimer != 0) {
 		transformTimer -= deltaTime;
 		if (transformTimer <= 0) {
