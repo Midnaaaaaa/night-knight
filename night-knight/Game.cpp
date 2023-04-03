@@ -21,10 +21,11 @@ void Game::init()
 
 bool Game::update(int deltaTime)
 {
-	if (playing) scene->update(deltaTime);
-	else menu.update(deltaTime);
-	if (getKeyUp('m')) {
-		toggleMenu();
+	if (playing && !scene->getPauseState()) scene->update(deltaTime);
+	else if(!playing) menu.update(deltaTime);
+	if (getKeyUp('m') && playing) {
+		scene->changePauseState();
+		engine->setAllSoundsPaused(scene->getPauseState());
 	}
 
 
@@ -123,6 +124,7 @@ void Game::changeLevel(int level)
 	scene->init();
 	menuMusic->setIsPaused(true);
 }
+
 
 
 

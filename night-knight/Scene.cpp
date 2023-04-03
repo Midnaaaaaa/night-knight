@@ -80,9 +80,7 @@ Scene::~Scene()
 	}
 	texProgram.free();
 
-	if (puntIncr != nullptr) puntIncr->drop();
 
-	if (hourglassSound != nullptr) hourglassSound->drop();
 
 	engine->removeSoundSource(gemSoundSrc);
 	engine->removeSoundSource(clockSoundSrc);
@@ -96,6 +94,7 @@ void Scene::init()
 	stageCompletedTimer = 4000;
 	gameOverTimer = 5000;
 	freezeTimer = 0;
+	paused = false;
 
 	initShaders();
 
@@ -158,10 +157,10 @@ void Scene::init()
 	engine = SoundManager::instance().getSoundEngine();
 	bgSound = SoundManager::instance().changeBgMusic(levelSoundFile.c_str(), true, true);
 
-	puntIncr = engine->play2D("sound/bit.wav", true, true);
-	puntIncr->setVolume(0.4);
+	puntIncrSrc = engine->addSoundSourceFromFile("sound/bit.wav");
+	puntIncrSrc->setDefaultVolume(0.4);
 
-	hourglassSound = engine->play2D("sound/hourglass.mp3", true, true);
+	hourglassSrc = engine->addSoundSourceFromFile("sound/hourglass.mp3");
 	gemSoundSrc = engine->addSoundSourceFromFile("sound/gem.wav");
 	clockSoundSrc = engine->addSoundSourceFromFile("sound/clock.mp3");
 
@@ -172,7 +171,7 @@ void Scene::updateTimers(int deltaTime) {
 		freezeTimer -= deltaTime;
 		if (freezeTimer <= 0) {
 			freezeTimer = 0;
-			hourglassSound->setIsPaused(true);
+			hourglassSound->stop();
 			bgSound->setVolume(1);
 		}
 	}
@@ -197,10 +196,14 @@ void Scene::update(int deltaTime)
 			int stageTimerActual = stageTimer / 1000;
 			stageTimer -= deltaTime * 20;
 			player->increasePuntuacion((stageTimerActual - stageTimer/1000)*10);
-			if (puntIncr->getIsPaused()) puntIncr->setIsPaused(false);
+			
+			if (puntIncrSound == nullptr) {
+				puntIncrSound = engine->play2D(puntIncrSrc, true);
+			}
+
 		}
 		else if (stageTimer / 1000 <= 0) {
-			puntIncr->setIsPaused(true);
+			puntIncrSound->stop();
 			Game::instance().exitLevel();
 		}
 		return;
@@ -213,7 +216,7 @@ void Scene::update(int deltaTime)
 		}
 		return;
 	}
-	
+
 	stageTimer -= deltaTime;
 	if (spawnTimer == -1) {
 		spawnTimer = rand() % (MAX_TIME_WITHOUT_SPAWN - MIN_TIME_WITHOUT_SPAWN + 1) + MIN_TIME_WITHOUT_SPAWN;
@@ -309,13 +312,13 @@ void Scene::update(int deltaTime)
 				}
 				freezeTimer = 5000;
 				//restart sound
-				//if (hourglassSound == nullptr || hourglassSound->isFinished()) {
-				//	hourglassSound = engine->play2D("sound/hourglass.mp3");
-				//}
-				//else {
-				hourglassSound->setPlayPosition(0);
-				hourglassSound->setIsPaused(false);
-				//}
+				if (hourglassSound == nullptr || hourglassSound->isFinished()) {
+					hourglassSound = engine->play2D("sound/hourglass.mp3");
+				}
+				else {
+					hourglassSound->setPlayPosition(0);
+					hourglassSound->setIsPaused(false);
+				}
 				bgSound->setVolume(0.4);
 				break;
 			case CLOCK:
@@ -415,7 +418,7 @@ void Scene::render()
 
 	//Render de num vidas
 	text.render("x" + to_string(player->getVidas()), glm::vec2(SCREEN_X + 26, 30.f), 26, glm::vec4(1, 1, 1, 1));
-	
+
 	//Render de puntuacion
 	stringstream ss;
 
@@ -432,7 +435,10 @@ void Scene::render()
 	else {
 		text.render(to_string(stageTimer / 1000), glm::vec2(SCREEN_WIDTH / 2, 30.f), 32, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 	}
+	if (paused) {
+		text.render("PAUSED", glm::vec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), 26, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 
+	}
 
 	if (stageCompletedTimer <= 3000 && stageCompleted) {
 		text.render("STAGE    CLEAR", glm::vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 26, glm::vec4(1, 1, 1, 1), Text::CENTERED);
@@ -578,4 +584,12 @@ void Scene::spawnCor()
 	cor->setAnimationParams(COR_POCHO, 1, false);
 	cor->addKeyframe(COR_POCHO, glm::vec2(1 / 8.f * 3, 0.0f));
 	cor->changeAnimation(COR_FULL);
+}
+
+void Scene::changePauseState() {
+	paused = !paused;
+}
+
+bool Scene::getPauseState() {
+	return paused;
 }

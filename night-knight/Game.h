@@ -67,6 +67,7 @@ private:
 	ISoundEngine* engine;
 	ISound* menuMusic;
 	ISound** bgMusicPtr;
+	
 
 };
 
