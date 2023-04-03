@@ -93,7 +93,7 @@ void Scene::init()
 	stageTimer = STAGE_TIMER;
 	stageCompleted = false;
 	stageCompletedTimer = 4000;
-	gameOverTimer = 5000;
+	gameOverTimer = 7000;
 	freezeTimer = 0;
 	paused = false;
 
@@ -225,10 +225,10 @@ void Scene::update(int deltaTime)
 	else if (gameOver) {
 		gameOverTimer -= deltaTime;
 		player->update(deltaTime);
-		if (gameOverTimer <= 1000 && gameOverSound == nullptr) {
+		if (gameOverTimer <= 4000 && gameOverSound == nullptr) {
 			gameOverSound = engine->play2D("sound/gameOver.mp3", false, false, true);
 		}
-		else if (gameOverTimer <= -2000) {
+		else if (gameOverTimer <= 0) {
 			gameOverSound->stop();
 			gameOverSound->drop();
 			Game::instance().exitLevel();
@@ -393,7 +393,7 @@ void Scene::render()
 		
 		if(stageTimer <= 0) text.render(to_string(stageTimer / 1000), glm::vec2(SCREEN_WIDTH / 2, 30.f), 32, glm::vec4(0.7, 0.2, 0.1, 1), Text::CENTERED);
 		else if (asesino != nullptr) asesino->render();
-		if (gameOverTimer <= 3000) {
+		if (gameOverTimer <= 4000) {
 			text.render("GAME    OVER", glm::vec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 32, glm::vec4(1, 1, 1, 1), Text::CENTERED);
 		}
 		return;
