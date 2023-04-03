@@ -176,12 +176,20 @@ void Scene::updateTimers(int deltaTime) {
 			bgSound->setVolume(1);
 		}
 	}
+
+	if (startTimer != 0) {
+		startTimer -= startTimer;
+		if (startTimer <= 0) {
+			startTimer = 0;
+		}
+	}
+	else
+		currentTime += deltaTime;
 }
 
 void Scene::update(int deltaTime)
 {
 	updateTimers(deltaTime);
-	currentTime += deltaTime;
 
 	if (stageCompleted) {
 		stageCompletedTimer -= deltaTime;

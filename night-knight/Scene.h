@@ -65,7 +65,7 @@ private:
 
 
 	bool keyCollected;
-	int spawnTimer = -1, despawnTimer = -1, freezeTimer;
+	int spawnTimer = -1, despawnTimer = -1, freezeTimer, startTimer;
 	deque<Item> objects; 
 	int stageTimer, gameOverTimer, stageCompletedTimer;
 	bool gameOver, stageCompleted;
