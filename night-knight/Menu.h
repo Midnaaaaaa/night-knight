@@ -21,9 +21,11 @@ public:
 private:
 	void initShaders();
 
-	Texture bgSpritesheet;
+	Texture bgSpritesheet, sirbernardsheet, bgcreditsheet;
 
 	Sprite* bg;
+	Sprite* bgCredit;
+	Sprite* sirbernard;
 
 	//Cada elemento del vector es el vector de cada escena
 	vector<vector<Sprite*>> images;

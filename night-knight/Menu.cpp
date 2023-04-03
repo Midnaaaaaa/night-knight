@@ -36,12 +36,24 @@ void Menu::init()
 		{"Credits", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100)},
 		{"Exit", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 150)} };
 
+	texts[CREDITS] = 
+	{
+		{"Pol   Roca", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)},
+		{"Adria   Lozano", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100)},
+		{"DEVELOPED BY", glm::ivec2(SCREEN_WIDTH / 2, 70)}
+	
+	};
+
 	bgSpritesheet.loadFromFile("images/titlescreen.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bg = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgSpritesheet, &texProgram);
-	//bg->setDisplacement(glm::vec2(0.0f, 0.0f));
-	//bg->setPosition(glm::ivec2(10, 10));
+	bgcreditsheet.loadFromFile("images/creditbg.jpg", TEXTURE_PIXEL_FORMAT_RGBA);
+	bgCredit = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgcreditsheet, &texProgram);
+	
+	sirbernardsheet.loadFromFile("images/sirbernard.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	sirbernard = Sprite::createSprite(glm::ivec2(SCREEN_WIDTH/2 + 200, SCREEN_HEIGHT/2), glm::vec2(float(SCREEN_WIDTH/2 - 200), float(SCREEN_HEIGHT/2)), glm::vec2(1.f, 1.f), &sirbernardsheet, &texProgram);
 
 	images[MAIN_MENU] = { bg };
+	images[CREDITS] = { bgCredit, sirbernard };
 
 	engine = SoundManager::instance().getSoundEngine();
 	menuNavSrc = engine->addSoundSourceFromFile("sound/menu-nav.mp3");
@@ -110,7 +122,7 @@ void Menu::render()
 	for (int i = 0; i < texts[scene].size(); ++i)
 	{
 		glm::vec4 color(1.f);
-		if (i == selected) {
+		if (i == selected && scene == MAIN_MENU) {
 			color = glm::vec4(0.7f, 0.8f, 0.2f, 1.f);
 		}
 		textObj.render(texts[scene][i].first, texts[scene][i].second + 1, 16, glm::vec4(0, 0, 0, 1) * 0.8f, Text::CENTERED);
