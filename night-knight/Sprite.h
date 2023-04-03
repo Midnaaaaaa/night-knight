@@ -15,7 +15,7 @@
 // able to manage animations stored as a spritesheet. 
 
 enum Effects {
-	EFFECT_BLINK, EFFECT_SHAKE, EFFECT_SIN_Y, EFFECT_SPAWN
+	EFFECT_BLINK, EFFECT_SHAKE, EFFECT_SIN_Y, EFFECT_SPAWN, EFFECT_INVIS
 };
 
 class Sprite

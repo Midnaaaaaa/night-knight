@@ -2,6 +2,9 @@
 #include <GL/glut.h>
 #include "Game.h"
 
+#define TRANSITION_TIME 1000
+
+
 void Game::init()
 {
 	//Hay que hacer destructora
@@ -21,6 +24,10 @@ void Game::init()
 
 bool Game::update(int deltaTime)
 {
+	updateTimers(deltaTime);
+
+
+	if (transitionTimer > 0) return bPlay;
 	if (playing && !scene->getPauseState()) scene->update(deltaTime);
 	else if(!playing) menu.update(deltaTime);
 	if (getKeyUp('m') && playing) {
@@ -43,6 +50,7 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if (transitionTimer > 0) return;
 	if (playing) scene->render();
 	else menu.render();
 }
@@ -104,6 +112,7 @@ void Game::toggleMenu() {
 	playing = !playing;
 	//(*bgMusicPtr)->setIsPaused(!playing);
 	menuMusic->setIsPaused(true);
+	transitionTimer = TRANSITION_TIME;
 }
 
 void Game::exitLevel()
@@ -112,8 +121,8 @@ void Game::exitLevel()
 	scene = new Scene(1);
 	scene->init();
 	SoundManager::instance().stopBgMusic();
-	menuMusic->setPlayPosition(0);
-	menuMusic->setIsPaused(false);
+	transitionTimer = TRANSITION_TIME;
+
 
 	playing = false;
 }
@@ -123,6 +132,21 @@ void Game::changeLevel(int level)
 	scene = new Scene(level);
 	scene->init();
 	menuMusic->setIsPaused(true);
+	transitionTimer = TRANSITION_TIME;
+	playing = true;
+}
+
+void Game::updateTimers(int deltaTime) {
+	if (transitionTimer > 0) {
+		transitionTimer -= deltaTime;
+		if (transitionTimer <= 0) {
+			transitionTimer = 0;
+			if (!playing) {
+				menuMusic->setPlayPosition(0);
+				menuMusic->setIsPaused(false);
+			}
+		}
+	}
 }
 
 

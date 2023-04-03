@@ -25,10 +25,11 @@ enum CharacterAnims
 	MOVE_LEFT, MOVE_RIGHT, STAND_LEFT, STAND_RIGHT, CROUCH_LEFT, CROUCH_RIGHT, JUMP_ASCENDING, JUMP_ASCENDING_RIGHT, JUMP_ASCENDING_LEFT, JUMP_ASCENDING_MIRROR, FALLING1, FALLING_MIRROR1, FALLING2, FALLING_MIRROR2, FALLING_NO_JUMP, FALLING_NO_JUMP_MIRROR, FALLING3, FALLING_MIRROR3, TOUCHING_GROUND, TOUCHING_GROUND_MIRROR, MUELTO, MUELTO_MIRROR
 };
 
-void Player::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram) {
+void Player::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, const glm::ivec2& spawnPos, ShaderProgram& shaderProgram) {
 	Character::init(tileMapPos, rightSight, spriteFile, colliderSize, colliderOffset, pixelSize, texSize, shaderProgram);
 	vidas = 3;
 	puntuacion = 0;
+	this->spawnPos = spawnPos;
 	respawn();
 
 	jumpSrc = engine->addSoundSourceFromFile("sound/jump.mp3");
@@ -204,7 +205,7 @@ void Player::loadAnimations() {
 
 void Player::respawn() {
 	damagedTimer = 0;
-	setPosition(glm::vec2(2 * map->getTileSize(), 9 * map->getTileSize()));
+	setPosition(glm::vec2(spawnPos.x * map->getTileSize(), spawnPos.y * map->getTileSize()));
 	moveSpeed = 2;
 	moveSpeedBase = 2;
 	sprite->changeAnimation(STAND_RIGHT);

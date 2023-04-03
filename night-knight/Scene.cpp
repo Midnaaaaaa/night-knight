@@ -109,7 +109,7 @@ void Scene::init()
 	bg = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(32*map->getTileSize(), 22*map->getTileSize()), glm::ivec2(1,1), &bgSpritesheet, &texProgram);
 	//bg->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
 	
-	initPlayerPos = glm::vec2(2, 9);
+	initPlayerPos = glm::vec2(2, 16);
 	doorPos = glm::vec2(20, 3);
 	keyPos = glm::vec2(28.5, 18.5);
 
@@ -132,7 +132,7 @@ void Scene::init()
 	//Player
 	player = new Player();
 	player->setTileMap(map);
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/soma-animations.png", glm::ivec2(16,32), glm::ivec2(8,32), glm::ivec2(32,64), glm::vec2(1/16.f, 1/16.f), texProgram);
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/soma-animations.png", glm::ivec2(16,32), glm::ivec2(8,32), glm::ivec2(32,64), glm::vec2(1/16.f, 1/16.f), initPlayerPos, texProgram);
 
 	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	//player->setSpeed(2);
@@ -181,10 +181,15 @@ void Scene::updateTimers(int deltaTime) {
 
 	if (startTimer != 0) {
 		startTimer -= deltaTime;
+		if (readySound == nullptr) {
+			readySound = engine->play2D("sound/gameOver.mp3", false, false, true);
+		}
 		if (startTimer <= 0) {
 			startTimer = 0;
 			string levelSoundFile = "sound/lvl" + to_string(level) + ".mp3";
 			bgSound = SoundManager::instance().changeBgMusic(levelSoundFile.c_str(), true, false);
+			readySound->stop();
+			readySound->drop();
 		}
 	}
 }
@@ -214,12 +219,15 @@ void Scene::update(int deltaTime)
 			if (puntIncrSound == nullptr) {
 				puntIncrSound = engine->play2D(puntIncrSrc, true, false, true);
 			}
-
+			stageCompletedTimer = 1000;
 		}
 		else if (stageTimer / 1000 <= 0) {
-			puntIncrSound->stop();
-			puntIncrSound->drop();
-			Game::instance().exitLevel();
+			if (puntIncrSound != nullptr) {
+				puntIncrSound->stop();
+				puntIncrSound->drop();
+				puntIncrSound = nullptr;
+			}
+			if(stageCompletedTimer <= 0) Game::instance().exitLevel();
 		}
 		return;
 	}
@@ -349,7 +357,8 @@ void Scene::update(int deltaTime)
 		glm::vec2 bottomRight = topLeft + door->getSpriteSize();
 		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
 			stageCompleted = true;
-			glm::vec2 pos = player->getPosition();
+			glm::vec2 pos = door->getPosition();
+			player->addEffect(EFFECT_INVIS, 60000);
 			spawnDoorParticle(pos);
 			SoundManager::instance().pauseBgMusic(true);
 		}
@@ -581,7 +590,7 @@ Item Scene::spawnClock(glm::vec2 pos) {
 void Scene::spawnDoorParticle(glm::vec2 pos) {
 	particleDoor = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(32, 64), glm::vec2(1 / 16.f, 1 / 8.f), &particleSpritesheet, &texProgram);
 	particleDoor->setDisplacement(glm::vec2(1 / 16.f * 0, 0.0f));
-	particleDoor->setPosition(glm::ivec2(pos.x, pos.y));
+	particleDoor->setPosition(glm::ivec2(pos.x, pos.y - 32));
 	particleDoor->setNumberAnimations(1);
 	particleDoor->setAnimationParams(DOOR_PARTICLE, 8, false);
 	particleDoor->addKeyframe(DOOR_PARTICLE, glm::vec2(1 / 16.f * 0, 0.0f));

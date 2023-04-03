@@ -84,6 +84,7 @@ private:
 	ISound* puntIncrSound;
 	ISound* hourglassSound;
 	ISound* gameOverSound;
+	ISound* readySound;
 
 	bool paused;
 

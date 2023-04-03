@@ -44,6 +44,7 @@ public:
 	void mouseMove(int x, int y);
 	void mousePress(int button);
 	void mouseRelease(int button);
+	void updateTimers(int deltaTime);
 	
 	bool getKey(int key) const;
 	bool getKeyUp(int key) const;
@@ -67,6 +68,8 @@ private:
 	ISoundEngine* engine;
 	ISound* menuMusic;
 	ISound** bgMusicPtr;
+
+	int transitionTimer;
 	
 
 };
