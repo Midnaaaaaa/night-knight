@@ -2,9 +2,13 @@
 #include <GL/glut.h>
 #include "Game.h"
 
-
 void Game::init()
 {
+	//Hay que hacer destructora
+	SoundManager::instance().init();
+	engine = SoundManager::instance().getSoundEngine();
+	bgSound = engine->play2D("sound/FourBitsToTheLeft.mp3", true, true);
+
 	bPlay = true;
 	playing = false;
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -94,6 +98,7 @@ bool Game::getSpecialKeyUp(int key) const
 
 void Game::toggleMenu() {
 	playing = !playing;
+	bgSound->setIsPaused(!playing);
 }
 
 void Game::exitLevel()
@@ -102,6 +107,8 @@ void Game::exitLevel()
 	scene = new Scene(1);
 	scene->init();
 	playing = false;
+	bgSound->setPlayPosition(0);
+	bgSound->setIsPaused(true);
 }
 
 void Game::changeLevel(int level)
