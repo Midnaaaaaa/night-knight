@@ -513,6 +513,7 @@ int Player::getPuntuacion() const {
 
 void Player::morir()
 {
+	engine->play2D("sound/alu_aaah.wav");
 	sprite->setAnimationParams(MUELTO, 3, false, 4);
 	sprite->setAnimationParams(MUELTO_MIRROR, 3, true, 4);
 }
