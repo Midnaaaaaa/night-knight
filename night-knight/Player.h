@@ -10,8 +10,8 @@
 
 class Player : public Character
 {
-
 public:
+	~Player();
 	virtual void init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram);
 	virtual void update(int deltaTime);
 	//virtual void render();
@@ -43,6 +43,11 @@ private:
 
 	int vidas;
 	int puntuacion;
+
+	ISoundSource* jumpSrc;
+	ISoundSource* hitSrc;
+	ISoundSource* platformSrc;
+
 
 };
 

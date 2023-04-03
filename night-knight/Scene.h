@@ -40,6 +40,8 @@ private:
 	//void gameOver();
 
 private:
+	void updateTimers(int deltaTime);
+
 	int level;
 
 	Texture bgSpritesheet, objectsSpritesheet, doorSpritesheet, particleSpritesheet, corSpritesheet;
@@ -63,7 +65,7 @@ private:
 
 
 	bool keyCollected;
-	int spawnTimer = -1, despawnTimer = -1;
+	int spawnTimer = -1, despawnTimer = -1, freezeTimer;
 	deque<Item> objects; 
 	int stageTimer, gameOverTimer, stageCompletedTimer;
 	bool gameOver, stageCompleted;
@@ -73,6 +75,11 @@ private:
 
 	ISoundEngine* engine;
 	ISound* bgSound;
+	ISound* puntIncr;
+
+	ISound* hourglassSound;
+	ISoundSource* gemSoundSrc;
+	ISoundSource* clockSoundSrc;
 };
 
 

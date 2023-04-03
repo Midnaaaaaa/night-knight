@@ -13,7 +13,7 @@ Menu::Menu()
 
 Menu::~Menu()
 {
-	menuNavSrc->drop();
+	//menuNavSrc->drop();
 }
 
 void Menu::init()
@@ -57,7 +57,7 @@ void Menu::init()
 
 	engine = SoundManager::instance().getSoundEngine();
 	menuNavSrc = engine->addSoundSourceFromFile("sound/menu-nav.mp3");
-	menuNavSrc->setDefaultVolume(0.3);
+	menuNavSrc->setDefaultVolume(0.5);
 }
 
 //Hacemos que devuelva un int o un bool para indicar que quiere cambiar al primer nivel?

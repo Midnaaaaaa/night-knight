@@ -8,7 +8,7 @@ void Game::init()
 	SoundManager::instance().init();
 	engine = SoundManager::instance().getSoundEngine();
 	menuMusic = engine->play2D("sound/menu.mp3", true, false, true);
-	menuMusic->setVolume(0.3);
+	menuMusic->setVolume(0.5);
 	bgMusicPtr = SoundManager::instance().getBgSoundPtr();
 
 	bPlay = true;

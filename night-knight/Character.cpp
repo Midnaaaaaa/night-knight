@@ -20,6 +20,8 @@ void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string sprit
 	//this->effectTimer = 0;
 	//this->effectId = -1;
 
+	engine = SoundManager::instance().getSoundEngine();
+
 }
 
 void Character::update(int deltaTime) {

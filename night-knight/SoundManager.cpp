@@ -10,6 +10,7 @@ SoundManager::~SoundManager() {
 
 void SoundManager::init() {
 	engine = createIrrKlangDevice();
+	engine->setSoundVolume(0.5f);
 }
 
 ISoundEngine* SoundManager::getSoundEngine() {
@@ -21,11 +22,12 @@ ISound** SoundManager::getBgSoundPtr()
 	return &bgSound;
 }
 
-void SoundManager::changeBgMusic(const char* file, bool loop, bool pause) {
+ISound* SoundManager::changeBgMusic(const char* file, bool loop, bool pause) {
 	if (bgSound != nullptr) {
 		bgSound->stop();
 		bgSound->drop();
 	}
 	bgSound = engine->play2D(file, loop, pause, true);
-	bgSound->setVolume(0.5);
+	//bgSound->setVolume(0.5);
+	return bgSound;
 }

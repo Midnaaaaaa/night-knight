@@ -2,6 +2,7 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
+#include "SoundManager.h"
 
 class Character
 {
@@ -42,6 +43,9 @@ protected:
 	glm::ivec2 spriteSize;
 
 	glm::ivec2 colliderSize, colliderOffset;
+
+	ISoundEngine* engine;
+
 
 	//int effectDelay, effectTimer, effectId;
 

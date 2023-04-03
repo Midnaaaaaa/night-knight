@@ -9,8 +9,8 @@
 #include <iomanip>
 #include <sstream>
 
-#define MIN_TIME_WITHOUT_SPAWN 4  * 1000
-#define MAX_TIME_WITHOUT_SPAWN 8 * 1000
+#define MIN_TIME_WITHOUT_SPAWN 1  * 1000
+#define MAX_TIME_WITHOUT_SPAWN 1 * 1000
 
 #define MIN_TIME_TO_DESPAWN 8  * 1000
 #define MAX_TIME_TO_DESPAWN 16 * 1000
@@ -80,6 +80,12 @@ Scene::~Scene()
 	}
 	texProgram.free();
 
+	if (puntIncr != nullptr) puntIncr->drop();
+
+	if (hourglassSound != nullptr) hourglassSound->drop();
+
+	engine->removeSoundSource(gemSoundSrc);
+	engine->removeSoundSource(clockSoundSrc);
 }
 
 
@@ -89,6 +95,7 @@ void Scene::init()
 	stageCompleted = false;
 	stageCompletedTimer = 4000;
 	gameOverTimer = 5000;
+	freezeTimer = 0;
 
 	initShaders();
 
@@ -154,18 +161,38 @@ void Scene::init()
 		cout << "Could not load font!!!" << endl;
 
 	string levelSoundFile = "sound/lvl" + to_string(level) + ".mp3";
-	SoundManager::instance().changeBgMusic(levelSoundFile.c_str(), true, true);
+	engine = SoundManager::instance().getSoundEngine();
+	bgSound = SoundManager::instance().changeBgMusic(levelSoundFile.c_str(), true, true);
 
+	puntIncr = engine->play2D("sound/bit.wav", true, true);
+	puntIncr->setVolume(0.4);
+
+	hourglassSound = engine->play2D("sound/hourglass.mp3", false, true);
+	gemSoundSrc = engine->addSoundSourceFromFile("sound/gem.wav");
+	clockSoundSrc = engine->addSoundSourceFromFile("sound/clock.mp3");
+
+}
+
+void Scene::updateTimers(int deltaTime) {
+	if (freezeTimer != 0) {
+		freezeTimer -= deltaTime;
+		if (freezeTimer <= 0) {
+			freezeTimer = 0;
+			hourglassSound->setIsPaused(true);
+			bgSound->setVolume(1);
+		}
+	}
 }
 
 void Scene::update(int deltaTime)
 {
+	updateTimers(deltaTime);
 	currentTime += deltaTime;
 
 	if (stageCompleted) {
 		stageCompletedTimer -= deltaTime;
 		if (particleDoor != nullptr) particleDoor->update(deltaTime);
-		if (stageCompletedTimer <= 3500 && stageCompletedTimer >= 3000) {
+		if (stageCompletedTimer <= 3500 && enemies.size() > 0) {
 			for (int i = enemies.size() - 1; i >= 0; --i)
 			{
 				delete enemies[i];
@@ -174,11 +201,13 @@ void Scene::update(int deltaTime)
 		}
 		if (stageTimer / 1000 > 0 && stageCompletedTimer <= 1000) {
 			int stageTimerActual = stageTimer / 1000;
-			stageTimer -= deltaTime * 20; 
+			stageTimer -= deltaTime * 20;
 			player->increasePuntuacion((stageTimerActual - stageTimer/1000)*10);
+			if (puntIncr->getIsPaused()) puntIncr->setIsPaused(false);
 		}
-		if (stageCompletedTimer <= 0) {
-			
+		else if (stageTimer / 1000 <= 0) {
+			puntIncr->setIsPaused(true);
+			Game::instance().exitLevel();
 		}
 		return;
 	}
@@ -266,24 +295,39 @@ void Scene::update(int deltaTime)
 		}
 	}
 
+	//Collision with items
 	for (std::deque<Item>::iterator it = objects.begin(); it != objects.end(); ++it) {
 		it->sprite->update(deltaTime);
 		glm::vec2 topLeft = it->sprite->getPosition();
 		glm::vec2 bottomRight = topLeft + it->sprite->getSpriteSize();
 		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
+			ik_f32 vol;
 			switch (it->id)
 			{
 			case GEM:
 				player->increasePuntuacion(500);
+				engine->play2D(gemSoundSrc);
 				break;
 			case HOURGLASS:
 				for (Enemy* e : enemies)
 				{
 					e->freeze(5000, true);
 				}
+				freezeTimer = 5000;
+				//restart sound
+				if (hourglassSound == nullptr || hourglassSound->isFinished()) {
+					hourglassSound = engine->play2D("sound/hourglass.mp3");
+				}
+				else {
+					hourglassSound->setPlayPosition(0);
+					hourglassSound->setIsPaused(false);
+				}
+				vol = bgSound->getVolume();
+				bgSound->setVolume(0.4);
 				break;
 			case CLOCK:
 				stageTimer += 15000;
+				engine->play2D(clockSoundSrc);
 				break;
 			}
 			it->sprite->free();

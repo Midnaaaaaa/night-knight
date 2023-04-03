@@ -27,9 +27,21 @@ enum CharacterAnims
 
 void Player::init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram) {
 	Character::init(tileMapPos, rightSight, spriteFile, colliderSize, colliderOffset, pixelSize, texSize, shaderProgram);
-	vidas = 1;
+	vidas = 3;
 	puntuacion = 0;
 	respawn();
+
+	jumpSrc = engine->addSoundSourceFromFile("sound/jump.mp3");
+	hitSrc = engine->addSoundSourceFromFile("sound/hit.mp3");
+	platformSrc = engine->addSoundSourceFromFile("sound/platform.mp3");
+	platformSrc->setDefaultVolume(0.5);
+}
+
+Player::~Player() {
+	engine->removeSoundSource(jumpSrc);
+	engine->removeSoundSource(hitSrc);
+	engine->removeSoundSource(platformSrc);
+
 }
 
 void Player::loadAnimations() {
@@ -347,6 +359,7 @@ void Player::update(int deltaTime)
 				bJumping = true;
 				jumpAngle = 0;
 				startY = posCharacter.y;
+				engine->play2D(jumpSrc);
 			}
 			else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
 				if (rightSight && sprite->animation() != CROUCH_RIGHT) {
@@ -417,6 +430,8 @@ void Player::checkCollisionUnder() {
 			map->reduceNumberOfPlatforms();
 			map->reduceNumberOfPlatforms();
 			increasePuntuacion(10);
+
+			engine->play2D(platformSrc);
 		}
 
 	}
@@ -448,6 +463,7 @@ void Player::muelto() {
 	}
 	else {
 		addEffect(EFFECT_BLINK, DAMAGED_TIME);
+		engine->play2D(hitSrc);
 	}
 }
 
