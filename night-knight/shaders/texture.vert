@@ -21,7 +21,7 @@ void main()
 		pos.x = pos.x + int((effectTimer % 100) < 50) * 5;
 	}
     else if (effectId == 2) { //Sin-Y
-        pos.y = pos.y + sin(effectTimer/1000.f*2*PI) * 3;
+        pos.y = pos.y + sin(effectTimer/1000.f*2*PI) * 6;
     }
 
 	// Pass texture coordinates to access a given texture atlas

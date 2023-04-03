@@ -9,8 +9,8 @@
 #include <iomanip>
 #include <sstream>
 
-#define MIN_TIME_WITHOUT_SPAWN 4  * 1000
-#define MAX_TIME_WITHOUT_SPAWN 8 * 1000
+#define MIN_TIME_WITHOUT_SPAWN 15  * 1000
+#define MAX_TIME_WITHOUT_SPAWN 30 * 1000
 
 #define MIN_TIME_TO_DESPAWN 8  * 1000
 #define MAX_TIME_TO_DESPAWN 16 * 1000
@@ -163,7 +163,7 @@ void Scene::init()
 	gemSoundSrc = engine->addSoundSourceFromFile("sound/gem.wav");
 	clockSoundSrc = engine->addSoundSourceFromFile("sound/clock.mp3");
 
-	startTimer = 3000;
+	startTimer = 4000;
 
 }
 
@@ -182,7 +182,7 @@ void Scene::updateTimers(int deltaTime) {
 	if (startTimer != 0) {
 		startTimer -= deltaTime;
 		if (readySound == nullptr) {
-			readySound = engine->play2D("sound/gameOver.mp3", false, false, true);
+			readySound = engine->play2D("sound/stageStart.mp3", false, false, true);
 		}
 		if (startTimer <= 0) {
 			startTimer = 0;
