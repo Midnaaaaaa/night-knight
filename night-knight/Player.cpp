@@ -212,6 +212,11 @@ void Player::respawn() {
 	//addEffect(EFFECT_SPAWN, 2*1000);
 }
 
+void Player::dentroDePlataforma() {
+	//Para ver si estamos dentro de una plataforma
+	map->dentroDePlataforma(posCharacter, colliderOffset, colliderSize);
+}
+
 void Player::update(int deltaTime)
 {	
 	Character::update(deltaTime);
@@ -222,8 +227,6 @@ void Player::update(int deltaTime)
 			respawn();
 		}
 	}
-
-
 	
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && (sprite->animation() != CROUCH_LEFT && sprite->animation() != CROUCH_RIGHT) && sePuedeMover())
 	{
@@ -233,7 +236,7 @@ void Player::update(int deltaTime)
 		}
 		rightSight = false;
 		posCharacter.x -= moveSpeed;
-		int tileCol = map->collisionMoveLeft(posCharacter, colliderOffset, colliderSize, jumpAngle > 90);
+		int tileCol = map->collisionMoveLeft(posCharacter, colliderOffset, colliderSize, bJumping && (jumpAngle <= 90 || map->dentroDePlataforma(posCharacter, colliderOffset, colliderSize)));
 		if (tileCol != 0)
 		{
 			posCharacter.x += moveSpeed;
@@ -249,7 +252,7 @@ void Player::update(int deltaTime)
 		}
 		rightSight = true;
 		posCharacter.x += moveSpeed;
-		int tileCol = map->collisionMoveRight(posCharacter, colliderOffset, colliderSize, jumpAngle > 90);
+		int tileCol = map->collisionMoveRight(posCharacter, colliderOffset, colliderSize, bJumping && (jumpAngle <= 90 || map->dentroDePlataforma(posCharacter, colliderOffset, colliderSize)));
 		if (tileCol != 0)
 		{
 			posCharacter.x -= moveSpeed;

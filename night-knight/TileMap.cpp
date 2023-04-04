@@ -431,6 +431,57 @@ int TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& colliderOf
 	return 0;
 }
 
+bool TileMap::dentroDePlataforma(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize) {
+	
+	int pos0, pos1, coordFija;
+
+	//topLeft ----> topRight
+	//coordFija -> y
+	pos0 = (pos.x + colliderOffset.x) / tileSize;
+	pos1 = (pos.x + colliderOffset.x + colliderSize.x - 1) / tileSize;
+	coordFija = (pos.y + colliderOffset.y) / tileSize;
+	for (int pos = pos0; pos <= pos1; pos++) {
+		int tile = map[coordFija * mapSize.x + pos];
+		if (tileType[tile] == TILE_PLATFORM || tileType[tile] == TILE_PLATFORM_ACTIVATED) 
+			return true;
+	}
+
+	//right
+	//invariante -> x
+	coordFija = (pos.x + colliderOffset.x + colliderSize.x - 1) / tileSize;
+	pos0 = (pos.y + colliderOffset.y) / tileSize;
+	pos1 = (pos.y + colliderOffset.y + colliderSize.y - 1) / tileSize;
+	for (int pos = pos0; pos <= pos1; pos++) {
+		int tile = map[pos * mapSize.x + coordFija];
+		if (tileType[tile] == TILE_PLATFORM || tileType[tile] == TILE_PLATFORM_ACTIVATED)
+			return true;
+	}
+
+	//left
+	//invariante -> x
+	coordFija = (pos.x + colliderOffset.x) / tileSize;
+	pos0 = (pos.y + colliderOffset.y) / tileSize;
+	pos1 = (pos.y + colliderOffset.y + colliderSize.y - 1) / tileSize;
+	for (int pos = pos0; pos <= pos1; pos++) {
+		int tile = map[pos * mapSize.x + coordFija];
+		if (tileType[tile] == TILE_PLATFORM || tileType[tile] == TILE_PLATFORM_ACTIVATED)
+			return true;
+	}
+
+	//down
+	//coordFija -> y
+	pos0 = (pos.x + colliderOffset.x) / tileSize;
+	pos1 = (pos.x + colliderOffset.x + colliderSize.x - 1) / tileSize;
+	coordFija = (pos.y + colliderOffset.y + colliderSize.y - 1) / tileSize;
+	for (int pos = pos0; pos <= pos1; pos++) {
+		int tile = map[coordFija * mapSize.x + pos];
+		if (tileType[tile] == TILE_PLATFORM || tileType[tile] == TILE_PLATFORM_ACTIVATED)
+			return true;
+	}
+
+	return false;
+}
+
 
 int TileMap::modifyTileMap(int i, int j, int newTile) {
 	int oldTile = map[mapSize.x * i + j];

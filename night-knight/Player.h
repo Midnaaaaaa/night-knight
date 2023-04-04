@@ -38,6 +38,8 @@ private:
 	virtual void loadAnimations();
 	void respawn();
 
+	void dentroDePlataforma();
+
 	//bool damaged = false;
 	int damagedTimer;
 

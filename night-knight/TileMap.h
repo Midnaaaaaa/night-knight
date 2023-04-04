@@ -38,14 +38,15 @@ public:
 	void free();
 	
 	int getTileSize() const { return tileSize; }
+	glm::ivec2 getMapSize() const { return mapSize; }
 
 	int collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping = false) const;
 	int collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping = false) const;
 	int collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY = nullptr) const;
 	int collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, bool ignorePlatform = false) const;
 
-	int collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &colliderOffset, const glm::ivec2 &colliderSize, bool bJumping = false) const;
-	int collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &colliderOffset, const glm::ivec2 &colliderSize, bool bJumping = false) const;
+	int collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &colliderOffset, const glm::ivec2 &colliderSize, bool ignorePlatform = false) const;
+	int collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &colliderOffset, const glm::ivec2 &colliderSize, bool ignorePlatform = false) const;
 	int collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &colliderOffset, const glm::ivec2 &colliderSize, int *posY = nullptr) const;
 	int collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &colliderOffset, const glm::ivec2 &colliderSize, bool ignorePlatform = false) const;
 
@@ -56,6 +57,8 @@ public:
 	void reduceNumberOfPlatforms();
 	int getNumOfTilesRemaining();
 	glm::ivec2 getRandomPlatform();
+
+	bool dentroDePlataforma(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize);
 	
 private:
 	bool loadLevel(const string &levelInfoStr);
