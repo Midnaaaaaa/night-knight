@@ -125,7 +125,8 @@ void Game::exitLevel()
 	scene->init();
 	SoundManager::instance().stopBgMusic();
 	transitionTimer = TRANSITION_TIME;
-
+	puntuacionActual = 0;
+	vidasActuales = 3;
 
 	playing = false;
 }
