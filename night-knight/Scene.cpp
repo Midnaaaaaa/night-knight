@@ -302,6 +302,17 @@ void Scene::update(int deltaTime)
 
 
 	currentTime += deltaTime;
+
+	//Check game state
+	if (player->isGameOver() || stageTimer <= 0 && player->getVidas() == 1) {
+		gameOver = true;
+		SoundManager::instance().pauseBgMusic(true);
+	}
+	else if (stageTimer <= 0) {
+		player->muelto();
+		stageTimer = STAGE_TIMER;
+	}
+
 	if (stageCompleted) {
 		stageCompletedTimer -= deltaTime;
 		if (particleDoor != nullptr) particleDoor->update(deltaTime);
@@ -465,14 +476,6 @@ void Scene::update(int deltaTime)
 			spawnDoorParticle(pos);
 			SoundManager::instance().pauseBgMusic(true);
 		}
-	}
-	if (player->isGameOver() || stageTimer <= 0 && player->getVidas() == 1) {
-		gameOver = true;
-		SoundManager::instance().pauseBgMusic(true);
-	}
-	else if (stageTimer <= 0) {
-		player->muelto();
-		stageTimer = STAGE_TIMER;
 	}
 
 	asesino = nullptr;

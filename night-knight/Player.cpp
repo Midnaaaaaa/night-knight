@@ -233,7 +233,7 @@ void Player::update(int deltaTime)
 		}
 		rightSight = false;
 		posCharacter.x -= moveSpeed;
-		int tileCol = map->collisionMoveLeft(posCharacter, colliderOffset, colliderSize, bJumping);
+		int tileCol = map->collisionMoveLeft(posCharacter, colliderOffset, colliderSize, jumpAngle > 90);
 		if (tileCol != 0)
 		{
 			posCharacter.x += moveSpeed;
@@ -249,7 +249,7 @@ void Player::update(int deltaTime)
 		}
 		rightSight = true;
 		posCharacter.x += moveSpeed;
-		int tileCol = map->collisionMoveRight(posCharacter, colliderOffset, colliderSize, bJumping);
+		int tileCol = map->collisionMoveRight(posCharacter, colliderOffset, colliderSize, jumpAngle > 90);
 		if (tileCol != 0)
 		{
 			posCharacter.x -= moveSpeed;
@@ -286,9 +286,8 @@ void Player::update(int deltaTime)
 
 			posCharacter.y = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
 
-			checkCollisionUnder();
-
 			if (jumpAngle > 90) {
+				checkCollisionUnder();
 				int tileCol = map->collisionMoveDown(posCharacter, colliderOffset, colliderSize, &posCharacter.y);
 				bJumping = tileCol == TILE_NOT_SOLID;
 			}
