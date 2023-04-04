@@ -91,6 +91,7 @@ Scene::~Scene()
 	engine->removeSoundSource(hourglassSrc);
 	engine->removeSoundSource(gemSoundSrc);
 	engine->removeSoundSource(clockSoundSrc);
+	SoundManager::instance().stopBgMusic();
 }
 
 

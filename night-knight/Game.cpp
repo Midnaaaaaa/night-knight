@@ -35,6 +35,9 @@ bool Game::update(int deltaTime)
 		engine->setAllSoundsPaused(scene->getPauseState());
 		menuMusic->setIsPaused(true);
 	}
+	if (getKeyUp('1')) changeLevel(1);
+	else if (getKeyUp('2')) changeLevel(2);
+	else if (getKeyUp('3')) changeLevel(3);
 
 
 	//Update old keys
