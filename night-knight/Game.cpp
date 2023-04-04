@@ -140,6 +140,22 @@ void Game::changeLevel(int level)
 	playing = true;
 }
 
+void Game::savePuntuacionYVidas(int puntuacion, int vidas)
+{
+	this->puntuacionActual = puntuacion;
+	this->vidasActuales = vidas;
+}
+
+int Game::getVidasActuales()
+{
+	return vidasActuales;
+}
+
+int Game::getPuntuacionActual()
+{
+	return puntuacionActual;
+}
+
 void Game::updateTimers(int deltaTime) {
 	if (transitionTimer > 0) {
 		transitionTimer -= deltaTime;

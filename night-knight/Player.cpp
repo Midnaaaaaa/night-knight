@@ -495,6 +495,11 @@ bool Player::sePuedeMover() {
 	return !(sprite->animation() == MUELTO || sprite->animation() == MUELTO_MIRROR || moveSpeed == 0);
 }
 
+void Player::setVidas(int vidas)
+{
+	this->vidas = vidas;
+}
+
 
 bool Player::isHurted() {
 	return damagedTimer > 0 || vidas <= 0;

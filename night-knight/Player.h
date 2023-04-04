@@ -33,6 +33,7 @@ public:
 	void muelto();
 
 	bool sePuedeMover();
+	void setVidas(int vidas);
 
 private:
 	virtual void loadAnimations();
