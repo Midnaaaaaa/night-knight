@@ -362,12 +362,16 @@ void Player::update(int deltaTime)
 				startY = posCharacter.y;
 				engine->play2D(jumpSrc);
 			}
-			else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+			else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) { // AGACHARSE
 				if (rightSight && sprite->animation() != CROUCH_RIGHT) {
 					sprite->changeAnimation(CROUCH_RIGHT);
+					colliderOffset.y = 42;
+					colliderSize.y = 22;
 				}
 				else if (!rightSight && sprite->animation() != CROUCH_LEFT) {
 					sprite->changeAnimation(CROUCH_LEFT);
+					colliderOffset.y = 42;
+					colliderSize.y = 22;
 				}
 			}
 			else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
@@ -416,6 +420,12 @@ void Player::update(int deltaTime)
 			}
 		}
 	}
+
+	if (sprite->animation() != CROUCH_LEFT && sprite->animation() != CROUCH_RIGHT) {
+		colliderOffset.y = 32;
+		colliderSize.y = 32;
+	}
+
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
 }
 
