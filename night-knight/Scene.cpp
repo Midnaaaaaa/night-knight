@@ -329,7 +329,7 @@ void Scene::update(int deltaTime)
 				puntIncrSound->drop();
 				puntIncrSound = nullptr;
 			}
-			if(stageCompletedTimer <= 0) Game::instance().changeLevel(2);
+			if(stageCompletedTimer <= 0) Game::instance().changeLevel(++level);
 		}
 		return;
 	}
