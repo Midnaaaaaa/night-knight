@@ -129,6 +129,7 @@ void Game::exitLevel()
 
 void Game::changeLevel(int level)
 {
+	delete scene;
 	scene = new Scene(level);
 	scene->init();
 	menuMusic->setIsPaused(true);
