@@ -46,20 +46,20 @@ const vector<int> TileMap::tileType = { 0,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,
 										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 };
 
-TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
+TileMap *TileMap::createTileMap(const string &levelInfoStr, const glm::vec2 &minCoords, ShaderProgram &program)
 {
-	TileMap *map = new TileMap(levelFile, minCoords, program);
+	TileMap *map = new TileMap(levelInfoStr, minCoords, program);
 	return map;
 }
 
 
-TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
+TileMap::TileMap(const string &levelInfoStr, const glm::vec2 &minCoords, ShaderProgram &program)
 {
 	numPlatforms = 0;
 	mapSize = glm::ivec2(32, 22);
 	tileSize = 16;
 	blockSize = 16;
-	loadLevel(levelFile);
+	loadLevel(levelInfoStr);
 	this->minCoords = minCoords;
 	prepareArrays(minCoords, program);
 	LEFT_WALL = 2 * tileSize;
@@ -92,27 +92,18 @@ void TileMap::free()
 	glDeleteBuffers(1, &vbo);
 }
 
-bool TileMap::loadLevel(const string &levelFile)
+bool TileMap::loadLevel(const string& levelInfoStr)
 {
-	ifstream fin;
+	stringstream fin(levelInfoStr);
 	string line, tilesheetFile;
 	stringstream sstream;
 	short tile;
 	
-	fin.open(levelFile.c_str());
-	if(!fin.is_open())
-		return false;
-	getline(fin, line);
-	if(line.compare(0, 7, "TILEMAP") != 0)
-		return false;
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> tilesheetFile;
 	tilesheet.loadFromFile(tilesheetFile, TEXTURE_PIXEL_FORMAT_RGBA);
-	//tilesheet.setWrapS(GL_CLAMP_TO_EDGE);
-	//tilesheet.setWrapT(GL_CLAMP_TO_EDGE);
-	//tilesheet.setMinFilter(GL_LINEAR_MIPMAP_LINEAR);
-	//tilesheet.setMagFilter(GL_LINEAR_MIPMAP_LINEAR);
+
 	tilesheet.setMinFilter(GL_NEAREST);
 	tilesheet.setMagFilter(GL_NEAREST);
 	getline(fin, line);
@@ -144,12 +135,10 @@ bool TileMap::loadLevel(const string &levelFile)
 			if (tile == 1) platformPositions.push_back(glm::ivec2(i, j));
 			map[j * mapSize.x + i] = tile;
 		}
-	#ifndef _WIN32
-		fin.get(tile);
-	#endif
-	}
-	fin.close();
-	
+	//#ifndef _WIN32
+	//	fin.get(tile);
+	//#endif
+	}	
 	return true;
 }
 
