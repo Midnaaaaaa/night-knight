@@ -485,6 +485,7 @@ bool TileMap::dentroDePlataforma(const glm::ivec2& pos, const glm::ivec2& collid
 
 int TileMap::modifyTileMap(int i, int j, int newTile) {
 	int oldTile = map[mapSize.x * i + j];
+	if (oldTile != 1 && oldTile != 2) return -1;
 	if (newTile < 0) newTile = map[mapSize.x * i + j] + (-newTile); //XD confia
 	map[mapSize.x * i + j] = newTile;
 
