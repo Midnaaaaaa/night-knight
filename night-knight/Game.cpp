@@ -125,13 +125,13 @@ void Game::toggleMenu() {
 void Game::exitLevel()
 {
 	delete scene;
+	puntuacionActual = 0;
+	vidasActuales = 3;
 	scene = new Scene(1);
 	scene->init();
 	SoundManager::instance().stopBgMusic();
 	engine->stopAllSounds();
 	transitionTimer = TRANSITION_TIME;
-	puntuacionActual = 0;
-	vidasActuales = 3;
 
 	playing = false;
 }
