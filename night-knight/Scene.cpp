@@ -7,6 +7,8 @@
 #include "Vampir.h"
 #include "Fantasma.h"
 #include <iomanip>
+
+#include <fstream>
 #include <sstream>
 
 #define MIN_TIME_WITHOUT_SPAWN 15  * 1000
@@ -45,6 +47,10 @@ enum Items {
 
 enum CorAnimations{
 	COR_FULL, COR_75, COR_50, COR_POCHO	
+};
+
+enum EnemyType {
+	ESQUELET, VAMPIR, FANTASMA
 };
 
 
@@ -99,7 +105,9 @@ void Scene::init()
 
 	initShaders();
 
-	map = TileMap::createTileMap("levels/level" + to_string(level) + ".txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	loadLevelInfo("levels/level" + to_string(level) + ".txt");
+
+
 	objectsSpritesheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgSpritesheet.loadFromFile("images/bg" + to_string(level) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
 	doorSpritesheet.loadFromFile("images/door.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -109,6 +117,7 @@ void Scene::init()
 	bg = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(32*map->getTileSize(), 22*map->getTileSize()), glm::ivec2(1,1), &bgSpritesheet, &texProgram);
 	//bg->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
 	
+	/*
 	initPlayerPos = glm::vec2(2, 16);
 	doorPos = glm::vec2(20, 3);
 	keyPos = glm::vec2(28.5, 18.5);
@@ -130,17 +139,13 @@ void Scene::init()
 
 
 	//Player
-	player = new Player();
-	player->setTileMap(map);
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/soma-animations.png", glm::ivec2(16,32), glm::ivec2(8,32), glm::ivec2(32,64), glm::vec2(1/16.f, 1/16.f), initPlayerPos, texProgram);
+	
 
 	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	//player->setSpeed(2);
 
-
 	//Objetos (sprites)
-	key = nullptr;
-	spawnDoor();
+	*/
 	spawnCor();
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
@@ -165,6 +170,102 @@ void Scene::init()
 
 	startTimer = 4000;
 
+}
+
+bool Scene::loadLevelInfo(const string& levelFile) {
+	ifstream fin;
+	string line, tilesheetFile;
+	stringstream sstream;
+	short tile;
+
+	fin.open(levelFile.c_str());
+	if (!fin.is_open())
+		return false;
+	getline(fin, line);
+	if (line.compare(0, 7, "TILEMAP") != 0)
+		return false;
+
+	string tileMapInfoStr = "";
+
+	getline(fin, line);
+	while (line.compare(0, 7, "TILEMAP") != 0) {
+		tileMapInfoStr += line + "\n";
+		getline(fin, line);
+	}
+
+	map = TileMap::createTileMap(tileMapInfoStr, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+
+	/**
+	* Ahora se leen:
+	* - Posicion de la puerta
+	* - Posicion de la llave
+	* - Posicion inicial del jugador
+	* - Numero de enemigos
+	* - info de cada enemigo
+	* 
+	* */
+
+	// Leer la posición de la llave
+	std::getline(fin, line);
+	sstream.str(line);
+	sstream >> keyPos.x >> keyPos.y;
+	sstream.clear();
+	key = nullptr;
+
+	// Leer la posición de la puerta
+	std::getline(fin, line);
+	sstream.str(line);
+	sstream >> doorPos.x >> doorPos.y;
+	sstream.clear();
+	spawnDoor();
+
+
+	// Leer la posición inicial del jugador y info
+	std::getline(fin, line);
+	sstream.str(line);
+	bool rightSight;
+	sstream >> initPlayerPos.x >> initPlayerPos.y >> rightSight;
+	sstream.clear();
+	player = new Player();
+	player->setTileMap(map);
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), true, "images/soma-animations.png", glm::ivec2(16, 32), glm::ivec2(8, 32), glm::ivec2(32, 64), glm::vec2(1 / 16.f, 1 / 16.f), initPlayerPos, texProgram);
+
+	// Leer el número de enemigos
+	int numEnemies;
+	std::getline(fin, line);
+	sstream.str(line);
+	sstream >> numEnemies;
+	sstream.clear();
+
+	// Leer la posición de cada enemigo
+	for (int i = 0; i < numEnemies; i++) {
+		std::getline(fin, line);
+		sstream.str(line);
+		int enemyType;
+		glm::ivec2 pos;
+		sstream >> enemyType >> pos.x >> pos.y >> rightSight;
+		sstream.clear();
+
+		Enemy* enemy;
+		switch (enemyType)
+		{
+		case ESQUELET:
+			enemy = new Esquelet();
+			break;
+		case VAMPIR:
+			enemy = new Vampir();
+			break;
+		case FANTASMA:
+		default:
+			enemy = new Fantasma();
+			break;
+		}
+		enemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), rightSight, pos, map, texProgram);
+		enemies.push_back(enemy);
+	}
+	fin.close();
+
+	return true;
 }
 
 void Scene::updateTimers(int deltaTime) {

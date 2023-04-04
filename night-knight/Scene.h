@@ -41,6 +41,8 @@ private:
 
 	//void gameOver();
 
+	bool loadLevelInfo(const string& levelFile);
+
 private:
 	void updateTimers(int deltaTime);
 

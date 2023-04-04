@@ -23,14 +23,14 @@ class TileMap
 {
 
 private:
-	TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
+	TileMap(const string &levelInfoStr, const glm::vec2 &minCoords, ShaderProgram &program);
 
 public:
 
 	int LEFT_WALL, RIGHT_WALL;
 
 	// Tile maps can only be created inside an OpenGL context
-	static TileMap *createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
+	static TileMap *createTileMap(const string &levelInfoStr, const glm::vec2 &minCoords, ShaderProgram &program);
 
 	~TileMap();
 
@@ -58,7 +58,7 @@ public:
 	glm::ivec2 getRandomPlatform();
 	
 private:
-	bool loadLevel(const string &levelFile);
+	bool loadLevel(const string &levelInfoStr);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
 
 private:
