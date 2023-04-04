@@ -2,7 +2,7 @@
 #include <GL/glut.h>
 #include "Game.h"
 
-#define TRANSITION_TIME 1000
+#define TRANSITION_TIME 500
 
 
 void Game::init()
