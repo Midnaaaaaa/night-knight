@@ -6,12 +6,17 @@ uniform vec2 texCoordDispl;
 uniform int effectTimer;
 uniform int effectId;
 
+uniform vec2 doorPos;
+
 
 in vec2 position;
 in vec2 texCoord;
 out vec2 texCoordFrag;
 
 const float PI = 3.1415926535897932384626433832795;
+
+const int effect5Duration = 2000;
+
 
 void main()
 {
@@ -22,6 +27,9 @@ void main()
 	}
     else if (effectId == 2) { //Sin-Y
         pos.y = pos.y + sin(effectTimer/1000.f*2*PI) * 3;
+    }
+    else if (effectId == 5) {// ¿?
+        pos = mix(pos, doorPos, (effectTimer/effect5Duration));
     }
 
 	// Pass texture coordinates to access a given texture atlas

@@ -30,7 +30,7 @@ void main()
     else if (effectId == 3) { //?
         texCoord.x = texCoord.x + sin((effectTimer)/1000.f*2*PI + int( 100*texCoord.y*2*PI )) * 0.01 * sin(-effectTimer * (PI/(effect3Duration*1.f)));
     }
-	else if(effectId == 4){
+	else if (effectId == 4) {
 		discard;
 	}
 
