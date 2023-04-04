@@ -264,12 +264,14 @@ void Player::update(int deltaTime)
 			jumpAngle = (180 - jumpAngle);
 		}
 
-		if(jumpAngle == 180 && sePuedeMover())
+		if(jumpAngle == 180)
 		{
 			bJumping = false;
 			posCharacter.y = startY;
-			if (rightSight) sprite->changeAnimation(FALLING_NO_JUMP, 2);
-			else sprite->changeAnimation(FALLING_NO_JUMP_MIRROR, 2);
+			if (sePuedeMover()) {
+				if (rightSight) sprite->changeAnimation(FALLING_NO_JUMP, 2);
+				else sprite->changeAnimation(FALLING_NO_JUMP_MIRROR, 2);
+			}
 		}
 		else
 		{

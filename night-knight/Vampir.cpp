@@ -10,7 +10,7 @@ enum CharacterAnims
 
 void Vampir::init(const glm::ivec2& tileMapPos, bool rightSight, const glm::vec2& pos, TileMap *map, ShaderProgram& shaderProgram) {
 	Character::init(tileMapPos, rightSight, "images/bat.png", glm::ivec2(21, 27), glm::ivec2(25, 37), glm::ivec2(64, 64), glm::vec2(1 / 8.f, 1 / 8.f), shaderProgram);
-	setPosition(glm::vec2(pos.x * map->getTileSize(), pos.y * map->getTileSize()));
+	setPosition(glm::vec2((pos.x - 2) * map->getTileSize(), (pos.y - 2) * map->getTileSize()));
 	setTileMap(map);
 	isBat = false;
 	wantsToTransform = false;
