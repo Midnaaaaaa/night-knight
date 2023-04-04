@@ -208,7 +208,8 @@ void Player::respawn() {
 	setPosition(glm::vec2(spawnPos.x * map->getTileSize(), spawnPos.y * map->getTileSize()));
 	moveSpeed = 2;
 	moveSpeedBase = 2;
-	sprite->changeAnimation(STAND_RIGHT);
+	if (rightSight) sprite->changeAnimation(STAND_RIGHT);
+	else sprite->changeAnimation(STAND_LEFT);
 	//addEffect(EFFECT_SPAWN, 2*1000);
 }
 
