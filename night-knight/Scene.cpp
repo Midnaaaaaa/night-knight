@@ -22,7 +22,7 @@
 
 #define STAGE_TIMER 60000
 
-
+#define START_TIME 4000
 
 
 enum KeyAnimations {
@@ -92,6 +92,11 @@ Scene::~Scene()
 	engine->removeSoundSource(gemSoundSrc);
 	engine->removeSoundSource(clockSoundSrc);
 	SoundManager::instance().stopBgMusic();
+
+	if (readySound != nullptr) {
+		readySound->stop();
+		readySound->drop();
+	}
 }
 
 
@@ -169,7 +174,7 @@ void Scene::init()
 	gemSoundSrc = engine->addSoundSourceFromFile("sound/gem.wav");
 	clockSoundSrc = engine->addSoundSourceFromFile("sound/clock.mp3");
 
-	startTimer = 4000;
+	startTimer = START_TIME;
 
 }
 
@@ -293,6 +298,7 @@ void Scene::updateTimers(int deltaTime) {
 			bgSound = SoundManager::instance().changeBgMusic(levelSoundFile.c_str(), true, false);
 			readySound->stop();
 			readySound->drop();
+			readySound = nullptr;
 		}
 	}
 }

@@ -114,7 +114,11 @@ bool Game::getSpecialKeyUp(int key) const
 void Game::toggleMenu() {
 	playing = !playing;
 	//(*bgMusicPtr)->setIsPaused(!playing);
-	menuMusic->setIsPaused(true);
+	if (menuMusic != nullptr) {
+		menuMusic->stop();
+		menuMusic->drop();
+		menuMusic = nullptr;
+	}
 	transitionTimer = TRANSITION_TIME;
 }
 
@@ -124,6 +128,7 @@ void Game::exitLevel()
 	scene = new Scene(1);
 	scene->init();
 	SoundManager::instance().stopBgMusic();
+	engine->stopAllSounds();
 	transitionTimer = TRANSITION_TIME;
 	puntuacionActual = 0;
 	vidasActuales = 3;
@@ -136,7 +141,12 @@ void Game::changeLevel(int level)
 	delete scene;
 	scene = new Scene(level);
 	scene->init();
-	menuMusic->setIsPaused(true);
+	if (menuMusic != nullptr) {
+		menuMusic->stop();
+		menuMusic->drop();
+		menuMusic = nullptr;
+	}
+	engine->stopAllSounds();
 	transitionTimer = TRANSITION_TIME;
 	playing = true;
 }
@@ -163,8 +173,8 @@ void Game::updateTimers(int deltaTime) {
 		if (transitionTimer <= 0) {
 			transitionTimer = 0;
 			if (!playing) {
-				menuMusic->setPlayPosition(0);
-				menuMusic->setIsPaused(false);
+				menuMusic = engine->play2D("sound/menu.mp3", true, false, true);
+				menuMusic->setVolume(0.5);
 			}
 		}
 	}
