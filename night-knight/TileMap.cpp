@@ -198,7 +198,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 // Method collisionMoveDown also corrects Y coordinate if the box is
 // already intersecting a tile below.
 
-bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping) const
+int TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping) const
 {
 	int x, y0, y1;
 	
@@ -218,14 +218,14 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, b
 			if (bJumping) break;
 		case TILE_SOLID:
 		case TILE_SPIKE:
-			return true;
+			return type;
 		}
 	}
 	
-	return false;
+	return 0;
 }
 
-bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping) const
+int TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, bool bJumping) const
 {
 	int x, y0, y1;
 	
@@ -245,11 +245,11 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, 
 			if (bJumping) break;
 		case TILE_SOLID:
 		case TILE_SPIKE:
-			return true;
+			return type;
 		}
 	}
 	
-	return false;
+	return 0;
 }
 
 int TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const
@@ -285,7 +285,7 @@ int TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, in
 	return 0;
 }
 
-bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, bool ignorePlatform) const
+int TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, bool ignorePlatform) const
 {
 	int x0, x1, y;
 
@@ -306,17 +306,17 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, boo
 				break;
 		case TILE_SOLID:
 		case TILE_SPIKE:
-			return true;
+			return type;
 		}
 	}
 
-	return false;
+	return 0;
 }
 
 
 // Collision tests for axis aligned bounding boxes with collider offsets
 
-bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize, bool bJumping) const
+int TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize, bool bJumping) const
 {
 	int x, y0, y1;
 
@@ -336,14 +336,14 @@ bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& collide
 			if (bJumping) break;
 		case TILE_SOLID:
 		case TILE_SPIKE:
-			return true;
+			return type;
 		}
 	}
 
-	return false;
+	return 0;
 }
 
-bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize, bool bJumping) const
+int TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize, bool bJumping) const
 {
 	int x, y0, y1;
 
@@ -363,11 +363,11 @@ bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& collid
 			if (bJumping) break;
 		case TILE_SOLID:
 		case TILE_SPIKE:
-			return true;
+			return type;
 		}
 	}
 
-	return false;
+	return 0;
 }
 
 int TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize, int* posY) const
@@ -403,7 +403,7 @@ int TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& collider
 	return 0;
 }
 
-bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize, bool ignorePlatform) const
+int TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& colliderOffset, const glm::ivec2& colliderSize, bool ignorePlatform) const
 {
 	int x0, x1, y;
 
@@ -424,11 +424,11 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& colliderO
 				break;
 		case TILE_SOLID:
 		case TILE_SPIKE:
-			return true;
+			return type;
 		}
 	}
 
-	return false;
+	return 0;
 }
 
 

@@ -233,10 +233,12 @@ void Player::update(int deltaTime)
 		}
 		rightSight = false;
 		posCharacter.x -= moveSpeed;
-		if (map->collisionMoveLeft(posCharacter, colliderOffset, colliderSize, bJumping))
+		int tileCol = map->collisionMoveLeft(posCharacter, colliderOffset, colliderSize, bJumping);
+		if (tileCol != 0)
 		{
 			posCharacter.x += moveSpeed;
 			if (sprite->animation() == MOVE_LEFT) sprite->changeAnimation(STAND_LEFT);
+			if (tileCol == TILE_SPIKE) muelto();
 		}
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && (sprite->animation() != CROUCH_LEFT && sprite->animation() != CROUCH_RIGHT) && sePuedeMover())
@@ -247,10 +249,12 @@ void Player::update(int deltaTime)
 		}
 		rightSight = true;
 		posCharacter.x += moveSpeed;
-		if (map->collisionMoveRight(posCharacter, colliderOffset, colliderSize, bJumping))
+		int tileCol = map->collisionMoveRight(posCharacter, colliderOffset, colliderSize, bJumping);
+		if (tileCol != 0)
 		{
 			posCharacter.x -= moveSpeed;
 			if (sprite->animation() == MOVE_RIGHT) sprite->changeAnimation(STAND_RIGHT);
+			if (tileCol == TILE_SPIKE) muelto();
 		}
 	}
 
@@ -260,8 +264,10 @@ void Player::update(int deltaTime)
 		int nextJumpAngle = jumpAngle + JUMP_ANGLE_STEP;
 
 		int nextY = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
-		if (map->collisionMoveUp(glm::ivec2(posCharacter.x, nextY), colliderOffset, colliderSize, true)) {
+		int tileCol = map->collisionMoveUp(glm::ivec2(posCharacter.x, nextY), colliderOffset, colliderSize, true);
+		if (tileCol != 0) {
 			jumpAngle = (180 - jumpAngle);
+			if (tileCol == TILE_SPIKE) muelto();
 		}
 
 		if(jumpAngle == 180)

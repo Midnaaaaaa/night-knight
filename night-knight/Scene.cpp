@@ -475,6 +475,7 @@ void Scene::update(int deltaTime)
 		stageTimer = STAGE_TIMER;
 	}
 
+	asesino = nullptr;
 	for (Enemy* e : enemies)
 	{
 		e->update(deltaTime);
