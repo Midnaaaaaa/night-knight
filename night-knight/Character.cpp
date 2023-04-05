@@ -10,10 +10,10 @@ void Character::init(const glm::ivec2& tileMapPos, bool rightSight, string sprit
 	bJumping = false;
 	spritesheet.loadFromFile(spriteFile, TEXTURE_PIXEL_FORMAT_RGBA);
 	//sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1 / 8.f, 1 / 4.f), &spritesheet, &shaderProgram);
+	tileMapDispl = tileMapPos;
 	sprite = Sprite::createSprite(tileMapDispl, pixelSize, texSize, &spritesheet, &shaderProgram);
 	loadAnimations();
-	tileMapDispl = tileMapPos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
+	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
 
 	this->freezeTimer = 0;
 	//this->effectDelay = 0;
@@ -54,7 +54,7 @@ void Character::setTileMap(TileMap* tileMap)
 void Character::setPosition(const glm::vec2& pos)
 {
 	posCharacter = pos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
+	sprite->setPosition(glm::vec2(float(posCharacter.x), float(posCharacter.y)));
 }
 
 void Character::setSpeed(int speed) {
@@ -99,6 +99,11 @@ void Character::freeze(int milisec, bool tremolar) {
 void Character::addEffect(int id, int duration, int delay) {
 	sprite->addEffect(id, duration, delay);
 }
+
+void Character::addEffect(int id, int duration, const glm::ivec2& dest, int delay) {
+	sprite->addEffect(id, duration, dest, delay);
+}
+
 
 void Character::updateTimers(int deltaTime, bool freeze) {
 	if (freezeTimer != 0) {

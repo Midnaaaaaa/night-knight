@@ -439,7 +439,7 @@ void Player::update(int deltaTime)
 		colliderSize.y = 32;
 	}
 
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
+	sprite->setPosition(glm::vec2(float(posCharacter.x), float(posCharacter.y)));
 }
 
 void Player::checkCollisionUnder() {

@@ -124,7 +124,7 @@ void Vampir::update(int deltaTime) {
 		posCharacter.x += (rightSight * 2 - 1) * moveSpeed;
 	}
 
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
+	sprite->setPosition(glm::vec2(float(posCharacter.x), float(posCharacter.y)));
 }
 
 void Vampir::transformBat() {

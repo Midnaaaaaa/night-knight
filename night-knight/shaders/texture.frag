@@ -7,6 +7,7 @@ uniform int effectTimer;
 uniform int effectId;
 
 in vec2 texCoordFrag;
+in float alpha;
 out vec4 outColor;
 
 const float PI = 3.1415926535897932384626433832795;
@@ -38,6 +39,7 @@ void main()
 	if(texColor.a < 0.5f)
 		discard;
 
+    texColor.a = 0.1f;
 	outColor = color * texColor;
 }
 

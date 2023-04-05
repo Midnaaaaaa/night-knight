@@ -28,13 +28,16 @@ void main()
     else if (effectId == 2) { //Sin-Y
         pos.y = pos.y + sin(effectTimer/1000.f*2*PI) * 3;
     }
-    else if (effectId == 5) {// ¿?
-        pos = mix(pos, doorPos, (effectTimer/effect5Duration));
-    }
 
 	// Pass texture coordinates to access a given texture atlas
 	texCoordFrag = texCoord + texCoordDispl;
 	// Transform position from pixel coordinates to clipping coordinates
-	gl_Position = projection * modelview * vec4(pos, 0.0, 1.0);
+    if (effectId == 5) {// ¿?
+        vec4 eyePos = mix(modelview * vec4(pos, 0.0, 1.0), vec4(doorPos, 0.0, 1.0), pow((effect5Duration-effectTimer)/float(effect5Duration), 5));
+	    gl_Position = projection * eyePos;
+    }
+    else {
+	    gl_Position = projection * modelview * vec4(pos, 0.0, 1.0);
+    }
 }
 
