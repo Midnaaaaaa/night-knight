@@ -61,6 +61,7 @@ public:
 	int getVidasActuales();
 	int getPuntuacionActual();
 
+	void resize(int w, int h);
 
 private:
 	bool initShaders();

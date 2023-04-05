@@ -39,8 +39,8 @@ void Game::init()
 	menuMusic->setVolume(0.5);
 	bgMusicPtr = SoundManager::instance().getBgSoundPtr();
 
-	//frameBufferTexture.loadFromFrameBuffer(FBO);
-	frameBufferTexture.loadFromFile("images/4284.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	glGenFramebuffers(1, &FBO);
+	frameBufferTexture.loadFromFrameBuffer(FBO);
 
 	bPlay = true;
 	playing = false;
@@ -219,6 +219,13 @@ int Game::getVidasActuales()
 int Game::getPuntuacionActual()
 {
 	return puntuacionActual;
+}
+
+void Game::resize(int w, int h)
+{
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+	glViewport(0, 0, w, h);
 }
 
 void Game::updateTimers(int deltaTime) {
