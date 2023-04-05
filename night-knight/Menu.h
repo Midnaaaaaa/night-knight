@@ -29,12 +29,14 @@ private:
 	void initShaders();
 	void moveBetweenHowToPlay();
 	void spawnDoor(int scene);
-	void spawnKey (int scene);
+	void spawnKey (int scene, const glm::vec2& pos);
 	void spawnPlatforms(int scene);
-	void spawnMan(int scene);
+	void spawnMan(int scene, const glm::vec2& pos);
+	void spawnManMoving(int scene, const glm::vec2& pos);
+	//void spawnArrows(int scene);
 
 	Texture bgSpritesheet, bgcreditsheet, bghowtoplaysheet, doorSpritesheet, itemsSpriteSheet, platformsSpritesheet;
-	Texture manSpriteSheet;
+	Texture manSpriteSheet, kbarrowssheet;
 
 	Sprite* bg;
 	Sprite* bgCredit;

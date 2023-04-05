@@ -57,7 +57,13 @@ void Menu::init()
 	texts[HOW_TO_PLAY2] =
 	{
 		{"MOVEMENT", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
-		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED}
+		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED},
+		{"USE THE KEYBOARD ARROWS TO JUMP, CROUCH AND MOVE", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80), 8, Text::CENTERED},
+		{">", glm::ivec2((SCREEN_WIDTH / 2) + 40, SCREEN_HEIGHT / 2), 32, Text::CENTERED},
+		{"<", glm::ivec2((SCREEN_WIDTH / 2) - 40, SCREEN_HEIGHT / 2), 32, Text::CENTERED},
+		{"^", glm::ivec2((SCREEN_WIDTH / 2) + 0, SCREEN_HEIGHT / 2 -  20), 32, Text::CENTERED},
+		{"v", glm::ivec2((SCREEN_WIDTH / 2) + 0, SCREEN_HEIGHT / 2 - 0), 32, Text::CENTERED},
+
 	};
 	texts[HOW_TO_PLAY3] =
 	{
@@ -81,6 +87,7 @@ void Menu::init()
 	itemsSpriteSheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	platformsSpritesheet.loadFromFile("images/tileSet2.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	manSpriteSheet.loadFromFile("images/soma-animations.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	//kbarrowssheet.loadFromFile("images/kbarrows.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	images[MAIN_MENU] = { bg };
 	
@@ -90,12 +97,13 @@ void Menu::init()
 	
 	images[HOW_TO_PLAY1] = { bghowtoplay };
 	spawnDoor(HOW_TO_PLAY1);
-	spawnKey(HOW_TO_PLAY1);
+	spawnKey(HOW_TO_PLAY1, glm::vec2(SCREEN_WIDTH * 4 / 6, 260));
 	spawnPlatforms(HOW_TO_PLAY1);
-	spawnMan(HOW_TO_PLAY1);
+	spawnMan(HOW_TO_PLAY1, glm::vec2(SCREEN_WIDTH * 1 / 6, 260 - 64));
 
 	images[HOW_TO_PLAY2] = { bghowtoplay };
-	
+	spawnManMoving(HOW_TO_PLAY2, glm::vec2((SCREEN_WIDTH * 3 / 6) - 40, 260 - 64));
+	//spawnArrows(HOW_TO_PLAY2);
 	
 	images[HOW_TO_PLAY3] = { bghowtoplay };
 	images[HOW_TO_PLAY4] = { bghowtoplay };
@@ -148,6 +156,7 @@ void Menu::update(int deltaTime)
 			scene = MAIN_MENU;
 		}
 		moveBetweenHowToPlay();
+
 	}
 	for (Sprite* s : images[scene])
 	{
@@ -245,10 +254,10 @@ void Menu::spawnDoor(int scene) {
 	images[scene].push_back(door);
 }
 
-void Menu::spawnKey(int scene) {
+void Menu::spawnKey(int scene, const glm::vec2& pos) {
 	Sprite* key = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 32), glm::vec2(1 / 8.f, 1 / 8.f), &itemsSpriteSheet, &texProgram);
 	key->setDisplacement(glm::vec2(1/8.f * 1, 1/8.f * 2));
-	key->setPosition(glm::vec2(SCREEN_WIDTH * 4 / 6, 260));
+	key->setPosition(pos);
 	key->addEffect(EFFECT_SIN_Y, 200000);
 	images[scene].push_back(key);
 }
@@ -279,10 +288,10 @@ void Menu::spawnPlatforms(int scene) {
 	images[scene].push_back(plat4);
 }
 
-void Menu::spawnMan(int scene) {
+void Menu::spawnMan(int scene, const glm::vec2& pos) {
 	Sprite* man = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(64, 128), glm::vec2(1 / 16.f, 1 / 16.f), &manSpriteSheet, &texProgram);
 	man->setDisplacement(glm::vec2(1 / 16.f * 1, 1 / 16.f * 2));
-	man->setPosition(glm::vec2(SCREEN_WIDTH * 1 / 6, 260 - 64));
+	man->setPosition(pos);
 
 	man->setNumberAnimations(1);
 	man->setAnimationParams(0, 4, false);
@@ -290,6 +299,98 @@ void Menu::spawnMan(int scene) {
 	man->addKeyframe(0, glm::vec2(1 / 16.f * 1, 0.0f));
 	man->addKeyframe(0, glm::vec2(1 / 16.f * 2, 0.0f));
 	man->addKeyframe(0, glm::vec2(1 / 16.f * 3, 0.0f));
+	man->changeAnimation(0);
+	images[scene].push_back(man);
+}
+
+//void Menu::spawnArrows(int scene) {
+//	Sprite* arrows = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(64, 48), glm::vec2(1 / 1.f, 1 / 1.f), &kbarrowssheet, &texProgram);
+//	arrows->setPosition(glm::vec2((SCREEN_WIDTH * 3 / 6) - 20, 150));
+//	images[scene].push_back(arrows);
+//}
+
+
+void Menu::spawnManMoving(int scene, const glm::vec2& pos) {
+	Sprite* man = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(64, 128), glm::vec2(1 / 16.f, 1 / 16.f), &manSpriteSheet, &texProgram);
+	man->setDisplacement(glm::vec2(1 / 16.f * 1, 1 / 16.f * 2));
+	man->setPosition(pos);
+
+	man->setNumberAnimations(2);
+	man->setAnimationParams(1, 30, true, 3, 0);
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 4, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 5, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 6, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 7, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 8, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 9, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 10, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 11, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 12, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 13, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 14, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 15, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 0, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 1, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 2, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 3, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 4, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 5, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 7, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 8, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 9, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 10, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 11, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 12, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 13, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 14, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 15, 0.0f));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 0, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 1, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 2, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 3, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 4, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 5, 1 / 16.f * 1));
+	man->addKeyframe(1, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
+
+	man->setAnimationParams(0, 30, false, 3, 1);
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 4, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 5, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 6, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 7, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 8, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 9, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 10, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 11, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 12, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 13, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 14, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 15, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 0, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 1, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 2, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 3, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 4, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 5, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 7, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 8, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 9, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 10, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 11, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 12, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 13, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 14, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 15, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 0, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 1, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 2, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 3, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 4, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 5, 1 / 16.f * 1));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 6, 1 / 16.f * 1));
+	
+	
 	man->changeAnimation(0);
 	images[scene].push_back(man);
 }
