@@ -39,10 +39,14 @@ void Menu::init()
 
 	texts[CREDITS] = 
 	{
-		{"Pol   Roca", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 16, Text::CENTERED},
-		{"Adria   Lozano", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100), 16, Text::CENTERED},
-		{"DEVELOPED BY", glm::ivec2(SCREEN_WIDTH / 2, 70), 16, Text::CENTERED}
-	
+		{"DEVELOPED BY", glm::ivec2(SCREEN_WIDTH / 2, 75), 16, Text::CENTERED},
+		{"Pol Roca", glm::ivec2(SCREEN_WIDTH / 2, 125), 16, Text::CENTERED},
+		{"Adria Lozano", glm::ivec2(SCREEN_WIDTH / 2, 150), 16, Text::CENTERED},
+		{"ORIGINAL BY", glm::ivec2(SCREEN_WIDTH / 2, 200), 16, Text::CENTERED},
+		{"Juan J. Martinez", glm::ivec2(SCREEN_WIDTH / 2, 225), 16, Text::CENTERED},
+		{"ART & MUSIC FROM", glm::ivec2(SCREEN_WIDTH / 2, 275), 16, Text::CENTERED},
+		{"Castelvania", glm::ivec2(SCREEN_WIDTH / 2, 300), 16, Text::CENTERED},
+		{"freesound.org", glm::ivec2(SCREEN_WIDTH / 2, 325), 16, Text::CENTERED},
 	};
 
 	texts[HOW_TO_PLAY1] =
@@ -81,7 +85,7 @@ void Menu::init()
 
 	bgSpritesheet.loadFromFile("images/titlescreen.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bg = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgSpritesheet, &texProgram);
-	bgcreditsheet.loadFromFile("images/creditbg.jpg", TEXTURE_PIXEL_FORMAT_RGBA);
+	bgcreditsheet.loadFromFile("images/bgcredits.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgCredit = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgcreditsheet, &texProgram);
 	bghowtoplaysheet.loadFromFile("images/bghowtoplay2.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bghowtoplay = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bghowtoplaysheet, &texProgram);
