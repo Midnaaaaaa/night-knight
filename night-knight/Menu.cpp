@@ -70,7 +70,7 @@ void Menu::init()
 		{"ITEMS", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
 		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED},
 		{"THERE ARE SOME ITEMS THAT CAN HELP YOU OUT!", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80), 8, Text::CENTERED},
-		{"KEY", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80), 8, Text::CENTERED}
+		{"THE KEY OPENS THE DOOR", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48, 140 + 28), 6, Text::LEFT_ALIGNED}
 	};
 	texts[HOW_TO_PLAY4] =
 	{
@@ -108,8 +108,8 @@ void Menu::init()
 	//spawnArrows(HOW_TO_PLAY2);
 	
 	images[HOW_TO_PLAY3] = { bghowtoplay };
-	spawnKey(HOW_TO_PLAY3, glm::vec2(SCREEN_WIDTH * 1 / 6, 260));
-	spawnItems(HOW_TO_PLAY3, glm::vec2(SCREEN_WIDTH * 2 / 6, 260), glm::vec2(SCREEN_WIDTH * 3 / 6, 260), glm::vec2(SCREEN_WIDTH * 4 / 6, 260));
+	spawnKey(HOW_TO_PLAY3, glm::vec2(SCREEN_WIDTH * 1.25 / 6, 140));
+	spawnItems(HOW_TO_PLAY3, glm::vec2(SCREEN_WIDTH * 1.25 / 6, 200), glm::vec2(SCREEN_WIDTH * 1.25 / 6, 260), glm::vec2(SCREEN_WIDTH * 1.25 / 6, 320));
 
 
 	images[HOW_TO_PLAY4] = { bghowtoplay };
@@ -257,7 +257,7 @@ void Menu::spawnItems(int scene, const glm::vec2& posH, const glm::vec2& posC, c
 	Sprite* hourglass = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 32), glm::vec2(1 / 8.f, 1 / 8.f), &itemsSpriteSheet, &texProgram);
 	hourglass->setDisplacement(glm::vec2(1 / 8.f * 5, 0.0f));
 	hourglass->setPosition(posH);
-	hourglass->addEffect(EFFECT_SIN_Y, 200000);
+	hourglass->addEffect(EFFECT_SIN_Y, 200000, 750);
 	images[scene].push_back(hourglass);
 
 	Sprite* clock = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 32), glm::vec2(1 / 8.f, 1 / 8.f), &itemsSpriteSheet, &texProgram);
@@ -274,13 +274,13 @@ void Menu::spawnItems(int scene, const glm::vec2& posH, const glm::vec2& posC, c
 	clock->addKeyframe(0, glm::vec2(1 / 8.f * 6, 1 / 8.f * 3));
 	clock->addKeyframe(0, glm::vec2(1 / 8.f * 7, 1 / 8.f * 3));
 	clock->changeAnimation(0);
-	clock->addEffect(EFFECT_SIN_Y, 200000);
+	clock->addEffect(EFFECT_SIN_Y, 200000, 500);
 	images[scene].push_back(clock);
 
 	Sprite* gem = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 32), glm::vec2(1 / 8.f, 1 / 8.f), &itemsSpriteSheet, &texProgram);
 	gem->setDisplacement(glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
 	gem->setPosition(posG);
-	gem->addEffect(EFFECT_SIN_Y, 200000);
+	gem->addEffect(EFFECT_SIN_Y, 200000, 250);
 	images[scene].push_back(gem);
 
 }
