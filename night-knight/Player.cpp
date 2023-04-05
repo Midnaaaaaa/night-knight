@@ -17,6 +17,7 @@
 #define TYPE_STOPWATCH 4
 
 #define DAMAGED_TIME 2 * 1000
+#define INV_TIME 2 * 1000
 
 #define PUNTS_TO_VIDA_EXTRA 10000
 
@@ -205,12 +206,13 @@ void Player::loadAnimations() {
 
 void Player::respawn() {
 	damagedTimer = 0;
+	invulnerabilityTimer = INV_TIME;
 	setPosition(glm::vec2(spawnPos.x * map->getTileSize(), spawnPos.y * map->getTileSize()));
 	moveSpeed = 2;
 	moveSpeedBase = 2;
 	if (rightSight) sprite->changeAnimation(STAND_RIGHT);
 	else sprite->changeAnimation(STAND_LEFT);
-	//addEffect(EFFECT_SPAWN, 2*1000);
+	if (puntuacion > 0) addEffect(EFFECT_BLINK, INV_TIME);
 }
 
 void Player::dentroDePlataforma() {
@@ -226,6 +228,13 @@ void Player::update(int deltaTime)
 		damagedTimer -= deltaTime;
 		if (damagedTimer <= 0 && vidas > 0) {
 			respawn();
+		}
+	}
+
+	if (invulnerabilityTimer > 0) {
+		invulnerabilityTimer -= deltaTime;
+		if (invulnerabilityTimer <= 0) {
+			invulnerabilityTimer = 0;
 		}
 	}
 
@@ -504,7 +513,7 @@ void Player::setVidas(int vidas)
 
 
 bool Player::isHurted() {
-	return damagedTimer > 0 || vidas <= 0;
+	return damagedTimer > 0 || vidas <= 0 || invulnerabilityTimer > 0;
 }
 
 bool Player::checkCollisionWithRect(const glm::ivec2& leftTop, const glm::ivec2& rightBottom, int type) {

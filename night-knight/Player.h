@@ -42,7 +42,7 @@ private:
 	void dentroDePlataforma();
 
 	//bool damaged = false;
-	int damagedTimer;
+	int damagedTimer, invulnerabilityTimer;
 
 	bool godMode;
 
