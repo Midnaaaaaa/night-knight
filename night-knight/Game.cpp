@@ -38,6 +38,7 @@ bool Game::update(int deltaTime)
 	if (getKeyUp('1')) changeLevel(1);
 	else if (getKeyUp('2')) changeLevel(2);
 	else if (getKeyUp('3')) changeLevel(3);
+	else if (getKeyUp('4')) changeLevel(4);
 
 
 	//Update old keys

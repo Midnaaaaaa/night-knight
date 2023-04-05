@@ -116,7 +116,7 @@ void Scene::init()
 
 	objectsSpritesheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgSpritesheet.loadFromFile("images/bg" + to_string(level) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
-	doorSpritesheet.loadFromFile("images/door"+ to_string(level) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
+	doorSpritesheet.loadFromFile("images/door"+ to_string(level % 3) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
 	particleSpritesheet.loadFromFile("images/particles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	corSpritesheet.loadFromFile("images/cor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
@@ -294,7 +294,7 @@ void Scene::updateTimers(int deltaTime) {
 		}
 		if (startTimer <= 0) {
 			startTimer = 0;
-			string levelSoundFile = "sound/lvl" + to_string(level) + ".mp3";
+			string levelSoundFile = "sound/lvl" + to_string(level % 3) + ".mp3";
 			bgSound = SoundManager::instance().changeBgMusic(levelSoundFile.c_str(), true, false);
 			readySound->stop();
 			readySound->drop();
