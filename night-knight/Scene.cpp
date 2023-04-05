@@ -285,9 +285,11 @@ void Scene::updateTimers(int deltaTime) {
 		freezeTimer -= deltaTime;
 		if (freezeTimer <= 0) {
 			freezeTimer = 0;
-			hourglassSound->stop();
-			hourglassSound->drop();
-			hourglassSound = nullptr;
+			if (hourglassSound != nullptr) {
+				hourglassSound->stop();
+				hourglassSound->drop();
+				hourglassSound = nullptr;
+			}
 			bgSound->setVolume(1);
 		}
 	}
@@ -614,15 +616,15 @@ void Scene::render()
 		e->render();
 	}
 
-	if (key != nullptr) {
-		key->render();
-	}
 
 	for (Item i : objects)
 	{
 		i.sprite->render();
 	}
 
+	if (key != nullptr) {
+		key->render();
+	}
 	//Render de num vidas
 	text.render("x" + to_string(player->getVidas()), glm::vec2(SCREEN_X + 26, 30.f), 26, glm::vec4(1, 1, 1, 1));
 
@@ -633,10 +635,10 @@ void Scene::render()
 	text.render(ss.str(), glm::vec2(150.f, 30.f), 26, glm::vec4(1, 1, 1, 1));
 
 
-	if (stageTimer < 20000 && stageTimer > 5000) {
+	if (stageTimer < 20000 && stageTimer > 5000 && !stageCompleted) {
 		text.render(to_string(stageTimer / 1000), glm::vec2(SCREEN_WIDTH / 2, 30.f), 32, glm::vec4(1, 1, 0, 1), Text::CENTERED);
 	}
-	else if (stageTimer < 5000){
+	else if (stageTimer < 5000 && !stageCompleted){
 		text.render(to_string(stageTimer / 1000), glm::vec2(SCREEN_WIDTH / 2, 30.f), 32, glm::vec4(0.7, 0.2, 0.1, 1), Text::CENTERED);
 	}
 	else {
