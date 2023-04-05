@@ -87,6 +87,9 @@ private:
 	ISound* hourglassSound;
 	ISound* gameOverSound;
 	ISound* readySound;
+	ISound* clockSound;
+
+	int tickSoundTime;
 
 
 	bool paused;

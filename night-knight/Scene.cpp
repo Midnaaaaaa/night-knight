@@ -11,8 +11,8 @@
 #include <fstream>
 #include <sstream>
 
-#define MIN_TIME_WITHOUT_SPAWN 15  * 1000
-#define MAX_TIME_WITHOUT_SPAWN 30 * 1000
+#define MIN_TIME_WITHOUT_SPAWN 1  * 1000
+#define MAX_TIME_WITHOUT_SPAWN 2 * 1000
 
 #define MIN_TIME_TO_DESPAWN 8  * 1000
 #define MAX_TIME_TO_DESPAWN 16 * 1000
@@ -499,13 +499,30 @@ void Scene::update(int deltaTime)
 				break;
 			case CLOCK:
 				stageTimer += 15000;
-				engine->play2D(clockSoundSrc);
+				if (clockSound == nullptr || clockSound->isFinished()) {
+					clockSound = engine->play2D(clockSoundSrc, true, false, true);
+				}
+				else {
+					clockSound->setPlayPosition(0);
+					clockSound->setIsPaused(false);
+				}
+				tickSoundTime = currentTime + 2000;
 				break;
 			}
 			it->sprite->free();
 			it = objects.erase(it);
 			if (it == objects.end()) break;
 		}
+	}
+
+	if (currentTime <= tickSoundTime && clockSound != nullptr) {
+		float ratio = 1-((tickSoundTime - currentTime)/2000) + 1;
+		clockSound->setPlaybackSpeed(ratio);
+	}
+	else if (clockSound != nullptr) {
+		clockSound->stop();
+		clockSound->drop();
+		clockSound = nullptr;
 	}
 
 	asesino = nullptr;
@@ -658,6 +675,9 @@ void Scene::spawnKey() {
 	key->addEffect(EFFECT_SIN_Y, 120 * 1000);
 	glm::ivec2 center = key->getPosition() + key->getSpriteSize() * 0.5f;
 	key->addEffect(EFFECT_BH, -1000, center);
+
+	ISound* is = engine->play2D("sound/keys.ogg", false, false, true);
+	is->setVolume(2);
 }
 
 

@@ -28,7 +28,7 @@ ISound* SoundManager::changeBgMusic(const char* file, bool loop, bool pause) {
 		bgSound->drop();
 	}
 	bgSound = engine->play2D(file, loop, pause, true);
-	//bgSound->setVolume(0.5);
+	//bgSound->setVolume(0.75);
 	return bgSound;
 }
 
