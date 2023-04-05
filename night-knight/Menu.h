@@ -33,6 +33,7 @@ private:
 	void spawnPlatforms(int scene);
 	void spawnMan(int scene, const glm::vec2& pos);
 	void spawnManMoving(int scene, const glm::vec2& pos);
+	void spawnItems(int scene, const glm::vec2& posH, const glm::vec2& posC, const glm::vec2& posG);
 	//void spawnArrows(int scene);
 
 	Texture bgSpritesheet, bgcreditsheet, bghowtoplaysheet, doorSpritesheet, itemsSpriteSheet, platformsSpritesheet;
