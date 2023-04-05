@@ -19,7 +19,7 @@ Menu::~Menu()
 void Menu::init()
 {
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
-	textObj.init("fonts/ArcadeClassic.ttf", glm::ivec2(0, 0), projection);
+	textObj.init("fonts/PixelFont.ttf", glm::ivec2(0, 0), projection);
 	titleObj.init("fonts/AncientModernTales.otf", glm::ivec2(0, 0), projection);
 	//Harcoded :+1:
 
@@ -31,35 +31,43 @@ void Menu::init()
 	texts.resize(6);
 	images.resize(6);
 
-	texts[MAIN_MENU] = { {"Play", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 0)},
-		{"How    to    play", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 50)},
-		{"Credits", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100)},
-		{"Exit", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 150)} };
+	texts[MAIN_MENU] = { {"PLAY", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2) + 1, 16, Text::CENTERED},
+		{"HOW TO PLAY", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 50), 16, Text::CENTERED},
+		{"CREDITS", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100), 16, Text::CENTERED},
+		{"EXIT", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 150), 16, Text::CENTERED} 
+	};
 
 	texts[CREDITS] = 
 	{
-		{"Pol   Roca", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)},
-		{"Adria   Lozano", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100)},
-		{"DEVELOPED BY", glm::ivec2(SCREEN_WIDTH / 2, 70)}
+		{"Pol   Roca", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), 16, Text::CENTERED},
+		{"Adria   Lozano", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100), 16, Text::CENTERED},
+		{"DEVELOPED BY", glm::ivec2(SCREEN_WIDTH / 2, 70), 16, Text::CENTERED}
 	
 	};
 
 	texts[HOW_TO_PLAY1] =
 	{
-		{"OBJECTIVE", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)},
-		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)}
+		{"OBJECTIVE", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT/2 - 150), 16, Text::CENTERED},
+		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED},
+		{"TO BEAT THE GAME YOU MUST STEP ON EVERY PLATFORM!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 80), 8, Text::LEFT_ALIGNED},
+		{"WHEN EVERY PLATFORM HAS BEEN MARKED, A KEY WILL SPAWN!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 60), 8, Text::LEFT_ALIGNED},
+		{"GRAB THE KEY AND HEAD OUT OF THE STAGE AS FAST AS YOU CAN!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 40), 8, Text::LEFT_ALIGNED}
+
 	};
 	texts[HOW_TO_PLAY2] =
 	{
-		{"MOVEMENT", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)}
+		{"MOVEMENT", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
+		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED}
 	};
 	texts[HOW_TO_PLAY3] =
 	{
-		{"OBJECTS", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)}
+		{"OBJECTS", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
+		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED}
 	};
 	texts[HOW_TO_PLAY4] =
 	{
-		{"ENEMIES", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)}
+		{"ENEMIES", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
+		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED}
 	};
 
 
@@ -67,12 +75,30 @@ void Menu::init()
 	bg = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgSpritesheet, &texProgram);
 	bgcreditsheet.loadFromFile("images/creditbg.jpg", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgCredit = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgcreditsheet, &texProgram);
-	
-	sirbernardsheet.loadFromFile("images/sirbernard.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sirbernard = Sprite::createSprite(glm::ivec2(SCREEN_WIDTH/2 + 200, SCREEN_HEIGHT/2), glm::vec2(float(SCREEN_WIDTH/2 - 200), float(SCREEN_HEIGHT/2)), glm::vec2(1.f, 1.f), &sirbernardsheet, &texProgram);
+	bghowtoplaysheet.loadFromFile("images/bghowtoplay2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	bghowtoplay = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bghowtoplaysheet, &texProgram);
+	doorSpritesheet.loadFromFile("images/door2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	itemsSpriteSheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	platformsSpritesheet.loadFromFile("images/tileSet2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	manSpriteSheet.loadFromFile("images/soma-animations.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	images[MAIN_MENU] = { bg };
-	images[CREDITS] = { bgCredit, sirbernard };
+	
+	
+	images[CREDITS] = { bgCredit };
+	
+	
+	images[HOW_TO_PLAY1] = { bghowtoplay };
+	spawnDoor(HOW_TO_PLAY1);
+	spawnKey(HOW_TO_PLAY1);
+	spawnPlatforms(HOW_TO_PLAY1);
+	spawnMan(HOW_TO_PLAY1);
+
+	images[HOW_TO_PLAY2] = { bghowtoplay };
+	
+	
+	images[HOW_TO_PLAY3] = { bghowtoplay };
+	images[HOW_TO_PLAY4] = { bghowtoplay };
 
 	engine = SoundManager::instance().getSoundEngine();
 	menuNavSrc = engine->addSoundSourceFromFile("sound/menu-nav.mp3");
@@ -134,9 +160,10 @@ void Menu::render()
 {
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
-	for (Sprite* s : images[scene])
+	for (int i = 0; i < images[scene].size(); ++i)
 	{
-		s->render(glm::vec4(0.5f));
+		if (i == 0) images[scene][i]->render(glm::vec4(0.5f));
+		else images[scene][i]->render();
 	}
 
 	for (int i = 0; i < texts[scene].size(); ++i)
@@ -145,8 +172,8 @@ void Menu::render()
 		if (i == selected && scene == MAIN_MENU) {
 			color = glm::vec4(0.7f, 0.8f, 0.2f, 1.f);
 		}
-		textObj.render(texts[scene][i].first, texts[scene][i].second + 1, 16, glm::vec4(0, 0, 0, 1) * 0.8f, Text::CENTERED);
-		textObj.render(texts[scene][i].first, texts[scene][i].second, 16, color, Text::CENTERED);
+		textObj.render(texts[scene][i].text, texts[scene][i].pos + 1, texts[scene][i].textSize, glm::vec4(0, 0, 0, 1) * 0.8f, texts[scene][i].alignment);
+		textObj.render(texts[scene][i].text, texts[scene][i].pos, texts[scene][i].textSize, color, texts[scene][i].alignment);
 	}
 
 
@@ -209,4 +236,60 @@ void Menu::moveBetweenHowToPlay()
 		if (Game::instance().getSpecialKeyUp(GLUT_KEY_LEFT)) scene = HOW_TO_PLAY3;
 		break;
 	}
+}
+
+
+void Menu::spawnDoor(int scene) {
+	Sprite *door = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(64, 64), glm::vec2(1 / 4.f, 1 / 4.f), &doorSpritesheet, &texProgram);
+	door->setPosition(glm::vec2((SCREEN_WIDTH * 5 / 6) - 32 , 250));
+	images[scene].push_back(door);
+}
+
+void Menu::spawnKey(int scene) {
+	Sprite* key = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 32), glm::vec2(1 / 8.f, 1 / 8.f), &itemsSpriteSheet, &texProgram);
+	key->setDisplacement(glm::vec2(1/8.f * 1, 1/8.f * 2));
+	key->setPosition(glm::vec2(SCREEN_WIDTH * 4 / 6, 260));
+	key->addEffect(EFFECT_SIN_Y, 200000);
+	images[scene].push_back(key);
+}
+
+void Menu::spawnPlatforms(int scene) {
+	Sprite* plat1 = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 32), glm::vec2(1 / 16.f, 1 / 16.f), &platformsSpritesheet, &texProgram);
+	plat1->setDisplacement(glm::vec2(1 / 16.f * 1, 1 / 16.f * 0));
+	plat1->setPosition(glm::vec2((SCREEN_WIDTH * 2 / 6), 260));
+	plat1->addEffect(EFFECT_SIN_Y, 200000);
+	images[scene].push_back(plat1);
+
+	Sprite* plat2 = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 32), glm::vec2(1 / 16.f, 1 / 16.f), &platformsSpritesheet, &texProgram);
+	plat2->setDisplacement(glm::vec2(1 / 16.f * 2, 1 / 16.f * 0));
+	plat2->setPosition(glm::vec2((SCREEN_WIDTH * 2 / 6) + 32, 260));
+	plat2->addEffect(EFFECT_SIN_Y, 200000);
+	images[scene].push_back(plat2);
+
+	Sprite* plat3 = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 32), glm::vec2(1 / 16.f, 1 / 16.f), &platformsSpritesheet, &texProgram);
+	plat3->setDisplacement(glm::vec2(1 / 16.f * 1, 1 / 16.f * 1));
+	plat3->setPosition(glm::vec2(SCREEN_WIDTH * 3 / 6, 260));
+	plat3->addEffect(EFFECT_SIN_Y, 200000);
+	images[scene].push_back(plat3);
+
+	Sprite* plat4 = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 32), glm::vec2(1 / 16.f, 1 / 16.f), &platformsSpritesheet, &texProgram);
+	plat4->setDisplacement(glm::vec2(1 / 16.f * 2, 1 / 16.f * 1));
+	plat4->setPosition(glm::vec2((SCREEN_WIDTH * 3 / 6) + 32, 260));
+	plat4->addEffect(EFFECT_SIN_Y, 200000);
+	images[scene].push_back(plat4);
+}
+
+void Menu::spawnMan(int scene) {
+	Sprite* man = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(64, 128), glm::vec2(1 / 16.f, 1 / 16.f), &manSpriteSheet, &texProgram);
+	man->setDisplacement(glm::vec2(1 / 16.f * 1, 1 / 16.f * 2));
+	man->setPosition(glm::vec2(SCREEN_WIDTH * 1 / 6, 260 - 64));
+
+	man->setNumberAnimations(1);
+	man->setAnimationParams(0, 4, false);
+	man->addKeyframe(0, glm::vec2(0.0f, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 1, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 2, 0.0f));
+	man->addKeyframe(0, glm::vec2(1 / 16.f * 3, 0.0f));
+	man->changeAnimation(0);
+	images[scene].push_back(man);
 }
