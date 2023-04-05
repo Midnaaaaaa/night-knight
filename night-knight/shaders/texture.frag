@@ -5,6 +5,7 @@ uniform sampler2D tex;
 
 uniform int effectTimer;
 uniform int effectId;
+uniform int effectDuration;
 
 in vec2 texCoordFrag;
 in float alpha;
@@ -12,7 +13,7 @@ out vec4 outColor;
 
 const float PI = 3.1415926535897932384626433832795;
 
-const int effect3Duration = 1000;
+//const int effect3Duration = 1000;
 
 void main()
 {
@@ -29,7 +30,7 @@ void main()
 			discard;
 	}
     else if (effectId == 3) { //?
-        texCoord.x = texCoord.x + sin((effectTimer)/1000.f*2*PI + int( 100*texCoord.y*2*PI )) * 0.01 * sin(-effectTimer * (PI/(effect3Duration*1.f)));
+        texCoord.x = texCoord.x + sin((effectTimer)/1000.f*2*PI + int( 100*texCoord.y*2*PI )) * 0.01 * sin(-effectTimer * (PI/(effectDuration*1.f)));
     }
 	else if (effectId == 4) {
 		discard;

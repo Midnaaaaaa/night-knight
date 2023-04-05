@@ -11,10 +11,10 @@
 #include <fstream>
 #include <sstream>
 
-#define MIN_TIME_WITHOUT_SPAWN 15  * 1000
-#define MAX_TIME_WITHOUT_SPAWN 30 * 1000
+#define MIN_TIME_WITHOUT_SPAWN 10  * 1000
+#define MAX_TIME_WITHOUT_SPAWN 25 * 1000
 
-#define MIN_TIME_TO_DESPAWN 8  * 1000
+#define MIN_TIME_TO_DESPAWN 10  * 1000
 #define MAX_TIME_TO_DESPAWN 16 * 1000
 
 #define SCREEN_X 32*2
@@ -23,6 +23,8 @@
 #define STAGE_TIMER 60000
 
 #define START_TIME 4000
+
+#define LEVELS_PER_GROUP 2
 
 
 enum KeyAnimations {
@@ -116,7 +118,7 @@ void Scene::init()
 
 	objectsSpritesheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgSpritesheet.loadFromFile("images/bg" + to_string(level) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
-	doorSpritesheet.loadFromFile("images/door"+ to_string(level/3 + 1) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
+	doorSpritesheet.loadFromFile("images/door"+ to_string((level-1)/LEVELS_PER_GROUP + 1) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
 	particleSpritesheet.loadFromFile("images/particles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	corSpritesheet.loadFromFile("images/cor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
@@ -294,7 +296,7 @@ void Scene::updateTimers(int deltaTime) {
 		}
 		if (startTimer <= 0) {
 			startTimer = 0;
-			string levelSoundFile = "sound/lvl" + to_string(level / 3 + 1) + ".mp3";
+			string levelSoundFile = "sound/lvl" + to_string((level-1) / LEVELS_PER_GROUP + 1) + ".mp3";
 			bgSound = SoundManager::instance().changeBgMusic(levelSoundFile.c_str(), true, false);
 			readySound->stop();
 			readySound->drop();
@@ -396,21 +398,22 @@ void Scene::update(int deltaTime)
 	if (currentTime >= spawnTimer) {
 		int objectToSpawn = rand() % 3;
 		glm::ivec2 platform = map->getRandomPlatform();
+		Item item;
 		switch (objectToSpawn)
 		{
 		case HOURGLASS:
-			Item hourglass = spawnHourglass(glm::vec2(platform.x + 0.5, platform.y - 1.5));
-			objects.push_back(hourglass);
+			item = spawnHourglass(glm::vec2(platform.x + 0.5, platform.y - 1.5));
 			break;
 		case GEM:
-			Item gem = spawnGem(glm::vec2(platform.x + 0.5, platform.y - 1.5));
-			objects.push_back(gem);
+			item = spawnGem(glm::vec2(platform.x + 0.5, platform.y - 1.5));
 			break;
 		case CLOCK:
-			Item clock = spawnClock(glm::vec2(platform.x + 0.5, platform.y - 1.5));
-			objects.push_back(clock);
+			item = spawnClock(glm::vec2(platform.x + 0.5, platform.y - 1.5));
 			break;
 		}
+		glm::ivec2 center = item.sprite->getPosition() + item.sprite->getSpriteSize() * 0.5f;
+		item.sprite->addEffect(EFFECT_BH, -1000, center);
+		objects.push_back(item);
 		despawnTimer = rand() % (MAX_TIME_TO_DESPAWN - MIN_TIME_TO_DESPAWN + 1) + MIN_TIME_TO_DESPAWN;
 		despawnTimer += currentTime;
 		spawnTimer = -1;

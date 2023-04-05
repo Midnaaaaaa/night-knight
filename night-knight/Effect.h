@@ -5,6 +5,6 @@ using namespace std;
 
 struct Effect
 {
-	int timer, id;
+	int timer, id, duration;
 	glm::ivec2 point;
 };

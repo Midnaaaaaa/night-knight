@@ -78,16 +78,24 @@ void Sprite::render() const
 {
 	int effectId = -1;
 	int effectTimer = 0;
+	int effectDuration = 1;
 	glm::ivec2 dest;
 	if (!effectStack.empty()) {
 		const Effect& e = effectStack.back();
 		effectId = e.id;
-		effectTimer = e.timer;
+		if (e.timer < 0) {
+			effectTimer = e.timer + e.duration; // [-duration 0] ---> [0 duration] 
+		}
+		else {
+			effectTimer = e.timer;
+		}
+		effectDuration = e.duration;
 		if (effectId == 5) {
 			dest = e.point;
 		}
 	}
 
+	/*
 	//--------------------DEBUG-------------------------
 	int shakeCount = 0;
 	int menouno = 0;
@@ -99,7 +107,7 @@ void Sprite::render() const
 		}
 	}
 	//--------------------DEBUG-------------------------
-
+	*/
 
 	glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(position.x + tileMapDispl.x, position.y + tileMapDispl.y, 0.f));
 	shaderProgram->use();
@@ -107,6 +115,7 @@ void Sprite::render() const
 	shaderProgram->setUniform2f("texCoordDispl", texCoordDispl.x, texCoordDispl.y);
 	shaderProgram->setUniform1i("effectId", effectId);
 	shaderProgram->setUniform1i("effectTimer", effectTimer);
+	shaderProgram->setUniform1i("effectDuration", effectDuration);
 	shaderProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	shaderProgram->setUniform2f("doorPos", dest.x + tileMapDispl.x, dest.y + tileMapDispl.y);
 
@@ -220,6 +229,7 @@ void Sprite::addEffect(int id, int duration, int delay) {
 	Effect e;
 	e.id = id;
 	e.timer = duration;
+	e.duration = duration;
 
 	effectStack.push_back(e);
 
@@ -235,8 +245,11 @@ void Sprite::addEffect(int id, int duration, int delay) {
 void Sprite::addEffect(int id, int duration, const glm::ivec2& point, int delay) {
 	Effect e;
 	e.id = id;
-	e.timer = duration;
 	e.point = point;
+	e.timer = duration;
+	e.duration = duration;
+	if (duration < 0)
+		e.duration = -duration;
 
 	effectStack.push_back(e);
 
@@ -283,6 +296,12 @@ void Sprite::updateTimers(int deltaTime) {
 		if (e.timer > 0) {
 			e.timer -= deltaTime;
 			if (e.timer <= 0) {
+				effectStack.pop_back();
+			}
+		}
+		else if (e.timer < 0) {
+			e.timer += deltaTime;
+			if (e.timer >= 0) {
 				effectStack.pop_back();
 			}
 		}

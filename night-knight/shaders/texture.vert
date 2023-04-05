@@ -5,6 +5,7 @@ uniform vec2 texCoordDispl;
 
 uniform int effectTimer;
 uniform int effectId;
+uniform int effectDuration;
 
 uniform vec2 doorPos;
 
@@ -15,7 +16,7 @@ out vec2 texCoordFrag;
 
 const float PI = 3.1415926535897932384626433832795;
 
-const int effect5Duration = 2000;
+//const int effect5Duration = 2000;
 
 
 void main()
@@ -33,7 +34,7 @@ void main()
 	texCoordFrag = texCoord + texCoordDispl;
 	// Transform position from pixel coordinates to clipping coordinates
     if (effectId == 5) {// ¿?
-        vec4 eyePos = mix(modelview * vec4(pos, 0.0, 1.0), vec4(doorPos, 0.0, 1.0), pow((effect5Duration-effectTimer)/float(effect5Duration), 5));
+        vec4 eyePos = mix(modelview * vec4(pos, 0.0, 1.0), vec4(doorPos, 0.0, 1.0), pow((effectDuration-effectTimer)/float(effectDuration), 2));
 	    gl_Position = projection * eyePos;
     }
     else {
