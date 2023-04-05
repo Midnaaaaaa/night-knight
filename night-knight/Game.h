@@ -52,8 +52,6 @@ public:
 	bool getSpecialKey(int key) const;
 	bool getSpecialKeyUp(int key) const;
 
-	void toggleMenu();
-
 	void exitLevel();
 	void changeLevel(int level);
 
@@ -65,10 +63,12 @@ public:
 
 private:
 	bool initShaders();
+	void addPostEffect(int id, int duration);
 
 	int currentTime;
 
-	bool playing;
+	int currentLevel, targetLevel;
+
 	bool bPlay;                       // Continue to play game?
 	Scene* scene;                     // Scene to render
 	Menu menu;					      // Menu
@@ -95,6 +95,8 @@ private:
 	int vidasActuales = 3;
 	
 	ShaderProgram postProcessingProgram;
+
+	Effect postEffect;
 };
 
 

@@ -18,11 +18,15 @@ void main()
 	// otherwise compose the texture sample with the fragment's interpolated color
 
 	vec2 texCoord = texCoordFrag;
-
-    texCoord.x = texCoord.x + sin((effectTimer)/1000.f*2*PI + int( 10*texCoord.y*2*PI )) * 0.01;
+    vec4 fColor = color;
+    float gray = 1;
+    if (effectId == 0) { //Fade
+        gray = (effectTimer/float(effectDuration));
+    }
+    //texCoord.x = texCoord.x + sin((effectTimer)/1000.f*2*PI + int( 10*texCoord.y*2*PI )) * 0.01;
 
     vec4 texColor = texture(tex, texCoord);
 
-	outColor = texColor;
+	outColor = (color*gray) * texColor;
 }
 

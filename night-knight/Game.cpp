@@ -4,6 +4,11 @@
 
 #define TRANSITION_TIME 500
 
+enum PostEffects {
+	PEFFECT_FADE
+};
+
+
 
 void Game::init()
 {
@@ -43,13 +48,13 @@ void Game::init()
 	frameBufferTexture.loadFromFrameBuffer(FBO);
 
 	bPlay = true;
-	playing = false;
+	currentLevel = 0;
+	targetLevel = 0;
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	menu.init();
-	scene = new Scene(1);
-	scene->init();
 
 	currentTime = 0;
+	postEffect.id = -1;
 }
 
 bool Game::update(int deltaTime)
@@ -58,9 +63,9 @@ bool Game::update(int deltaTime)
 	currentTime += deltaTime;
 
 	if (transitionTimer > 0) return bPlay;
-	if (playing && !scene->getPauseState()) scene->update(deltaTime);
-	else if(!playing) menu.update(deltaTime);
-	if (getKeyUp('m') && playing) {
+	if (currentLevel > 0 && !scene->getPauseState()) scene->update(deltaTime);
+	else if(currentLevel == 0) menu.update(deltaTime);
+	if (getKeyUp('m') && currentLevel > 0) {
 		scene->changePauseState();
 		engine->setAllSoundsPaused(scene->getPauseState());
 	}
@@ -83,19 +88,12 @@ bool Game::update(int deltaTime)
 }
 
 void Game::render()
-{
-	
-	//int vp[4];
-	//glGetIntegerv(GL_VIEWPORT, vp);
-	//frameBufferTexture.use();
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, vp[2], vp[3], 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-
+{	
 	// Bind the custom framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	if (transitionTimer > 0) return;
-	if (playing) scene->render();
+	if (currentLevel > 0) scene->render();
 	else menu.render();
 
 	// Bind the default framebuffer
@@ -103,7 +101,11 @@ void Game::render()
 
 	// Draw the framebuffer rectangle
 	postProcessingProgram.use();
-	postProcessingProgram.setUniform1i("effectTimer", currentTime);
+	//postProcessingProgram.setUniform1i("effectTimer", currentTime);
+	postProcessingProgram.setUniform1i("effectId", postEffect.id);
+	postProcessingProgram.setUniform1i("effectTimer", postEffect.timer);
+	postProcessingProgram.setUniform1i("effectDuration", postEffect.duration);
+	postProcessingProgram.setUniform4f("color", 1.f, 1.f, 1.f, 1.f);
 
 	glDisable(GL_DEPTH_TEST); // prevents framebuffer rectangle from being discarded
 
@@ -170,44 +172,18 @@ bool Game::getSpecialKeyUp(int key) const
 	return specialKeys[key] && !old_specialKeys[key];
 }
 
-void Game::toggleMenu() {
-	playing = !playing;
-	//(*bgMusicPtr)->setIsPaused(!playing);
-	if (menuMusic != nullptr) {
-		menuMusic->stop();
-		menuMusic->drop();
-		menuMusic = nullptr;
-	}
-	transitionTimer = TRANSITION_TIME;
-}
-
 void Game::exitLevel()
 {
-	delete scene;
-	puntuacionActual = 0;
-	vidasActuales = 3;
-	scene = new Scene(1);
-	scene->init();
-	SoundManager::instance().stopBgMusic();
-	engine->stopAllSounds();
+	targetLevel = 0;
 	transitionTimer = TRANSITION_TIME;
-
-	playing = false;
+	addPostEffect(PEFFECT_FADE, TRANSITION_TIME);
 }
 
 void Game::changeLevel(int level)
 {
-	delete scene;
-	scene = new Scene(level);
-	scene->init();
-	if (menuMusic != nullptr) {
-		menuMusic->stop();
-		menuMusic->drop();
-		menuMusic = nullptr;
-	}
-	engine->stopAllSounds();
+	targetLevel = level;
 	transitionTimer = TRANSITION_TIME;
-	playing = true;
+	addPostEffect(PEFFECT_FADE, TRANSITION_TIME);
 }
 
 void Game::savePuntuacionYVidas(int puntuacion, int vidas)
@@ -239,10 +215,41 @@ void Game::updateTimers(int deltaTime) {
 		transitionTimer -= deltaTime;
 		if (transitionTimer <= 0) {
 			transitionTimer = 0;
-			if (!playing) {
+			currentLevel = targetLevel;
+
+			if (currentLevel == 0) {
+
+				delete scene;
+				puntuacionActual = 0;
+				vidasActuales = 3;
+				SoundManager::instance().stopBgMusic();
+				engine->stopAllSounds();
+
+
+
 				menuMusic = engine->play2D("sound/menu.mp3", true, false, true);
 				menuMusic->setVolume(0.5);
 			}
+			else {
+				if (scene != nullptr)
+					delete scene;
+				scene = new Scene(currentLevel);
+				scene->init();
+				if (menuMusic != nullptr) {
+					menuMusic->stop();
+					menuMusic->drop();
+					menuMusic = nullptr;
+				}
+				engine->stopAllSounds();
+			}
+		}
+	}
+
+	if (postEffect.timer > 0) {
+		postEffect.timer -= deltaTime;
+		if (postEffect.timer <= 0) {
+			postEffect.timer = 0;
+			postEffect.id = -1;
 		}
 	}
 }
@@ -275,5 +282,12 @@ bool Game::initShaders()
 	fShader.free();
 
 	return true;
+}
+
+void Game::addPostEffect(int id, int duration)
+{
+	postEffect.id = id;
+	postEffect.timer = duration;
+	postEffect.duration = duration;
 }
 

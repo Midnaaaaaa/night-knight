@@ -143,7 +143,7 @@ void Menu::update(int deltaTime)
 			{
 			case 0: //Jugar
 				//return algo?
-				Game::instance().toggleMenu();
+				Game::instance().changeLevel(1);
 				break;
 			case 1: //How to play?
 				scene = HOW_TO_PLAY1;
