@@ -35,6 +35,7 @@ public:
 	void init();
 	bool update(int deltaTime);
 	void render();
+	//void postProcessing();
 	
 	// Input callback methods
 	void keyPressed(int key);
@@ -62,6 +63,10 @@ public:
 
 
 private:
+	bool initShaders();
+
+	int currentTime;
+
 	bool playing;
 	bool bPlay;                       // Continue to play game?
 	Scene* scene;                     // Scene to render
@@ -75,11 +80,20 @@ private:
 	ISound** bgMusicPtr;
 
 	int transitionTimer;
-	
+
+	Texture frameBufferTexture;
+	GLuint FBO;
+
+
+	GLuint vao;
+	GLuint vbo;
+	GLint posLocation, texCoordLocation;
+
+
 	int puntuacionActual = 0;
 	int vidasActuales = 3;
 	
-
+	ShaderProgram postProcessingProgram;
 };
 
 

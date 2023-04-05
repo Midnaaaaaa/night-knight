@@ -28,6 +28,8 @@ public:
 	void createEmptyTexture(int width, int height);
 	void loadSubtextureFromGlyphBuffer(unsigned char *buffer, int x, int y, int width, int height);
 	void generateMipmap();
+
+	bool loadFromFrameBuffer(GLuint& FBO);
 	
 	void setWrapS(GLint value);
 	void setWrapT(GLint value);

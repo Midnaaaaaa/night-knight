@@ -45,7 +45,7 @@ void Menu::init()
 		{"ORIGINAL BY", glm::ivec2(SCREEN_WIDTH / 2, 200), 16, Text::CENTERED},
 		{"Juan J. Martinez", glm::ivec2(SCREEN_WIDTH / 2, 225), 16, Text::CENTERED},
 		{"ART & MUSIC FROM", glm::ivec2(SCREEN_WIDTH / 2, 275), 16, Text::CENTERED},
-		{"Castelvania", glm::ivec2(SCREEN_WIDTH / 2, 300), 16, Text::CENTERED},
+		{"Castlevania", glm::ivec2(SCREEN_WIDTH / 2, 300), 16, Text::CENTERED},
 		{"freesound.org", glm::ivec2(SCREEN_WIDTH / 2, 325), 16, Text::CENTERED},
 	};
 

@@ -7,6 +7,31 @@
 
 void Game::init()
 {
+	initShaders();
+
+	float rectangleVertices[] =
+	{
+		// Coords    // texCoords
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		-1.0f,  1.0f,  0.0f, 1.0f,
+
+		 1.0f,  1.0f,  1.0f, 1.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		-1.0f,  1.0f,  0.0f, 1.0f
+	};
+
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+	glBindVertexArray(vao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rectangleVertices), &rectangleVertices, GL_STATIC_DRAW);
+	posLocation = postProcessingProgram.bindVertexAttribute("position", 2, 4 * sizeof(float), 0);
+	texCoordLocation = postProcessingProgram.bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+
+
+
 	//Hay que hacer destructora
 	SoundManager::instance().init();
 	engine = SoundManager::instance().getSoundEngine();
@@ -14,18 +39,23 @@ void Game::init()
 	menuMusic->setVolume(0.5);
 	bgMusicPtr = SoundManager::instance().getBgSoundPtr();
 
+	//frameBufferTexture.loadFromFrameBuffer(FBO);
+	frameBufferTexture.loadFromFile("images/4284.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
 	bPlay = true;
 	playing = false;
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	menu.init();
 	scene = new Scene(1);
 	scene->init();
+
+	currentTime = 0;
 }
 
 bool Game::update(int deltaTime)
 {
 	updateTimers(deltaTime);
-
+	currentTime += deltaTime;
 
 	if (transitionTimer > 0) return bPlay;
 	if (playing && !scene->getPauseState()) scene->update(deltaTime);
@@ -54,10 +84,32 @@ bool Game::update(int deltaTime)
 
 void Game::render()
 {
+	
+	// Bind the custom framebuffer
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if (transitionTimer > 0) return;
 	if (playing) scene->render();
 	else menu.render();
+
+	// Bind the default framebuffer
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// Draw the framebuffer rectangle
+	postProcessingProgram.use();
+	postProcessingProgram.setUniform1i("effectTimer", currentTime);
+
+	glDisable(GL_DEPTH_TEST); // prevents framebuffer rectangle from being discarded
+
+	glEnable(GL_TEXTURE_2D);
+	frameBufferTexture.use();
+	glBindVertexArray(vao);
+	glEnableVertexAttribArray(posLocation);
+	glEnableVertexAttribArray(texCoordLocation);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDisable(GL_TEXTURE_2D);
+
 }
 
 void Game::keyPressed(int key)
@@ -183,5 +235,32 @@ void Game::updateTimers(int deltaTime) {
 }
 
 
+bool Game::initShaders()
+{
+	Shader vShader, fShader;
 
+	vShader.initFromFile(VERTEX_SHADER, "shaders/postproc.vert");
+	if (!vShader.isCompiled())
+	{
+		return false;
+	}
+	fShader.initFromFile(FRAGMENT_SHADER, "shaders/postproc.frag");
+	if (!fShader.isCompiled())
+	{
+		return false;
+	}
+	postProcessingProgram.init();
+	postProcessingProgram.addShader(vShader);
+	postProcessingProgram.addShader(fShader);
+	postProcessingProgram.link();
+	if (!postProcessingProgram.isLinked())
+	{
+		return false;
+	}
+	postProcessingProgram.bindFragmentOutput("outColor");
+	vShader.free();
+	fShader.free();
+
+	return true;
+}
 
