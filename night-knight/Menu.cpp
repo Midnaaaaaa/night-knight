@@ -46,7 +46,8 @@ void Menu::init()
 
 	texts[HOW_TO_PLAY1] =
 	{
-		{"OBJECTIVE", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)}
+		{"OBJECTIVE", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)},
+		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)}
 	};
 	texts[HOW_TO_PLAY2] =
 	{

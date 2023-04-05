@@ -26,8 +26,8 @@ images/tileSet2.png
 TILEMAP
 25.5 18.5	//Pos llave
 25 3		//Pos puerta
-2 16 true	//Player
+2 16 1		//Player
 3		//Num enemigos
-0 25 18 true
-0 11 15 false
-2 25 10 true
+0 25 18 1
+0 11 15 0
+2 25 10 1
