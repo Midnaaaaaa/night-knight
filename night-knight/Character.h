@@ -9,7 +9,7 @@ class Character
 public:
 	virtual void init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, ShaderProgram& shaderProgram);
 	virtual void update(int deltaTime);
-	void render();
+	virtual void render();
 
 	void setTileMap(TileMap* tileMap);
 	void setPosition(const glm::vec2& pos);

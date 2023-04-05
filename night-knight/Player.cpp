@@ -483,9 +483,10 @@ void Player::checkCollisionUnder() {
 	}
 }
 
-//void Player::render() {
-//	sprite->render(effectId, effectTimer);
-//}
+void Player::render() {
+	sprite->render();
+	if (godMode) sprite->render(glm::vec4(1,1,0.4,1));
+}
 
 void Player::muelto() {
 	if (godMode) return;

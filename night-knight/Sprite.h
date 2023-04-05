@@ -29,8 +29,7 @@ public:
 	static Sprite *createSprite(const glm::vec2& tileMapPos, const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Texture *spritesheet, ShaderProgram *program);
 
 	void update(int deltaTime, bool freeze = false);
-	void render() const;
-	void render(glm::vec4 color, int effectId = -1, int effectTimer = 0) const;
+	void render(glm::vec4 color = glm::vec4(1.f)) const;
 	void render(const Texture& tex) const;
 	void free();
 

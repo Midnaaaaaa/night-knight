@@ -14,7 +14,7 @@ public:
 	~Player();
 	virtual void init(const glm::ivec2& tileMapPos, bool rightSight, string spriteFile, const glm::ivec2& colliderSize, const glm::ivec2& colliderOffset, const glm::ivec2& pixelSize, const glm::vec2& texSize, const glm::ivec2& spawnPos, ShaderProgram& shaderProgram);
 	virtual void update(int deltaTime);
-	//virtual void render();
+	virtual void render();
 
 	void checkCollisionUnder();
 	bool isHurted();
