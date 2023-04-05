@@ -28,8 +28,8 @@ void Menu::init()
 	//vector<pair<string, glm::ivec2>>
 	//EJEMPLO:
 
-	texts.resize(3);
-	images.resize(3);
+	texts.resize(6);
+	images.resize(6);
 
 	texts[MAIN_MENU] = { {"Play", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + 0)},
 		{"How    to    play", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 50)},
@@ -43,6 +43,24 @@ void Menu::init()
 		{"DEVELOPED BY", glm::ivec2(SCREEN_WIDTH / 2, 70)}
 	
 	};
+
+	texts[HOW_TO_PLAY1] =
+	{
+		{"OBJECTIVE", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)}
+	};
+	texts[HOW_TO_PLAY2] =
+	{
+		{"MOVEMENT", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)}
+	};
+	texts[HOW_TO_PLAY3] =
+	{
+		{"OBJECTS", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)}
+	};
+	texts[HOW_TO_PLAY4] =
+	{
+		{"ENEMIES", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)}
+	};
+
 
 	bgSpritesheet.loadFromFile("images/titlescreen.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bg = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgSpritesheet, &texProgram);
@@ -83,7 +101,7 @@ void Menu::update(int deltaTime)
 				Game::instance().toggleMenu();
 				break;
 			case 1: //How to play?
-				scene = HOW_TO_PLAY;
+				scene = HOW_TO_PLAY1;
 				break;
 			case 2: //Creditos
 				scene = CREDITS;
@@ -102,6 +120,7 @@ void Menu::update(int deltaTime)
 		if (Game::instance().getKeyUp(27)) {
 			scene = MAIN_MENU;
 		}
+		moveBetweenHowToPlay();
 	}
 	for (Sprite* s : images[scene])
 	{
@@ -168,4 +187,25 @@ void Menu::initShaders()
 	texProgram.bindFragmentOutput("outColor");
 	vShader.free();
 	fShader.free();
+}
+
+void Menu::moveBetweenHowToPlay()
+{
+	switch (scene)
+	{
+	case HOW_TO_PLAY1:
+		if (Game::instance().getSpecialKeyUp(GLUT_KEY_RIGHT)) scene = HOW_TO_PLAY2;
+		break;
+	case HOW_TO_PLAY2:
+		if (Game::instance().getSpecialKeyUp(GLUT_KEY_RIGHT)) scene = HOW_TO_PLAY3;
+		if (Game::instance().getSpecialKeyUp(GLUT_KEY_LEFT)) scene = HOW_TO_PLAY1;
+		break;
+	case HOW_TO_PLAY3:
+		if (Game::instance().getSpecialKeyUp(GLUT_KEY_RIGHT)) scene = HOW_TO_PLAY4;
+		if (Game::instance().getSpecialKeyUp(GLUT_KEY_LEFT)) scene = HOW_TO_PLAY2;
+		break;
+	case HOW_TO_PLAY4:
+		if (Game::instance().getSpecialKeyUp(GLUT_KEY_LEFT)) scene = HOW_TO_PLAY3;
+		break;
+	}
 }

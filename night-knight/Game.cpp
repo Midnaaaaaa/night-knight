@@ -38,6 +38,7 @@ bool Game::update(int deltaTime)
 	if (getKeyUp('1')) changeLevel(1);
 	else if (getKeyUp('2')) changeLevel(2);
 	else if (getKeyUp('3')) changeLevel(3);
+	else if (getKeyUp('4')) changeLevel(4);
 
 
 	//Update old keys
@@ -125,6 +126,8 @@ void Game::toggleMenu() {
 void Game::exitLevel()
 {
 	delete scene;
+	puntuacionActual = 0;
+	vidasActuales = 3;
 	scene = new Scene(1);
 	scene->init();
 	SoundManager::instance().stopBgMusic();
@@ -147,6 +150,22 @@ void Game::changeLevel(int level)
 	engine->stopAllSounds();
 	transitionTimer = TRANSITION_TIME;
 	playing = true;
+}
+
+void Game::savePuntuacionYVidas(int puntuacion, int vidas)
+{
+	this->puntuacionActual = puntuacion;
+	this->vidasActuales = vidas;
+}
+
+int Game::getVidasActuales()
+{
+	return vidasActuales;
+}
+
+int Game::getPuntuacionActual()
+{
+	return puntuacionActual;
 }
 
 void Game::updateTimers(int deltaTime) {

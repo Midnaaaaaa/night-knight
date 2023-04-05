@@ -116,7 +116,7 @@ void Scene::init()
 
 	objectsSpritesheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgSpritesheet.loadFromFile("images/bg" + to_string(level) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
-	doorSpritesheet.loadFromFile("images/door.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	doorSpritesheet.loadFromFile("images/door"+ to_string(level % 3) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
 	particleSpritesheet.loadFromFile("images/particles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	corSpritesheet.loadFromFile("images/cor.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
@@ -235,7 +235,8 @@ bool Scene::loadLevelInfo(const string& levelFile) {
 	player = new Player();
 	player->setTileMap(map);
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), rightSight, "images/soma-animations.png", glm::ivec2(16, 32), glm::ivec2(8, 32), glm::ivec2(32, 64), glm::vec2(1 / 16.f, 1 / 16.f), initPlayerPos, texProgram);
-
+	player->increasePuntuacion(Game::instance().getPuntuacionActual());
+	player->setVidas(Game::instance().getVidasActuales());
 	// Leer el número de enemigos
 	int numEnemies;
 	std::getline(fin, line);
@@ -293,7 +294,7 @@ void Scene::updateTimers(int deltaTime) {
 		}
 		if (startTimer <= 0) {
 			startTimer = 0;
-			string levelSoundFile = "sound/lvl" + to_string(level) + ".mp3";
+			string levelSoundFile = "sound/lvl" + to_string(level % 3) + ".mp3";
 			bgSound = SoundManager::instance().changeBgMusic(levelSoundFile.c_str(), true, false);
 			readySound->stop();
 			readySound->drop();
@@ -365,7 +366,10 @@ void Scene::update(int deltaTime)
 				puntIncrSound->drop();
 				puntIncrSound = nullptr;
 			}
-			if(stageCompletedTimer <= 0) Game::instance().changeLevel(++level);
+			if (stageCompletedTimer <= 0) {
+				Game::instance().savePuntuacionYVidas(player->getPuntuacion(), player->getVidas());
+				Game::instance().changeLevel(++level);
+			}
 		}
 		return;
 	}

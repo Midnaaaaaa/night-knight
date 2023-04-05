@@ -5,7 +5,7 @@
 #include "Scene.h"
 
 enum Scenes {
-	MAIN_MENU, HOW_TO_PLAY, CREDITS
+	MAIN_MENU, HOW_TO_PLAY1, HOW_TO_PLAY2, HOW_TO_PLAY3, HOW_TO_PLAY4, CREDITS
 };
 
 class Menu
@@ -20,6 +20,7 @@ public:
 
 private:
 	void initShaders();
+	void moveBetweenHowToPlay();
 
 	Texture bgSpritesheet, sirbernardsheet, bgcreditsheet;
 
