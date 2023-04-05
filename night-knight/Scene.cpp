@@ -344,6 +344,16 @@ void Scene::update(int deltaTime)
 	}
 
 	if (stageCompleted) {
+		if (clockSound != nullptr) {
+			clockSound->stop();
+			clockSound->drop();
+			clockSound = nullptr;
+		}
+		if (hourglassSound != nullptr) {
+			hourglassSound->stop();
+			hourglassSound->drop();
+			hourglassSound = nullptr;
+		}
 		stageCompletedTimer -= deltaTime;
 		player->update(deltaTime);
 		if (particleDoor != nullptr) particleDoor->update(deltaTime);
