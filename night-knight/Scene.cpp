@@ -429,15 +429,12 @@ void Scene::update(int deltaTime)
 	}
 
 
-	if (Game::instance().getKeyUp('k') && !keyCollected) {
-		spawnKey();
-	}
 	if (Game::instance().getKeyUp('g')) {
 		player->setGodMode(!player->inGodMode());
 	}
 
 
-	if (map->getNumOfTilesRemaining() == 0 && !keyCollected && key == nullptr) {
+	if ((Game::instance().getKeyUp('k') || map->getNumOfTilesRemaining() == 0) && !keyCollected && key == nullptr) {
 		spawnKey();
 	}
 
@@ -644,6 +641,8 @@ void Scene::spawnKey() {
 	key->setDisplacement(glm::vec2(1 / 8.f * 2, 1 / 8.f * 1));
 	key->setPosition(glm::ivec2(keyPos.x * map->getTileSize(), keyPos.y * map->getTileSize()));
 	key->addEffect(EFFECT_SIN_Y, 120 * 1000);
+	glm::ivec2 center = key->getPosition() + key->getSpriteSize() * 0.5f;
+	key->addEffect(EFFECT_BH, -1000, center);
 }
 
 
