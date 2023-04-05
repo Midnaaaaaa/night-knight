@@ -379,6 +379,16 @@ void Scene::update(int deltaTime)
 		return;
 	}
 	else if (gameOver) {
+		if (clockSound != nullptr) {
+			clockSound->stop();
+			clockSound->drop();
+			clockSound = nullptr;
+		}
+		if (hourglassSound != nullptr) {
+			hourglassSound->stop();
+			hourglassSound->drop();
+			hourglassSound = nullptr;
+		}
 		if (player->sePuedeMover()) player->setSpeed(0);
 		gameOverTimer -= deltaTime;
 		player->update(deltaTime);

@@ -20,6 +20,8 @@ void Vampir::init(const glm::ivec2& tileMapPos, bool rightSight, const glm::vec2
 	wantsToTransform = false;
 	goesUp = true;
 	timer = 0;
+
+	nextTransformTime = 6500;
 }
 
 /*
@@ -47,7 +49,7 @@ posCharacter = nextPos;
 void Vampir::update(int deltaTime) {
 	Character::update(deltaTime);
 
-	if (timer > 6500 && !wantsToTransform) {
+	if (timer > nextTransformTime && !wantsToTransform) {
 		if (isBat) wantsToTransform = true;
 		else {
 			//transformBat();
@@ -133,6 +135,7 @@ void Vampir::update(int deltaTime) {
 
 void Vampir::transformBat() {
 	isBat = true;
+	nextTransformTime = rand() % 5000 + 3000; //de 3 seg a 8 seg
 
 
 	realColliderSize = glm::ivec2(13, 32);
@@ -147,6 +150,7 @@ void Vampir::transformVampir() {
 	wantsToTransform = false;
 	isBat = false;
 	timer = 0;
+	nextTransformTime = rand() % 5000 + 3000; //de 3 seg a 8 seg
 
 	posCharacter.y -= spriteSize.y - (realColliderOffset.y + realColliderSize.y); //Corregir posicion Y
  

@@ -20,6 +20,7 @@ private:
 	glm::ivec2 realColliderSize, realColliderOffset;
 
 	int timer, transformTimer;
+	int nextTransformTime;
 
 };
 
