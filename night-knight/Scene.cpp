@@ -321,8 +321,26 @@ void Scene::update(int deltaTime)
 		stageTimer = STAGE_TIMER;
 	}
 
+	door->update(deltaTime);
+	//Colision puerta
+	if (door->animation() == DOOR_OPENED && !stageCompleted) {
+		glm::vec2 topLeft = door->getPosition();
+		glm::vec2 bottomRight = topLeft + door->getSpriteSize();
+		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
+			stageCompleted = true;
+			glm::vec2 pos = door->getPosition();
+			player->addEffect(EFFECT_INVIS, 60000);
+			glm::ivec2 doorPos = door->getPosition() + door->getSpriteSize()*0.5f;
+			player->addEffect(5, 2000, doorPos);
+			player->setSpeed(0);
+			spawnDoorParticle(pos);
+			SoundManager::instance().pauseBgMusic(true);
+		}
+	}
+
 	if (stageCompleted) {
 		stageCompletedTimer -= deltaTime;
+		player->update(deltaTime);
 		if (particleDoor != nullptr) particleDoor->update(deltaTime);
 		if (stageCompletedTimer <= 4500 && enemies.size() > 0) {
 			for (int i = enemies.size() - 1; i >= 0; --i)
@@ -472,20 +490,6 @@ void Scene::update(int deltaTime)
 			it->sprite->free();
 			it = objects.erase(it);
 			if (it == objects.end()) break;
-		}
-	}
-
-	door->update(deltaTime);
-	//Colision puerta
-	if (door->animation() == DOOR_OPENED) {
-		glm::vec2 topLeft = door->getPosition();
-		glm::vec2 bottomRight = topLeft + door->getSpriteSize();
-		if (player->checkCollisionWithRect(topLeft, bottomRight, 2)) {
-			stageCompleted = true;
-			glm::vec2 pos = door->getPosition();
-			player->addEffect(EFFECT_INVIS, 60000);
-			spawnDoorParticle(pos);
-			SoundManager::instance().pauseBgMusic(true);
 		}
 	}
 

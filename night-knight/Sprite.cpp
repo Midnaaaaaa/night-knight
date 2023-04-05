@@ -78,10 +78,14 @@ void Sprite::render() const
 {
 	int effectId = -1;
 	int effectTimer = 0;
+	glm::ivec2 dest;
 	if (!effectStack.empty()) {
 		const Effect& e = effectStack.back();
 		effectId = e.id;
 		effectTimer = e.timer;
+		if (effectId == 5) {
+			dest = e.point;
+		}
 	}
 
 	//--------------------DEBUG-------------------------
@@ -104,6 +108,8 @@ void Sprite::render() const
 	shaderProgram->setUniform1i("effectId", effectId);
 	shaderProgram->setUniform1i("effectTimer", effectTimer);
 	shaderProgram->setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+	shaderProgram->setUniform2f("doorPos", dest.x + tileMapDispl.x, dest.y + tileMapDispl.y);
+
 	glEnable(GL_TEXTURE_2D);
 	texture->use();
 	glBindVertexArray(vao);
@@ -112,6 +118,7 @@ void Sprite::render() const
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisable(GL_TEXTURE_2D);
 }
+
 
 void Sprite::render(glm::vec4 color, int effectId, int effectTimer) const
 {
@@ -213,6 +220,23 @@ void Sprite::addEffect(int id, int duration, int delay) {
 	Effect e;
 	e.id = id;
 	e.timer = duration;
+
+	effectStack.push_back(e);
+
+	if (delay > 0) {
+		Effect delayEffect;
+		delayEffect.id = -1;
+		delayEffect.timer = delay;
+
+		effectStack.push_back(delayEffect);
+	}
+}
+
+void Sprite::addEffect(int id, int duration, const glm::ivec2& point, int delay) {
+	Effect e;
+	e.id = id;
+	e.timer = duration;
+	e.point = point;
 
 	effectStack.push_back(e);
 

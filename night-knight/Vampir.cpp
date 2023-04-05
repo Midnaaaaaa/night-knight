@@ -124,14 +124,16 @@ void Vampir::update(int deltaTime) {
 		posCharacter.x += (rightSight * 2 - 1) * moveSpeed;
 	}
 
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posCharacter.x), float(tileMapDispl.y + posCharacter.y)));
+	sprite->setPosition(glm::vec2(float(posCharacter.x), float(posCharacter.y)));
 }
 
 void Vampir::transformBat() {
 	isBat = true;
 
+
 	colliderSize = glm::ivec2(13, 32);
 	colliderOffset = glm::ivec2(26, 24);
+	posCharacter.y += spriteSize.y - (colliderOffset.y + colliderSize.y); //Corregir posicion Y
 }
 void Vampir::transformVampir() {
 	wantsToTransform = false;
