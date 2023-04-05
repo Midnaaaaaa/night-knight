@@ -19,7 +19,7 @@ void main()
 
 	vec2 texCoord = texCoordFrag;
 
-    //texCoord.x = texCoord.x + sin((effectTimer)/1000.f*2*PI + int( 10*texCoord.y*2*PI )) * 0.01;
+    texCoord.x = texCoord.x + sin((effectTimer)/1000.f*2*PI + int( 10*texCoord.y*2*PI )) * 0.01;
 
     vec4 texColor = texture(tex, texCoord);
 

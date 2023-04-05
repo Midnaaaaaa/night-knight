@@ -128,6 +128,7 @@ void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm
 	glEnable(GL_BLEND);
 	program.use();
 	//glGetIntegerv(GL_VIEWPORT, vp);
+	//projection = glm::ortho(0.f, float(vp[2] - 1), float(vp[3] - 1), 0.f);
 	program.setUniformMatrix4f("projection", projection);
 	program.setUniform4f("color", color.r, color.g, color.b, color.a);
 
@@ -157,6 +158,11 @@ void Text::render(const string &str, const glm::vec2 &pixel, int size, const glm
 	}
 
 	glDisable(GL_BLEND);
+}
+
+Texture* Text::getAlias()
+{
+	return &textureAtlas;
 }
 
 void Text::initShaders()

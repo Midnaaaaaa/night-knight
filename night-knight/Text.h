@@ -49,6 +49,8 @@ public:
 	static const int LEFT_ALIGNED = 0;
 	static const int RIGHT_ALIGNED = 2;
 
+	Texture* getAlias();
+
 private:
 	void initShaders();
 	bool extractCharSizes(int *maxCharWidth, int *maxCharHeight);

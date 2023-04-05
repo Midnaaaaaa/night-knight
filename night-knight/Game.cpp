@@ -85,6 +85,11 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	
+	//int vp[4];
+	//glGetIntegerv(GL_VIEWPORT, vp);
+	//frameBufferTexture.use();
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, vp[2], vp[3], 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
 	// Bind the custom framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
@@ -223,6 +228,7 @@ int Game::getPuntuacionActual()
 
 void Game::resize(int w, int h)
 {
+	frameBufferTexture.use();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
 	glViewport(0, 0, w, h);
