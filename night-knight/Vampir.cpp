@@ -9,9 +9,13 @@ enum CharacterAnims
 
 
 void Vampir::init(const glm::ivec2& tileMapPos, bool rightSight, const glm::vec2& pos, TileMap *map, ShaderProgram& shaderProgram) {
-	Character::init(tileMapPos, rightSight, "images/bat.png", glm::ivec2(21, 27), glm::ivec2(25, 37), glm::ivec2(64, 64), glm::vec2(1 / 8.f, 1 / 8.f), shaderProgram);
+	Character::init(tileMapPos, rightSight, "images/bat.png", glm::ivec2(14, 24), glm::ivec2(25, 40), glm::ivec2(64, 64), glm::vec2(1 / 8.f, 1 / 8.f), shaderProgram);
 	setPosition(glm::vec2((pos.x - 2) * map->getTileSize(), (pos.y - 2) * map->getTileSize()));
 	setTileMap(map);
+
+	realColliderOffset = glm::ivec2(25, 40);
+	realColliderSize = glm::ivec2(14, 24);
+
 	isBat = false;
 	wantsToTransform = false;
 	goesUp = true;
@@ -66,8 +70,8 @@ void Vampir::update(int deltaTime) {
 		colliders justo fuera del collider para poder detectar que entra "justo" entre las plataformas
 		*/
 
-		bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), colliderOffset, glm::ivec2(colliderSize.x, 1));
-		int collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + colliderSize.y), colliderOffset, glm::ivec2(colliderSize.x, 1));
+		bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), realColliderOffset, glm::ivec2(realColliderSize.x, 1));
+		int collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + realColliderSize.y), realColliderOffset, glm::ivec2(realColliderSize.x, 1));
 		if (collisionUp && collisionDown) {
 			goesUp = !goesUp;
 			posCharacter.x += (rightSight * 2 - 1) * moveSpeed;
@@ -80,8 +84,8 @@ void Vampir::update(int deltaTime) {
 		
 
 
-			bool collisionUp = map->collisionMoveUp(nextPos, colliderOffset, glm::ivec2(colliderSize.x, 1));
-			bool collisionDown = map->collisionMoveDown(glm::ivec2(nextPos.x, nextPos.y + colliderSize.y - 1), colliderOffset, glm::ivec2(colliderSize.x, 1));
+			bool collisionUp = map->collisionMoveUp(nextPos, realColliderOffset, glm::ivec2(realColliderSize.x, 1));
+			bool collisionDown = map->collisionMoveDown(glm::ivec2(nextPos.x, nextPos.y + realColliderSize.y - 1), realColliderOffset, glm::ivec2(realColliderSize.x, 1));
 
 
 			if (wantsToTransform && collisionDown && collisionDown != TILE_SPIKE && transformTimer == 0) {
@@ -105,7 +109,7 @@ void Vampir::update(int deltaTime) {
 		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;
 		nextPos.y = posCharacter.y;
 
-		if (map->collisionMoveLeft(nextPos, colliderOffset, colliderSize) || map->collisionMoveRight(nextPos, colliderOffset, colliderSize)) {
+		if (map->collisionMoveLeft(nextPos, realColliderOffset, realColliderSize) || map->collisionMoveRight(nextPos, realColliderOffset, realColliderSize)) {
 			rightSight = !rightSight;
 		}
 
@@ -115,7 +119,7 @@ void Vampir::update(int deltaTime) {
 	}
 	else {
 		// Igual que l'esquelet
-		bool sightChange = (map->tevacae(posCharacter + colliderOffset, colliderSize, rightSight) || map->collisionMoveLeft(posCharacter, colliderOffset, colliderSize) || map->collisionMoveRight(posCharacter, colliderOffset, colliderSize));
+		bool sightChange = (map->tevacae(posCharacter + realColliderOffset, realColliderSize, rightSight) || map->collisionMoveLeft(posCharacter, realColliderOffset, realColliderSize) || map->collisionMoveRight(posCharacter, realColliderOffset, realColliderSize));
 		if (sightChange) {
 			rightSight = !rightSight;
 			if (rightSight && sprite->animation() != MOVE_RIGHT) sprite->changeAnimation(MOVE_RIGHT);
@@ -131,19 +135,26 @@ void Vampir::transformBat() {
 	isBat = true;
 
 
-	colliderSize = glm::ivec2(13, 32);
-	colliderOffset = glm::ivec2(26, 24);
-	posCharacter.y += spriteSize.y - (colliderOffset.y + colliderSize.y); //Corregir posicion Y
+	realColliderSize = glm::ivec2(13, 32);
+	realColliderOffset = glm::ivec2(26, 24);
+
+	colliderSize = glm::ivec2(13,6);
+	colliderOffset = glm::ivec2(26,37);
+
+	posCharacter.y += spriteSize.y - (realColliderOffset.y + realColliderSize.y); //Corregir posicion Y
 }
 void Vampir::transformVampir() {
 	wantsToTransform = false;
 	isBat = false;
 	timer = 0;
 
-	posCharacter.y -= spriteSize.y - (colliderOffset.y + colliderSize.y); //Corregir posicion Y
+	posCharacter.y -= spriteSize.y - (realColliderOffset.y + realColliderSize.y); //Corregir posicion Y
+ 
+	realColliderSize = glm::ivec2(14, 24);
+	realColliderOffset = glm::ivec2(25, 40);
 
-	colliderSize = glm::ivec2(21, 27);
-	colliderOffset = glm::ivec2(25, 37);
+	colliderSize = glm::ivec2(14, 24);
+	colliderOffset = glm::ivec2(25, 40);
 
 	//Cambio la animacion del MAN cuando se acabe el timer
 	//if (rightSight && sprite->animation() != MOVE_RIGHT) sprite->changeAnimation(MOVE_RIGHT);

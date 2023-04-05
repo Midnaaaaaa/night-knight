@@ -17,6 +17,8 @@ private:
 	bool wantsToTransform;
 	bool goesUp;
 
+	glm::ivec2 realColliderSize, realColliderOffset;
+
 	int timer, transformTimer;
 
 };
