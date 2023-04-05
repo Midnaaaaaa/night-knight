@@ -290,6 +290,13 @@ void Sprite::refreshFreezeEffect(int duration, int delay) {
 	addEffect(EFFECT_SHAKE, duration, delay);
 }
 
+int Sprite::currentEffectId() {
+	if (!effectStack.empty()) {
+		return effectStack.back().id;
+	}
+}
+
+
 void Sprite::updateTimers(int deltaTime) {
 	if (!effectStack.empty()) {
 		Effect& e = effectStack.back();

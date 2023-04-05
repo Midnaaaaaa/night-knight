@@ -11,11 +11,13 @@
 #include <fstream>
 #include <sstream>
 
-#define MIN_TIME_WITHOUT_SPAWN 10  * 1000
-#define MAX_TIME_WITHOUT_SPAWN 25 * 1000
+#define MIN_TIME_WITHOUT_SPAWN 1  * 1000
+#define MAX_TIME_WITHOUT_SPAWN 2 * 1000
 
-#define MIN_TIME_TO_DESPAWN 10  * 1000
-#define MAX_TIME_TO_DESPAWN 16 * 1000
+#define MIN_TIME_TO_DESPAWN 2  * 1000
+#define MAX_TIME_TO_DESPAWN 4 * 1000
+
+#define OBJ_SPAWN_ANIM_TIME 1000
 
 #define SCREEN_X 32*2
 #define SCREEN_Y 16*2
@@ -25,6 +27,7 @@
 #define START_TIME 4000
 
 #define LEVELS_PER_GROUP 2
+
 
 
 enum KeyAnimations {
@@ -412,10 +415,12 @@ void Scene::update(int deltaTime)
 			break;
 		}
 		glm::ivec2 center = item.sprite->getPosition() + item.sprite->getSpriteSize() * 0.5f;
-		item.sprite->addEffect(EFFECT_BH, -1000, center);
+		item.sprite->addEffect(EFFECT_BH, -OBJ_SPAWN_ANIM_TIME, center);
 		objects.push_back(item);
-		despawnTimer = rand() % (MAX_TIME_TO_DESPAWN - MIN_TIME_TO_DESPAWN + 1) + MIN_TIME_TO_DESPAWN;
-		despawnTimer += currentTime;
+		if (despawnTimer == -1) {
+			despawnTimer = rand() % (MAX_TIME_TO_DESPAWN - MIN_TIME_TO_DESPAWN + 1) + MIN_TIME_TO_DESPAWN;
+			despawnTimer += currentTime;
+		}
 		spawnTimer = -1;
 	}
 	if (currentTime >= despawnTimer && despawnTimer != -1) {
@@ -427,7 +432,17 @@ void Scene::update(int deltaTime)
 		}
 		despawnTimer = -1;
 	}
-
+	else if (currentTime >= despawnTimer - OBJ_SPAWN_ANIM_TIME && despawnTimer != -1) {
+		if (!objects.empty()) {
+			Item obj;
+			obj = objects.front();
+			if (obj.sprite->currentEffectId() != EFFECT_BH && obj.sprite->currentEffectId() != EFFECT_INVIS) {
+				glm::ivec2 center = obj.sprite->getPosition() + obj.sprite->getSpriteSize() * 0.5f;
+				obj.sprite->addEffect(EFFECT_INVIS, 3000);
+				obj.sprite->addEffect(EFFECT_BH, OBJ_SPAWN_ANIM_TIME, center);
+			}
+		}
+	}
 
 	if (Game::instance().getKeyUp('g')) {
 		player->setGodMode(!player->inGodMode());

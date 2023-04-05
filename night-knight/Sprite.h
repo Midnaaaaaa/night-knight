@@ -49,6 +49,7 @@ public:
 	void addEffect(int id, int duration, int delay = 0);
 	void addEffect(int id, int duration, const glm::ivec2& point, int delay = 0);
 	void refreshFreezeEffect(int duration, int delay);
+	int currentEffectId();
 
 private:
 	void updateTimers(int deltaTime);
