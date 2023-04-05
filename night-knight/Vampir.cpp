@@ -67,7 +67,7 @@ void Vampir::update(int deltaTime) {
 		*/
 
 		bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), colliderOffset, glm::ivec2(colliderSize.x, 1));
-		bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + colliderSize.y), colliderOffset, glm::ivec2(colliderSize.x, 1));
+		int collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + colliderSize.y), colliderOffset, glm::ivec2(colliderSize.x, 1));
 		if (collisionUp && collisionDown) {
 			goesUp = !goesUp;
 			posCharacter.x += (rightSight * 2 - 1) * moveSpeed;
@@ -84,7 +84,7 @@ void Vampir::update(int deltaTime) {
 			bool collisionDown = map->collisionMoveDown(glm::ivec2(nextPos.x, nextPos.y + colliderSize.y - 1), colliderOffset, glm::ivec2(colliderSize.x, 1));
 
 
-			if (wantsToTransform && collisionDown && transformTimer == 0) {
+			if (wantsToTransform && collisionDown && collisionDown != TILE_SPIKE && transformTimer == 0) {
 				transformVampir();
 				//Empieza la transformacion en el MAN, pero la skin le cambia luego
 				addEffect(EFFECT_SPAWN, TRANSFORM_TIME);
