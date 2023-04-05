@@ -33,7 +33,6 @@ bool Game::update(int deltaTime)
 	if (getKeyUp('m') && playing) {
 		scene->changePauseState();
 		engine->setAllSoundsPaused(scene->getPauseState());
-		menuMusic->setIsPaused(true);
 	}
 	if (getKeyUp('1')) changeLevel(1);
 	else if (getKeyUp('2')) changeLevel(2);
