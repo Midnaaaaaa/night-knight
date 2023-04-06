@@ -19,7 +19,7 @@
 #define DAMAGED_TIME 2 * 1000
 #define INV_TIME 2 * 1000
 
-#define PUNTS_TO_VIDA_EXTRA 10000
+#define PUNTS_TO_VIDA_EXTRA 5000
 
 enum CharacterAnims
 {
