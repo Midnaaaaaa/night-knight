@@ -90,12 +90,20 @@ void Menu::init()
 		{"Gives you extra time to complete the level", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,	images[HOW_TO_PLAY3][3]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
 		{"Gives you extra points", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,						images[HOW_TO_PLAY3][4]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED}
 	};
+
+	images[HOW_TO_PLAY4] = { bghowtoplay };
+	spawnEnemies(HOW_TO_PLAY4, glm::vec2(SCREEN_WIDTH * 0.75 / 6, 260), glm::vec2(SCREEN_WIDTH * 2.75 / 6, 260), glm::vec2(SCREEN_WIDTH * 4.25 / 6, 196));
+
 	texts[HOW_TO_PLAY4] =
 	{
 		{"ENEMIES", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
 		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED},
 		{"WATCH OUT!", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80), 10, Text::CENTERED},
 		{"THERE ARE SOME CREATURES THAT WANT TO HURT YOU", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 40), 10, Text::CENTERED},
+		{"Walks around the map", glm::ivec2(images[HOW_TO_PLAY4][1]->getPosition().x + 35,200), subTextSize, Text::CENTERED},
+		{"Can fly across the map", glm::ivec2(images[HOW_TO_PLAY4][3]->getPosition().x + 20,220), subTextSize, Text::CENTERED},
+		{"and go through walls", glm::ivec2(images[HOW_TO_PLAY4][3]->getPosition().x + 20,240), subTextSize, Text::CENTERED},
+		{"Can transform into a bat", glm::ivec2(images[HOW_TO_PLAY4][2]->getPosition().x + 64,200), subTextSize, Text::CENTERED},
 	};
 
 
@@ -131,8 +139,7 @@ void Menu::init()
 	//spawnArrows(HOW_TO_PLAY2);
 
 
-	images[HOW_TO_PLAY4] = { bghowtoplay };
-	spawnEnemies(HOW_TO_PLAY4, glm::vec2(SCREEN_WIDTH * 1 / 6, 260), glm::vec2(SCREEN_WIDTH * 2.75 / 6, 260), glm::vec2(SCREEN_WIDTH * 4 / 6, 196));
+	
 
 	engine = SoundManager::instance().getSoundEngine();
 	menuNavSrc = engine->addSoundSourceFromFile("sound/menu-nav.mp3");
@@ -412,6 +419,7 @@ void Menu::spawnEnemies(int scene, const glm::vec2& posE, const glm::vec2& posF,
 	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
 	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
 	ghost->changeAnimation(0);
+	ghost->addEffect(EFFECT_SIN_Y, 2000000);
 	images[scene].push_back(ghost);
 
 
