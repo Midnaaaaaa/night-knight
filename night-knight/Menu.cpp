@@ -40,8 +40,8 @@ void Menu::init()
 	texts[CREDITS] = 
 	{
 		{"DEVELOPED BY", glm::ivec2(SCREEN_WIDTH / 2, 75), 16, Text::CENTERED},
-		{"Pol Roca", glm::ivec2(SCREEN_WIDTH / 2, 125), 16, Text::CENTERED},
-		{"Adria Lozano", glm::ivec2(SCREEN_WIDTH / 2, 150), 16, Text::CENTERED},
+		{"Pol Roca", glm::ivec2(SCREEN_WIDTH / 2, 100), 16, Text::CENTERED},
+		{"Adria Lozano", glm::ivec2(SCREEN_WIDTH / 2, 125), 16, Text::CENTERED},
 		{"ORIGINAL BY", glm::ivec2(SCREEN_WIDTH / 2, 200), 16, Text::CENTERED},
 		{"Juan J. Martinez", glm::ivec2(SCREEN_WIDTH / 2, 225), 16, Text::CENTERED},
 		{"ART & MUSIC FROM", glm::ivec2(SCREEN_WIDTH / 2, 275), 16, Text::CENTERED},
@@ -55,26 +55,40 @@ void Menu::init()
 		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED},
 		{"TO BEAT THE GAME YOU MUST STEP ON EVERY PLATFORM!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 80), 8, Text::LEFT_ALIGNED},
 		{"WHEN EVERY PLATFORM HAS BEEN MARKED, A KEY WILL SPAWN!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 60), 8, Text::LEFT_ALIGNED},
-		{"GRAB THE KEY AND HEAD OUT OF THE STAGE AS FAST AS YOU CAN!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 40), 8, Text::LEFT_ALIGNED}
+		{"GRAB THE KEY AND HEAD OUT OF THE STAGE AS FAST AS YOU CAN!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 40), 8, Text::LEFT_ALIGNED},
+		{"MARKING PLATFORMS AND COMPLETING THE LEVEL GIVES YOU POINTS", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 20), 8, Text::LEFT_ALIGNED},
+		{"COLLECTING 10000 POINTS WILL GIVE YOU AN EXTRA LIFE", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 + 1), 8, Text::LEFT_ALIGNED},
 
 	};
 	texts[HOW_TO_PLAY2] =
 	{
-		{"MOVEMENT", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
+		{"CONTROLS", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
 		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED},
-		{"USE THE KEYBOARD ARROWS TO JUMP, CROUCH AND MOVE", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80), 8, Text::CENTERED},
-		{">", glm::ivec2((SCREEN_WIDTH / 2) + 40, SCREEN_HEIGHT / 2), 32, Text::CENTERED},
-		{"<", glm::ivec2((SCREEN_WIDTH / 2) - 40, SCREEN_HEIGHT / 2), 32, Text::CENTERED},
-		{"^", glm::ivec2((SCREEN_WIDTH / 2) + 0, SCREEN_HEIGHT / 2 -  20), 32, Text::CENTERED},
-		{"v", glm::ivec2((SCREEN_WIDTH / 2) + 0, SCREEN_HEIGHT / 2 - 0), 32, Text::CENTERED},
+		{"ESC: Return to the menu", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80), 8, Text::CENTERED},
+		{"P: Pause the game", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 60), 8, Text::CENTERED},
+		{"USE THE KEYBOARD ARROWS TO JUMP, CROUCH AND MOVE", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 20), 8, Text::CENTERED},
+		{">", glm::ivec2((SCREEN_WIDTH / 2) + 40, SCREEN_HEIGHT / 2 + 60), 32, Text::CENTERED},
+		{"<", glm::ivec2((SCREEN_WIDTH / 2) - 40, SCREEN_HEIGHT / 2 + 60), 32, Text::CENTERED},
+		{"^", glm::ivec2((SCREEN_WIDTH / 2) + 0, SCREEN_HEIGHT / 2 -  20 + 60), 32, Text::CENTERED},
+		{"v", glm::ivec2((SCREEN_WIDTH / 2) + 0, SCREEN_HEIGHT / 2 - 0 + 60), 32, Text::CENTERED},
 
 	};
+
+	bghowtoplay = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bghowtoplaysheet, &texProgram);
+	images[HOW_TO_PLAY3] = { bghowtoplay };
+	spawnKey(HOW_TO_PLAY3, glm::vec2(SCREEN_WIDTH * 1.25 / 6, 140));
+	spawnItems(HOW_TO_PLAY3, glm::vec2(SCREEN_WIDTH * 1.25 / 6, 200), glm::vec2(SCREEN_WIDTH * 1.25 / 6, 260), glm::vec2(SCREEN_WIDTH * 1.25 / 6, 320));
+	int subTextSize = 8;
+
 	texts[HOW_TO_PLAY3] =
 	{
 		{"ITEMS", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
 		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED},
-		{"THERE ARE SOME ITEMS THAT CAN HELP YOU OUT!", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80), 8, Text::CENTERED},
-		{"THE KEY OPENS THE DOOR", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48, 140 + 28), 6, Text::LEFT_ALIGNED}
+		{"THERE ARE SOME ITEMS THAT CAN HELP YOU OUT!", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80), 10, Text::CENTERED},
+		{"Opens the door", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,						images[HOW_TO_PLAY3][1]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
+		{"Freezes the enemies for 5 seconds", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,	images[HOW_TO_PLAY3][2]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
+		{"Gives you extra time to complete the level", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,				images[HOW_TO_PLAY3][3]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
+		{"Gives you extra points", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,				images[HOW_TO_PLAY3][4]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED}
 	};
 	texts[HOW_TO_PLAY4] =
 	{
@@ -88,7 +102,6 @@ void Menu::init()
 	bgcreditsheet.loadFromFile("images/bgcredits.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bgCredit = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgcreditsheet, &texProgram);
 	bghowtoplaysheet.loadFromFile("images/bghowtoplay2.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	bghowtoplay = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bghowtoplaysheet, &texProgram);
 	doorSpritesheet.loadFromFile("images/door2.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	itemsSpriteSheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	platformsSpritesheet.loadFromFile("images/tileSet2.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -110,10 +123,6 @@ void Menu::init()
 	images[HOW_TO_PLAY2] = { bghowtoplay };
 	spawnManMoving(HOW_TO_PLAY2, glm::vec2((SCREEN_WIDTH * 3 / 6) - 40, 260 - 64));
 	//spawnArrows(HOW_TO_PLAY2);
-	
-	images[HOW_TO_PLAY3] = { bghowtoplay };
-	spawnKey(HOW_TO_PLAY3, glm::vec2(SCREEN_WIDTH * 1.25 / 6, 140));
-	spawnItems(HOW_TO_PLAY3, glm::vec2(SCREEN_WIDTH * 1.25 / 6, 200), glm::vec2(SCREEN_WIDTH * 1.25 / 6, 260), glm::vec2(SCREEN_WIDTH * 1.25 / 6, 320));
 
 
 	images[HOW_TO_PLAY4] = { bghowtoplay };
@@ -126,7 +135,6 @@ void Menu::init()
 //Hacemos que devuelva un int o un bool para indicar que quiere cambiar al primer nivel?
 void Menu::update(int deltaTime)
 {
-
 	if (scene == MAIN_MENU) {
 		if (Game::instance().getSpecialKeyUp(GLUT_KEY_UP)) {
 			if (--selected < 0) selected = 3;
@@ -299,7 +307,7 @@ void Menu::spawnDoor(int scene) {
 
 void Menu::spawnKey(int scene, const glm::vec2& pos) {
 	Sprite* key = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 32), glm::vec2(1 / 8.f, 1 / 8.f), &itemsSpriteSheet, &texProgram);
-	key->setDisplacement(glm::vec2(1/8.f * 1, 1/8.f * 2));
+	key->setDisplacement(glm::vec2(1/8.f * 2, 1/8.f * 1));
 	key->setPosition(pos);
 	key->addEffect(EFFECT_SIN_Y, 200000);
 	images[scene].push_back(key);

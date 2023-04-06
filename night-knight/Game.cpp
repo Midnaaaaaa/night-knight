@@ -105,6 +105,7 @@ void Game::render()
 	postProcessingProgram.setUniform1i("effectId", postEffect.id);
 	postProcessingProgram.setUniform1i("effectTimer", postEffect.timer);
 	postProcessingProgram.setUniform1i("effectDuration", postEffect.duration);
+	postProcessingProgram.setUniform2f("center", postEffect.point.x, postEffect.point.y);
 	postProcessingProgram.setUniform4f("color", 1.f, 1.f, 1.f, 1.f);
 
 	glDisable(GL_DEPTH_TEST); // prevents framebuffer rectangle from being discarded
@@ -287,6 +288,14 @@ bool Game::initShaders()
 void Game::addPostEffect(int id, int duration)
 {
 	postEffect.id = id;
+	postEffect.timer = duration;
+	postEffect.duration = duration;
+}
+
+void Game::addPostEffect(int id, int duration, const glm::ivec2& point)
+{
+	postEffect.id = id;
+	postEffect.point = point;
 	postEffect.timer = duration;
 	postEffect.duration = duration;
 }

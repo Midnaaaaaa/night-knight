@@ -64,6 +64,8 @@ public:
 private:
 	bool initShaders();
 	void addPostEffect(int id, int duration);
+	void addPostEffect(int id, int duration, const glm::ivec2& point);
+
 
 	int currentTime;
 

@@ -7,6 +7,8 @@ uniform int effectTimer;
 uniform int effectId;
 uniform int effectDuration;
 
+uniform vec2 center;
+
 in vec2 texCoordFrag;
 out vec4 outColor;
 
