@@ -124,6 +124,7 @@ void Scene::init()
 	doorSpritesheet.loadFromFile("images/door"+ to_string((level-1)/LEVELS_PER_GROUP + 1) + ".png", TEXTURE_PIXEL_FORMAT_RGBA);
 	particleSpritesheet.loadFromFile("images/particles.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	corSpritesheet.loadFromFile("images/cor.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	torchSpriteSheet.loadFromFile("images/torch.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	bg = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(32*map->getTileSize(), 22*map->getTileSize()), glm::ivec2(1,1), &bgSpritesheet, &texProgram);
 	//bg->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
@@ -249,8 +250,6 @@ bool Scene::loadLevelInfo(const string& levelFile) {
 	sstream >> numEnemies;
 	sstream.clear();
 
-	lightSources.resize(numEnemies + 1);
-
 	// Leer la posición de cada enemigo
 	for (int i = 0; i < numEnemies; i++) {
 		std::getline(fin, line);
@@ -276,6 +275,24 @@ bool Scene::loadLevelInfo(const string& levelFile) {
 		}
 		enemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), rightSight, pos, map, texProgram);
 		enemies.push_back(enemy);
+	}
+
+	// Leer el número de enemigos
+	int numLights;
+	std::getline(fin, line);
+	sstream.str(line);
+	sstream >> numLights;
+	sstream.clear();
+
+	// Leer la posición de cada enemigo
+	for (int i = 0; i < numLights; i++) {
+		std::getline(fin, line);
+		sstream.str(line);
+		int type;
+		glm::ivec2 pos;
+		sstream >> type >> pos.x >> pos.y;
+		sstream.clear();
+		spawnTorch(pos, type);
 	}
 	fin.close();
 
@@ -548,6 +565,11 @@ void Scene::update(int deltaTime)
 		clockSound->drop();
 		clockSound = nullptr;
 	}
+;
+	for (Sprite* s : torches)
+	{
+		s->update(deltaTime);
+	}
 
 	asesino = nullptr;
 	for (Enemy* e : enemies)
@@ -575,13 +597,23 @@ void Scene::update(int deltaTime)
 
 vector<pair<glm::ivec2, int>>* Scene::getLightSources()
 {
-	lightSources.resize(enemies.size() + 1);
+	lightSources.resize(enemies.size() + torches.size() + 1);
 	lightSources[0].first = player->getCenterPos() + glm::ivec2(SCREEN_X, SCREEN_Y);
-	lightSources[0].second = 75;
 
-	for (int i = 0; i < enemies.size() && i < MAX_LIGHTS; ++i) {
-		lightSources[i + 1].first = enemies[i]->getCenterPos() + glm::ivec2(SCREEN_X, SCREEN_Y);
-		lightSources[i + 1].second = 45;
+	float PI = glm::pi<float>();
+	float sino = glm::sin((currentTime/200) * 2 * PI);
+	lightSources[0].second = 75 + (sino * 2);
+
+	int k = 1;
+	for (int i = 0; i < enemies.size() && k < MAX_LIGHTS; ++i) {
+		lightSources[k].first = enemies[i]->getCenterPos() + glm::ivec2(SCREEN_X, SCREEN_Y);
+		lightSources[k].second = 45 + sino * 2;
+		++k;
+	}
+	for (int i = 0; i < torches.size() && k < MAX_LIGHTS; ++i) {
+		lightSources[k].first = torches[i]->getPosition() + torches[i]->getSpriteSize()*0.5f + glm::vec2(SCREEN_X, SCREEN_Y);
+		lightSources[k].second = 45 + sino * 2;
+		++k;
 	}
 
 	pair<glm::ivec2, int> keyData;
@@ -617,7 +649,7 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("projection", projection);
 
 
-	if (level > 0) { //Dark
+	if (level == 7) { //Dark
 		vector<pair<glm::ivec2, int>>* data = getLightSources();
 		int n = data->size();
 
@@ -655,6 +687,12 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	door->render();
+
+	for (Sprite* s : torches)
+	{
+		s->render();
+	}
+
 	player->render();
 	if (particleDoor != nullptr) {
 		particleDoor->render();
@@ -674,6 +712,7 @@ void Scene::render()
 	if (key != nullptr) {
 		key->render();
 	}
+
 
 	//Disable dark
 	texProgram.setUniform1i("count", 0);
@@ -855,6 +894,21 @@ void Scene::spawnCor()
 	cor->setAnimationParams(COR_POCHO, 1, false);
 	cor->addKeyframe(COR_POCHO, glm::vec2(1 / 8.f * 3, 0.0f));
 	cor->changeAnimation(COR_FULL);
+}
+
+void Scene::spawnTorch(glm::ivec2 pos, int type)
+{
+	Sprite* light = Sprite::createSprite(glm::ivec2(SCREEN_X, SCREEN_Y), glm::vec2(16, 32), glm::vec2(1 / 4.f, 1 / 4.f), &torchSpriteSheet, &texProgram);
+	light->setPosition(pos * map->getTileSize());
+	light->setNumberAnimations(1);
+	light->setAnimationParams(0, 10, false);
+	light->addKeyframe(0, glm::vec2(1 / 4.f * 0, 1 / 4.f * type));
+	light->addKeyframe(0, glm::vec2(1 / 4.f * 1, 1 / 4.f * type));
+	light->addKeyframe(0, glm::vec2(1 / 4.f * 2, 1 / 4.f * type));
+	light->addKeyframe(0, glm::vec2(1 / 4.f * 3, 1 / 4.f * type));
+	light->changeAnimation(0);
+	torches.push_back(light);
+
 }
 
 void Scene::changePauseState() {

@@ -32,13 +32,14 @@ void Fantasma::update(int deltaTime) {
 	*/
 
 	bool collisionUp = map->collisionMoveUp(glm::ivec2(posCharacter.x, posCharacter.y - 1), colliderOffset, glm::ivec2(colliderSize.x, 1));
-	bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), colliderOffset, glm::ivec2(colliderSize.x, 1));
+	bool collisionDownFull = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + spriteSize.y), colliderOffset, glm::ivec2(colliderSize.x, 1));
+	bool collisionDown = map->collisionMoveDown(glm::ivec2(posCharacter.x, posCharacter.y + colliderOffset.y + colliderSize.y), colliderOffset, glm::ivec2(colliderSize.x, 1));
 
 	if (nextPos.x < map->LEFT_WALL || nextPos.x + spriteSize.x > map->RIGHT_WALL) {
 		rightSight = !rightSight;
 		nextPos.x = posCharacter.x + (rightSight * 2 - 1) * moveSpeed;
 	}
-	else if (collisionUp && collisionDown) {
+	else if (collisionUp && collisionDownFull) {
 		nextPos.y = posCharacter.y;
 		goesUp = !goesUp;
 	}

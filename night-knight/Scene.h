@@ -42,6 +42,7 @@ private:
 	Item spawnClock(glm::vec2 pos);
 	void spawnDoorParticle(glm::vec2 pos);
 	void spawnCor();
+	void spawnTorch(glm::ivec2 pos, int type);
 	//void executeFunction(void(Scene::*)());
 	vector<pair<glm::ivec2, int>>* getLightSources();
 
@@ -54,7 +55,7 @@ private:
 
 	int level;
 
-	Texture bgSpritesheet, objectsSpritesheet, doorSpritesheet, particleSpritesheet, corSpritesheet;
+	Texture bgSpritesheet, objectsSpritesheet, doorSpritesheet, particleSpritesheet, corSpritesheet, torchSpriteSheet;
 
 	Sprite *bg;
 	TileMap *map;
@@ -70,6 +71,8 @@ private:
 	Sprite* door;
 	Sprite* particleDoor;
 	Sprite* cor;
+
+	vector<Sprite*> torches;
 
 	glm::vec2 doorPos, keyPos, initPlayerPos;
 
