@@ -28,8 +28,8 @@ void Menu::init()
 	//vector<pair<string, glm::ivec2>>
 	//EJEMPLO:
 
-	texts.resize(6);
-	images.resize(6);
+	texts.resize(7);
+	images.resize(7);
 
 	texts[MAIN_MENU] = { {"PLAY", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2) + 1, 16, Text::CENTERED},
 		{"HOW TO PLAY", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 50), 16, Text::CENTERED},
@@ -106,6 +106,9 @@ void Menu::init()
 		{"Can transform into a bat", glm::ivec2(images[HOW_TO_PLAY4][2]->getPosition().x + 64,200), subTextSize, Text::CENTERED},
 	};
 
+	texts[END] = {
+		{"THE END", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 1), 16, Text::CENTERED},
+	};
 
 	bgSpritesheet.loadFromFile("images/titlescreen.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	bg = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &bgSpritesheet, &texProgram);
@@ -119,7 +122,9 @@ void Menu::init()
 	batSpritesheet.loadFromFile("images/bat.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	ghostspritesheet.loadFromFile("images/ghost.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	skeletonspritesheet.loadFromFile("images/esquelet.png", TEXTURE_PIXEL_FORMAT_RGBA);
-
+	endspritesheet.loadFromFile("images/END.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	Sprite* end = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &endspritesheet, &texProgram);
+	images[END] = { end };
 	//kbarrowssheet.loadFromFile("images/kbarrows.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	images[MAIN_MENU] = { bg };
