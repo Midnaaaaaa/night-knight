@@ -34,10 +34,13 @@ private:
 	void spawnMan(int scene, const glm::vec2& pos);
 	void spawnManMoving(int scene, const glm::vec2& pos);
 	void spawnItems(int scene, const glm::vec2& posH, const glm::vec2& posC, const glm::vec2& posG);
+	void spawnEnemies(int scene, const glm::vec2& posE, const glm::vec2& posF, const glm::vec2& posV);
+
 	//void spawnArrows(int scene);
 
 	Texture bgSpritesheet, bgcreditsheet, bghowtoplaysheet, doorSpritesheet, itemsSpriteSheet, platformsSpritesheet;
 	Texture manSpriteSheet, kbarrowssheet;
+	Texture batSpritesheet, skeletonspritesheet, ghostspritesheet;
 
 	Sprite* bg;
 	Sprite* bgCredit;

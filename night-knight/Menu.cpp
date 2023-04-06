@@ -53,11 +53,11 @@ void Menu::init()
 	{
 		{"OBJECTIVE", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT/2 - 150), 16, Text::CENTERED},
 		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED},
-		{"TO BEAT THE GAME YOU MUST STEP ON EVERY PLATFORM!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 80), 8, Text::LEFT_ALIGNED},
-		{"WHEN EVERY PLATFORM HAS BEEN MARKED, A KEY WILL SPAWN!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 60), 8, Text::LEFT_ALIGNED},
-		{"GRAB THE KEY AND HEAD OUT OF THE STAGE AS FAST AS YOU CAN!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 40), 8, Text::LEFT_ALIGNED},
-		{"MARKING PLATFORMS AND COMPLETING THE LEVEL GIVES YOU POINTS", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 20), 8, Text::LEFT_ALIGNED},
-		{"COLLECTING 10000 POINTS WILL GIVE YOU AN EXTRA LIFE", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 + 1), 8, Text::LEFT_ALIGNED},
+		{"To beat the game you must step on every platform!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 80), 8, Text::LEFT_ALIGNED},
+		{"When every platform has been marked, a key will spawn!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 60), 8, Text::LEFT_ALIGNED},
+		{"Grab the key and head out of the stage as fast as you can!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 40), 8, Text::LEFT_ALIGNED},
+		{"Marking platforms and completing the level gives you points", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 20), 8, Text::LEFT_ALIGNED},
+		{"Collecting 5000 points will give you an extra life", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 + 1), 8, Text::LEFT_ALIGNED},
 
 	};
 	texts[HOW_TO_PLAY2] =
@@ -93,7 +93,9 @@ void Menu::init()
 	texts[HOW_TO_PLAY4] =
 	{
 		{"ENEMIES", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
-		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED}
+		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED},
+		{"WATCH OUT!", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80), 10, Text::CENTERED},
+		{"THERE ARE SOME CREATURES THAT WANT TO HURT YOU", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 40), 10, Text::CENTERED},
 	};
 
 
@@ -106,6 +108,10 @@ void Menu::init()
 	itemsSpriteSheet.loadFromFile("images/items.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	platformsSpritesheet.loadFromFile("images/tileSet2.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	manSpriteSheet.loadFromFile("images/soma-animations.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	batSpritesheet.loadFromFile("images/bat.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	ghostspritesheet.loadFromFile("images/ghost.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	skeletonspritesheet.loadFromFile("images/esquelet.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
 	//kbarrowssheet.loadFromFile("images/kbarrows.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
 	images[MAIN_MENU] = { bg };
@@ -126,6 +132,7 @@ void Menu::init()
 
 
 	images[HOW_TO_PLAY4] = { bghowtoplay };
+	spawnEnemies(HOW_TO_PLAY4, glm::vec2(SCREEN_WIDTH * 1 / 6, 260), glm::vec2(SCREEN_WIDTH * 2.75 / 6, 260), glm::vec2(SCREEN_WIDTH * 4 / 6, 196));
 
 	engine = SoundManager::instance().getSoundEngine();
 	menuNavSrc = engine->addSoundSourceFromFile("sound/menu-nav.mp3");
@@ -263,6 +270,154 @@ void Menu::moveBetweenHowToPlay()
 		if (Game::instance().getSpecialKeyUp(GLUT_KEY_LEFT)) scene = HOW_TO_PLAY3;
 		break;
 	}
+}
+
+void Menu::spawnEnemies(int scene, const glm::vec2& posE, const glm::vec2& posF, const glm::vec2& posV) {
+	Sprite* esquelet = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(64, 64), glm::vec2(1 / 6.f, 1 / 2.f), &skeletonspritesheet, &texProgram);
+	esquelet->setDisplacement(glm::vec2(0.0f, 0.0f));
+	esquelet->setPosition(posE);
+	esquelet->setNumberAnimations(1);
+	esquelet->setAnimationParams(0, 10, false);
+	esquelet->addKeyframe(0, glm::vec2(0.0f, 0.0f));
+	esquelet->addKeyframe(0, glm::vec2(1 / 6.f * 1, 0.0f));
+	esquelet->addKeyframe(0, glm::vec2(1 / 6.f * 2, 0.0f));
+	esquelet->addKeyframe(0, glm::vec2(1 / 6.f * 3, 0.0f));
+	esquelet->addKeyframe(0, glm::vec2(1 / 6.f * 4, 0.0f));
+	esquelet->addKeyframe(0, glm::vec2(1 / 6.f * 5, 0.0f));
+	esquelet->addKeyframe(0, glm::vec2(1 / 6.f * 0, 1 / 2.f * 1));
+	esquelet->addKeyframe(0, glm::vec2(1 / 6.f * 1, 1 / 2.f * 1));
+	esquelet->addKeyframe(0, glm::vec2(1 / 6.f * 2, 1 / 2.f * 1));
+	esquelet->addKeyframe(0, glm::vec2(1 / 6.f * 3, 1 / 2.f * 1));
+	esquelet->addKeyframe(0, glm::vec2(1 / 6.f * 4, 1 / 2.f * 1));
+	esquelet->addKeyframe(0, glm::vec2(1 / 6.f * 5, 1 / 2.f * 1));
+	esquelet->changeAnimation(0);
+	images[scene].push_back(esquelet);
+
+	Sprite* bat = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(128, 128), glm::vec2(1 / 8.f, 1 / 8.f), &batSpritesheet, &texProgram);
+	bat->setPosition(posV);
+	bat->setNumberAnimations(2);
+	bat->setAnimationParams(0, 10, false, 0, 1);
+	bat->addKeyframe(0, glm::vec2(0.0f, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	bat->addKeyframe(0, glm::vec2(0.0f, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	bat->addKeyframe(0, glm::vec2(0.0f, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	bat->addKeyframe(0, glm::vec2(0.0f, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	bat->addKeyframe(0, glm::vec2(0.0f, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	bat->addKeyframe(0, glm::vec2(0.0f, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	bat->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+
+	bat->setAnimationParams(1, 15, false, 3, 0);
+	bat->addKeyframe(1, glm::vec2(0.0f, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 1, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 2, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(0.0f, 1 / 8.f * 3));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 2, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(0.0f, 1 / 8.f * 3));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 2, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(0.0f, 1 / 8.f * 3));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 7, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 6, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 5, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 4, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 3, 1 / 8.f * 2));
+	bat->addKeyframe(1, glm::vec2(1 / 8.f * 2, 1 / 8.f * 2));
+
+	bat->changeAnimation(0);
+	images[scene].push_back(bat);
+
+	Sprite* ghost = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(64, 64), glm::vec2(1 / 8.f, 1 / 2.f), &ghostspritesheet, &texProgram);
+	ghost->setDisplacement(glm::vec2(0.0f, 0.0f));
+	ghost->setPosition(posF);
+	ghost->setNumberAnimations(1);
+	ghost->setAnimationParams(0, 10, false);
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 7, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 5, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 4, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 3, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 0, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 7, 1 / 2.f * 1));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 1 / 2.f * 1));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 7, 1 / 2.f * 1));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 1 / 2.f * 1));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 7, 1 / 2.f * 1));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 1 / 2.f * 1));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 7, 1 / 2.f * 1));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 1 / 2.f * 1));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 7, 1 / 2.f * 1));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 1 / 2.f * 1));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 7, 1 / 2.f * 1));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 0, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 1, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 2, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 3, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 4, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 5, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
+	ghost->addKeyframe(0, glm::vec2(1 / 8.f * 6, 0.0f));
+	ghost->changeAnimation(0);
+	images[scene].push_back(ghost);
+
+
+
+
+
 }
 
 void Menu::spawnItems(int scene, const glm::vec2& posH, const glm::vec2& posC, const glm::vec2& posG) {

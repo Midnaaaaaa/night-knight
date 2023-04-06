@@ -500,7 +500,7 @@ void Scene::update(int deltaTime)
 			switch (it->id)
 			{
 			case GEM:
-				player->increasePuntuacion(500);
+				player->increasePuntuacion(1000);
 				engine->play2D(gemSoundSrc);
 				break;
 			case HOURGLASS:
