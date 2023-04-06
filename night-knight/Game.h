@@ -61,10 +61,14 @@ public:
 
 	void resize(int w, int h);
 
+	void theEnd();
+
 private:
 	bool initShaders();
 	void addPostEffect(int id, int duration);
 	void addPostEffect(int id, int duration, const glm::ivec2& point);
+
+	bool playing();
 
 
 	int currentTime;

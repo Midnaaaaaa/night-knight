@@ -55,6 +55,8 @@ private:
 
 	glm::ivec2 spawnPos;
 
+	int lastJumpAngle;
+
 };
 
 

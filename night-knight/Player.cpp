@@ -282,9 +282,9 @@ void Player::update(int deltaTime)
 
 		int nextY = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
 		int tileCol = map->collisionMoveUp(glm::ivec2(posCharacter.x, nextY), colliderOffset, colliderSize, true);
-		if (tileCol != 0) {
+		if (tileCol == TILE_SPIKE) {
 			jumpAngle = (180 - jumpAngle);
-			if (tileCol == TILE_SPIKE) muelto();
+			muelto();
 		}
 
 		if(jumpAngle == 180)
@@ -299,9 +299,16 @@ void Player::update(int deltaTime)
 		else
 		{
 			//Advance jumpAngle
+			nextY = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
+			int lastY = int(startY - JUMP_HEIGHT * sin(3.14159f * lastJumpAngle / 180.f));
 			jumpAngle += JUMP_ANGLE_STEP;
-
-			posCharacter.y = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
+			if ((tileCol != 0 && tileCol != TILE_SPIKE) || nextY < lastY - 16) {
+				posCharacter.y = int(startY - JUMP_HEIGHT * sin(3.14159f * lastJumpAngle / 180.f));
+			}
+			else {
+				posCharacter.y = int(startY - JUMP_HEIGHT * sin(3.14159f * nextJumpAngle / 180.f));
+				lastJumpAngle = nextJumpAngle;
+			}
 
 			if (jumpAngle > 90) {
 				checkCollisionUnder();
@@ -383,6 +390,7 @@ void Player::update(int deltaTime)
 			{
 				bJumping = true;
 				jumpAngle = 0;
+				lastJumpAngle = 0;
 				startY = posCharacter.y;
 				engine->play2D(jumpSrc);
 			}

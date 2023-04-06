@@ -63,13 +63,13 @@ bool Game::update(int deltaTime)
 	currentTime += deltaTime;
 
 	if (transitionTimer > 0) return bPlay;
-	if (currentLevel > 0 && !scene->getPauseState()) scene->update(deltaTime);
-	else if(currentLevel == 0) menu.update(deltaTime);
-	if (getKeyUp('p') && currentLevel > 0) {
+	if (playing() && !scene->getPauseState()) scene->update(deltaTime);
+	else if(!playing()) menu.update(deltaTime);
+	if (getKeyUp('p') && playing()) {
 		scene->changePauseState();
 		engine->setAllSoundsPaused(scene->getPauseState());
 	}
-	else if (getKeyUp(27) && currentLevel > 0) {
+	else if (getKeyUp(27) && playing()) {
 		exitLevel();
 	}
 	if (getKeyUp('1')) changeLevel(1);
@@ -79,6 +79,7 @@ bool Game::update(int deltaTime)
 	else if (getKeyUp('5')) changeLevel(5);
 	else if (getKeyUp('6')) changeLevel(6);
 	else if (getKeyUp('7')) changeLevel(7);
+	else if (getKeyUp('8')) changeLevel(8);
 
 
 	//Update old keys
@@ -97,7 +98,7 @@ void Game::render()
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	if (currentLevel > 0) scene->render();
+	if (playing()) scene->render();
 	else menu.render();
 
 	// Bind the default framebuffer
@@ -214,6 +215,14 @@ void Game::resize(int w, int h)
 	glViewport(0, 0, w, h);
 }
 
+void Game::theEnd()
+{
+	menu.theEnd();
+	SoundManager::instance().changeBgMusic("sound/theEnd.mp3", true, false);
+	puntuacionActual = 0;
+	vidasActuales = 3;
+}
+
 void Game::updateTimers(int deltaTime) {
 	if (transitionTimer > 0) {
 		transitionTimer -= deltaTime;
@@ -222,8 +231,8 @@ void Game::updateTimers(int deltaTime) {
 			currentLevel = targetLevel;
 
 			if (currentLevel == 0) {
-
-				delete scene;
+				if (scene != nullptr) 
+					delete scene;
 				scene = nullptr;
 				puntuacionActual = 0;
 				vidasActuales = 3;
@@ -234,6 +243,14 @@ void Game::updateTimers(int deltaTime) {
 
 				menuMusic = engine->play2D("sound/menu.mp3", true, false, true);
 				menuMusic->setVolume(0.5);
+			}
+			else if (currentLevel == 9) {
+				if (scene != nullptr)
+					delete scene;
+				scene = nullptr;
+				SoundManager::instance().stopBgMusic();
+				engine->stopAllSounds();
+				theEnd();
 			}
 			else {
 				if (scene != nullptr)
@@ -302,5 +319,10 @@ void Game::addPostEffect(int id, int duration, const glm::ivec2& point)
 	postEffect.point = point;
 	postEffect.timer = duration;
 	postEffect.duration = duration;
+}
+
+bool Game::playing()
+{
+	return currentLevel > 0 && currentLevel != 9;
 }
 

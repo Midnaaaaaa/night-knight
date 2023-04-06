@@ -384,8 +384,8 @@ void Scene::update(int deltaTime)
 				delete enemies[i];
 				enemies.pop_back();
 			}
-			if (level != 7) engine->play2D("sound/stageClear.ogg");
-			else engine->play2D("sound/clearlvl8.ogg");
+			if (level == 8) engine->play2D("sound/clearlvl8.ogg");
+			else engine->play2D("sound/stageClear.ogg");
 		}
 		if (stageTimer / 1000 > 0 && stageCompletedTimer <= 1000) {
 			int stageTimerActual = stageTimer / 1000;
@@ -403,12 +403,9 @@ void Scene::update(int deltaTime)
 				puntIncrSound->drop();
 				puntIncrSound = nullptr;
 			}
-			if (stageCompletedTimer <= 0 && level != 8) {
+			if (stageCompletedTimer <= 0 && level != 8 || stageCompletedTimer <= -2500) {
 				Game::instance().savePuntuacionYVidas(player->getPuntuacion(), player->getVidas());
 				Game::instance().changeLevel(++level);
-			}
-			else if (stageCompletedTimer <= -2000) {
-				//GO TO END
 			}
 		}
 		return;
@@ -653,7 +650,7 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("projection", projection);
 
 
-	if (level == 7) { //Dark
+	if (level == 7 || level == 8) { //Dark
 		vector<pair<glm::ivec2, int>>* data = getLightSources();
 		int n = data->size();
 

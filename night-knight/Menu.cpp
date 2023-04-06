@@ -256,6 +256,11 @@ void Menu::render()
 
 }
 
+void Menu::theEnd()
+{
+	scene = END;
+}
+
 void Menu::initShaders()
 {
 	Shader vShader, fShader;

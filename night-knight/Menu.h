@@ -25,6 +25,8 @@ public:
 	void update(int deltaTime);
 	void render();
 
+	void theEnd();
+
 private:
 	void initShaders();
 	void moveBetweenHowToPlay();

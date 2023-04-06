@@ -39,9 +39,9 @@ const vector<int> TileMap::tileType = { 0,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,
 										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
 										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 										0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,
-										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+										0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,
+										0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,
+										0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,
 										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 										0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 };
@@ -412,6 +412,7 @@ int TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& colliderOf
 	x0 = (pos.x + colliderOffset.x) / tileSize;
 	x1 = (pos.x + colliderOffset.x + colliderSize.x - 1) / tileSize;
 	y = (pos.y + colliderOffset.y) / tileSize;
+	if (y < 0) return TILE_SOLID;
 	for (int x = x0; x <= x1; x++)
 	{
 		int tile = map[y * mapSize.x + x];
