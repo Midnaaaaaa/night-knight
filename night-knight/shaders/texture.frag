@@ -44,7 +44,7 @@ void main()
         for (int i = 0; i < count; ++i) {
             vec2 centerPos = ((projection * vec4(center[i], 0, 1)).xy + 1)/2;
             //factor = max(factor, smoothstep(0, 0.1f, distance(centerPos, fragCoord)));
-            factor = max(factor, 1 - smoothstep(0, radius[i]/500.f, distance(centerPos, fragCoord)));
+            factor = min(1, factor + 1 - smoothstep(0, radius[i]/500.f, distance(centerPos, fragCoord)));
         }
     }
 

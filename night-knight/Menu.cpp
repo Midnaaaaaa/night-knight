@@ -85,10 +85,10 @@ void Menu::init()
 		{"ITEMS", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
 		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED},
 		{"THERE ARE SOME ITEMS THAT CAN HELP YOU OUT!", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80), 10, Text::CENTERED},
-		{"Opens the door", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,						images[HOW_TO_PLAY3][1]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
-		{"Freezes the enemies for 5 seconds", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,	images[HOW_TO_PLAY3][2]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
-		{"Gives you extra time to complete the level", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,				images[HOW_TO_PLAY3][3]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
-		{"Gives you extra points", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,				images[HOW_TO_PLAY3][4]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED}
+		{"Opens the door", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,								images[HOW_TO_PLAY3][1]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
+		{"Freezes the enemies for 5 seconds", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,			images[HOW_TO_PLAY3][2]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
+		{"Gives you extra time to complete the level", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,	images[HOW_TO_PLAY3][3]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
+		{"Gives you extra points", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,						images[HOW_TO_PLAY3][4]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED}
 	};
 	texts[HOW_TO_PLAY4] =
 	{

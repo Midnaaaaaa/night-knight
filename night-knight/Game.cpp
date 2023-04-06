@@ -107,24 +107,6 @@ void Game::render()
 	postProcessingProgram.setUniform1i("effectDuration", postEffect.duration);
 	postProcessingProgram.setUniform4f("color", 1.f, 1.f, 1.f, 1.f);
 
-
-	//if (currentLevel == 1) { //Dark
-	//	vector<pair<glm::ivec2, int>>* data = scene->getLightSources();
-	//	int n = data->size();
-
-	//	float lightPos[MAX_LIGHTS * 2];
-	//	int radius[MAX_LIGHTS];
-	//	for (int i = 0; i < n; ++i) {
-	//		lightPos[i] = (*data)[i].first.x;
-	//		lightPos[i+1] = (*data)[i].first.y;
-	//		radius[i] = (*data)[i].second;
-	//	}
-
-	//	postProcessingProgram.setUniform1iv("radius", n, radius);
-	//	postProcessingProgram.setUniform2fv("center", n, lightPos);
-	//	postProcessingProgram.setUniform1i("count", n);
-	//}
-
 	glDisable(GL_DEPTH_TEST); // prevents framebuffer rectangle from being discarded
 
 	glEnable(GL_TEXTURE_2D);
@@ -238,6 +220,7 @@ void Game::updateTimers(int deltaTime) {
 			if (currentLevel == 0) {
 
 				delete scene;
+				scene = nullptr;
 				puntuacionActual = 0;
 				vidasActuales = 3;
 				SoundManager::instance().stopBgMusic();

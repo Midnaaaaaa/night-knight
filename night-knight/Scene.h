@@ -31,7 +31,6 @@ public:
 	void changePauseState();
 	bool getPauseState();
 
-	vector<pair<glm::ivec2, int>>* getLightSources();
 
 
 private:
@@ -44,6 +43,7 @@ private:
 	void spawnDoorParticle(glm::vec2 pos);
 	void spawnCor();
 	//void executeFunction(void(Scene::*)());
+	vector<pair<glm::ivec2, int>>* getLightSources();
 
 	//void gameOver();
 

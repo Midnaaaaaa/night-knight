@@ -206,13 +206,15 @@ void Player::loadAnimations() {
 
 void Player::respawn() {
 	damagedTimer = 0;
-	invulnerabilityTimer = INV_TIME;
 	setPosition(glm::vec2(spawnPos.x * map->getTileSize(), spawnPos.y * map->getTileSize()));
 	moveSpeed = 2;
 	moveSpeedBase = 2;
 	if (rightSight) sprite->changeAnimation(STAND_RIGHT);
 	else sprite->changeAnimation(STAND_LEFT);
-	if (puntuacion > 0) addEffect(EFFECT_BLINK, INV_TIME);
+	if (puntuacion > 0) {
+		invulnerabilityTimer = INV_TIME;
+		addEffect(EFFECT_BLINK, INV_TIME);
+	}
 }
 
 void Player::dentroDePlataforma() {
