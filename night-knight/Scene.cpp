@@ -405,7 +405,7 @@ void Scene::update(int deltaTime)
 			}
 			if (stageCompletedTimer <= 0 && level != 8 || stageCompletedTimer <= -2500) {
 				Game::instance().savePuntuacionYVidas(player->getPuntuacion(), player->getVidas());
-				Game::instance().changeLevel(++level);
+				Game::instance().changeLevel(level + 1);
 			}
 		}
 		return;
