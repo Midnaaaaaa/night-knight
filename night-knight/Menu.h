@@ -5,7 +5,7 @@
 #include "Scene.h"
 
 enum Scenes {
-	MAIN_MENU, HOW_TO_PLAY1, HOW_TO_PLAY2, HOW_TO_PLAY3, HOW_TO_PLAY4, CREDITS, END
+	MAIN_MENU, HOW_TO_PLAY1, HOW_TO_PLAY2, HOW_TO_PLAY3, HOW_TO_PLAY4, HOW_TO_PLAY5, CREDITS, END
 };
 
 struct TextInfo {
@@ -35,12 +35,13 @@ private:
 	void spawnManMoving(int scene, const glm::vec2& pos);
 	void spawnItems(int scene, const glm::vec2& posH, const glm::vec2& posC, const glm::vec2& posG);
 	void spawnEnemies(int scene, const glm::vec2& posE, const glm::vec2& posF, const glm::vec2& posV);
+	void spawnTorch(int scene, const glm::vec2& posT);
 
 	//void spawnArrows(int scene);
 
 	Texture bgSpritesheet, bgcreditsheet, bghowtoplaysheet, doorSpritesheet, itemsSpriteSheet, platformsSpritesheet;
 	Texture manSpriteSheet, kbarrowssheet;
-	Texture batSpritesheet, skeletonspritesheet, ghostspritesheet, endspritesheet;
+	Texture batSpritesheet, skeletonspritesheet, ghostspritesheet, endspritesheet, torchSpriteSheet;
 
 	Sprite* bg;
 	Sprite* bgCredit;

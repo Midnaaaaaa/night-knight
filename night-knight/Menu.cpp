@@ -28,8 +28,8 @@ void Menu::init()
 	//vector<pair<string, glm::ivec2>>
 	//EJEMPLO:
 
-	texts.resize(7);
-	images.resize(7);
+	texts.resize(8);
+	images.resize(8);
 
 	texts[MAIN_MENU] = { {"PLAY", glm::ivec2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2) + 1, 16, Text::CENTERED},
 		{"HOW TO PLAY", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 50), 16, Text::CENTERED},
@@ -58,7 +58,7 @@ void Menu::init()
 		{"Grab the key and head out of the stage as fast as you can!", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 40), 8, Text::LEFT_ALIGNED},
 		{"Marking platforms and completing the level gives you points", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 20), 8, Text::LEFT_ALIGNED},
 		{"Collecting 5000 points will give you an extra life", glm::ivec2(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 + 1), 8, Text::LEFT_ALIGNED},
-
+		{">", glm::ivec2(SCREEN_WIDTH - 40, SCREEN_HEIGHT - 20), 40, Text::CENTERED},
 	};
 	texts[HOW_TO_PLAY2] =
 	{
@@ -71,6 +71,8 @@ void Menu::init()
 		{"<", glm::ivec2((SCREEN_WIDTH / 2) - 40, SCREEN_HEIGHT / 2 + 60), 32, Text::CENTERED},
 		{"^", glm::ivec2((SCREEN_WIDTH / 2) + 0, SCREEN_HEIGHT / 2 -  20 + 60), 32, Text::CENTERED},
 		{"v", glm::ivec2((SCREEN_WIDTH / 2) + 0, SCREEN_HEIGHT / 2 - 0 + 60), 32, Text::CENTERED},
+		{"<", glm::ivec2(40, SCREEN_HEIGHT - 20), 40, Text::CENTERED},
+		{">", glm::ivec2(SCREEN_WIDTH - 40, SCREEN_HEIGHT - 20), 40, Text::CENTERED},
 
 	};
 
@@ -88,7 +90,9 @@ void Menu::init()
 		{"Opens the door", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,								images[HOW_TO_PLAY3][1]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
 		{"Freezes the enemies for 5 seconds", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,			images[HOW_TO_PLAY3][2]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
 		{"Gives you extra time to complete the level", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,	images[HOW_TO_PLAY3][3]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
-		{"Gives you extra points", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,						images[HOW_TO_PLAY3][4]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED}
+		{"Gives you extra points", glm::ivec2(SCREEN_WIDTH * 1.25 / 6 + 48,						images[HOW_TO_PLAY3][4]->getPosition().y + 16 + subTextSize/2), subTextSize, Text::LEFT_ALIGNED},
+		{"<", glm::ivec2(40, SCREEN_HEIGHT - 20), 40, Text::CENTERED},
+		{">", glm::ivec2(SCREEN_WIDTH - 40, SCREEN_HEIGHT - 20), 40, Text::CENTERED},
 	};
 
 	images[HOW_TO_PLAY4] = { bghowtoplay };
@@ -104,6 +108,19 @@ void Menu::init()
 		{"Can fly across the map", glm::ivec2(images[HOW_TO_PLAY4][3]->getPosition().x + 20,220), subTextSize, Text::CENTERED},
 		{"and go through walls", glm::ivec2(images[HOW_TO_PLAY4][3]->getPosition().x + 20,240), subTextSize, Text::CENTERED},
 		{"Can transform into a bat", glm::ivec2(images[HOW_TO_PLAY4][2]->getPosition().x + 64,200), subTextSize, Text::CENTERED},
+		{"<", glm::ivec2(40, SCREEN_HEIGHT - 20), 40, Text::CENTERED},
+		{">", glm::ivec2(SCREEN_WIDTH - 40, SCREEN_HEIGHT - 20), 40, Text::CENTERED},
+	};
+
+	texts[HOW_TO_PLAY5] =
+	{
+		{"DARK ROOMS", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 150), 16, Text::CENTERED},
+		{"------------", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 130), 16, Text::CENTERED},
+		{"THERE ARE ROOMS IN THE CASTLE WITH NO LIGHT!", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80), 10, Text::CENTERED},
+		{"You will have to find the door", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 60), 10, Text::CENTERED},
+		{"Use the torches of the walls to see through darkness", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 40), 10, Text::CENTERED},
+		{"DON'T GET LOST!", glm::ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 1), 10, Text::CENTERED},
+		{"<", glm::ivec2(40, SCREEN_HEIGHT - 20), 40, Text::CENTERED},
 	};
 
 	texts[END] = {
@@ -122,7 +139,9 @@ void Menu::init()
 	batSpritesheet.loadFromFile("images/bat.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	ghostspritesheet.loadFromFile("images/ghost.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	skeletonspritesheet.loadFromFile("images/esquelet.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	torchSpriteSheet.loadFromFile("images/torch.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	endspritesheet.loadFromFile("images/END.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	
 	Sprite* end = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(float(SCREEN_WIDTH), float(SCREEN_HEIGHT)), glm::vec2(1.f, 1.f), &endspritesheet, &texProgram);
 	images[END] = { end };
 	//kbarrowssheet.loadFromFile("images/kbarrows.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -142,6 +161,10 @@ void Menu::init()
 	images[HOW_TO_PLAY2] = { bghowtoplay };
 	spawnManMoving(HOW_TO_PLAY2, glm::vec2((SCREEN_WIDTH * 3 / 6) - 40, 260 - 64));
 	//spawnArrows(HOW_TO_PLAY2);
+
+
+	images[HOW_TO_PLAY5] = { bghowtoplay };
+	spawnTorch(HOW_TO_PLAY5, glm::vec2(SCREEN_WIDTH / 2 - 16, SCREEN_HEIGHT / 2 + 50));
 
 
 	
@@ -280,6 +303,10 @@ void Menu::moveBetweenHowToPlay()
 		break;
 	case HOW_TO_PLAY4:
 		if (Game::instance().getSpecialKeyUp(GLUT_KEY_LEFT)) scene = HOW_TO_PLAY3;
+		if (Game::instance().getSpecialKeyUp(GLUT_KEY_RIGHT)) scene = HOW_TO_PLAY5;
+		break;
+	case HOW_TO_PLAY5:
+		if (Game::instance().getSpecialKeyUp(GLUT_KEY_LEFT)) scene = HOW_TO_PLAY4;
 		break;
 	}
 }
@@ -612,4 +639,18 @@ void Menu::spawnManMoving(int scene, const glm::vec2& pos) {
 	
 	man->changeAnimation(0);
 	images[scene].push_back(man);
+}
+
+void Menu::spawnTorch(int scene, const glm::vec2& posT) {
+	Sprite* light = Sprite::createSprite(glm::ivec2(0, 0), glm::vec2(32, 64), glm::vec2(1 / 4.f, 1 / 4.f), &torchSpriteSheet, &texProgram);
+	light->setPosition(posT);
+	light->setNumberAnimations(1);
+	light->setAnimationParams(0, 10, false);
+	light->addKeyframe(0, glm::vec2(1 / 4.f * 0, 1 / 4.f * 2));
+	light->addKeyframe(0, glm::vec2(1 / 4.f * 1, 1 / 4.f * 2));
+	light->addKeyframe(0, glm::vec2(1 / 4.f * 2, 1 / 4.f * 2));
+	light->addKeyframe(0, glm::vec2(1 / 4.f * 3, 1 / 4.f * 2));
+	light->changeAnimation(0);
+	light->addEffect(EFFECT_SIN_Y, 200000);
+	images[scene].push_back(light);
 }
