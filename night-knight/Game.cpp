@@ -107,8 +107,12 @@ void Game::render()
 	// Draw the framebuffer rectangle
 	postProcessingProgram.use();
 	//postProcessingProgram.setUniform1i("effectTimer", currentTime);
+	int effectTimer = postEffect.timer;
+	if (postEffect.timer < 0) {
+		effectTimer = postEffect.timer + postEffect.duration; // [-duration 0] ---> [0 duration] 
+	}
 	postProcessingProgram.setUniform1i("effectId", postEffect.id);
-	postProcessingProgram.setUniform1i("effectTimer", postEffect.timer);
+	postProcessingProgram.setUniform1i("effectTimer", effectTimer);
 	postProcessingProgram.setUniform1i("effectDuration", postEffect.duration);
 	postProcessingProgram.setUniform4f("color", 1.f, 1.f, 1.f, 1.f);
 
@@ -221,6 +225,7 @@ void Game::theEnd()
 	SoundManager::instance().changeBgMusic("sound/theEnd.mp3", true, false);
 	puntuacionActual = 0;
 	vidasActuales = 3;
+	addPostEffect(PEFFECT_FADE, -5000);
 }
 
 void Game::updateTimers(int deltaTime) {
@@ -274,6 +279,13 @@ void Game::updateTimers(int deltaTime) {
 			postEffect.id = -1;
 		}
 	}
+	else if (postEffect.timer < 0) {
+		postEffect.timer += deltaTime;
+		if (postEffect.timer >= 0) {
+			postEffect.timer = 0;
+			postEffect.id = -1;
+		}
+	}
 }
 
 
@@ -311,6 +323,8 @@ void Game::addPostEffect(int id, int duration)
 	postEffect.id = id;
 	postEffect.timer = duration;
 	postEffect.duration = duration;
+	if (duration < 0)
+		postEffect.duration = -duration;
 }
 
 void Game::addPostEffect(int id, int duration, const glm::ivec2& point)
