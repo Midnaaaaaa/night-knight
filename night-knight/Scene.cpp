@@ -249,6 +249,8 @@ bool Scene::loadLevelInfo(const string& levelFile) {
 	sstream >> numEnemies;
 	sstream.clear();
 
+	lightSources.resize(numEnemies + 1);
+
 	// Leer la posición de cada enemigo
 	for (int i = 0; i < numEnemies; i++) {
 		std::getline(fin, line);
@@ -571,6 +573,20 @@ void Scene::update(int deltaTime)
 	
 }
 
+vector<pair<glm::ivec2, int>>* Scene::getLightSources()
+{
+	lightSources[0].first = player->getCenterPos() + glm::ivec2(SCREEN_X, SCREEN_Y);
+	lightSources[0].second = 64;
+
+	for (int i = 0; i < enemies.size() && i < MAX_LIGHTS; ++i) {
+		lightSources[i + 1].first = enemies[i]->getCenterPos() + glm::ivec2(SCREEN_X, SCREEN_Y);
+		lightSources[i + 1].second = 32;
+	}
+
+	return &lightSources;
+}
+
+
 void Scene::render()
 {
 	//Render de game over
@@ -590,6 +606,30 @@ void Scene::render()
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 
+
+	if (level == 1) { //Dark
+		vector<pair<glm::ivec2, int>>* data = getLightSources();
+		int n = data->size();
+
+		float lightPos[MAX_LIGHTS * 2];
+		int radius[MAX_LIGHTS];
+		for (int i = 0; i < n; ++i) {
+			lightPos[2*i] = (*data)[i].first.x;
+			lightPos[2*i + 1] = (*data)[i].first.y;
+			radius[i] = (*data)[i].second;
+		}
+
+		glm::vec4 aux =  projection* glm::vec4(lightPos[0], lightPos[1], 0, 1);
+
+		texProgram.setUniform1iv("radius", n, radius);
+		texProgram.setUniform2fv("center", n, lightPos);
+		texProgram.setUniform1i("count", n);
+
+		int vp[4];
+		glGetIntegerv(GL_VIEWPORT, vp);
+		texProgram.setUniform1i("WIDTH", vp[2]);
+		texProgram.setUniform1i("HEIGHT", vp[3]);
+	}
 
 	//Render normal
 	bg->render();

@@ -35,6 +35,10 @@ public:
 	void setUniform4f(const string &uniformName, float v0, float v1, float v2, float v3);
 	void setUniformMatrix4f(const string &uniformName, glm::mat4 &mat);
 
+	void setUniform1iv(const string& uniformName, int n, int[]);
+	void setUniform2fv(const string& uniformName, int n, float[]);
+
+
 	bool isLinked();
 	const string &log() const;
 

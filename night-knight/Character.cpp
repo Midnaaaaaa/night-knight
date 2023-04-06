@@ -77,6 +77,11 @@ glm::ivec2 Character::getColliderSize() const {
 	return colliderSize;
 }
 
+glm::ivec2 Character::getCenterPos() const
+{
+	return (posCharacter + colliderOffset) + colliderSize/2;
+}
+
 void Character::freeze(int milisec, bool tremolar) {
 
 	//Estaban ya congelaos

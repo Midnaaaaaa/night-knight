@@ -277,7 +277,6 @@ int Sprite::currentEffectId() {
 	}
 }
 
-
 void Sprite::updateTimers(int deltaTime) {
 	if (!effectStack.empty()) {
 		Effect& e = effectStack.back();
