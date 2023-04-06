@@ -11,8 +11,8 @@
 #include <fstream>
 #include <sstream>
 
-#define MIN_TIME_WITHOUT_SPAWN 10  * 1000
-#define MAX_TIME_WITHOUT_SPAWN 20 * 1000
+#define MIN_TIME_WITHOUT_SPAWN 8  * 1000
+#define MAX_TIME_WITHOUT_SPAWN 15 * 1000
 
 #define MIN_TIME_TO_DESPAWN 10  * 1000
 #define MAX_TIME_TO_DESPAWN 15 * 1000
