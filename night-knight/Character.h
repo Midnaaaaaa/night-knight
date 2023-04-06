@@ -18,6 +18,7 @@ public:
 	glm::ivec2 getSpriteSize() const;
 	glm::ivec2 getColliderPos() const;
 	glm::ivec2 getColliderSize() const;
+	glm::ivec2 getCenterPos() const;
 
 	void freeze(int milisec, bool tremolar);
 	void addEffect(int id, int duration, int delay = 0);

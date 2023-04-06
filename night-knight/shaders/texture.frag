@@ -13,6 +13,15 @@ out vec4 outColor;
 
 const float PI = 3.1415926535897932384626433832795;
 
+uniform mat4 projection;
+uniform int count;
+uniform vec2 center[10];
+uniform int radius[10];
+
+uniform int WIDTH;
+uniform int HEIGHT;
+
+
 //const int effect3Duration = 1000;
 
 void main()
@@ -24,6 +33,21 @@ void main()
 	//if(mod(int(gl_FragCoord.y),4) == 0) discard;
 
 	vec2 texCoord = texCoordFrag;
+
+    
+    float factor = 1;
+    if (count > 1) { //dark level
+        factor = 0;
+        vec2 fragCoord;
+        fragCoord.x = gl_FragCoord.x / WIDTH;
+        fragCoord.y = gl_FragCoord.y / HEIGHT;
+        for (int i = 0; i < count; ++i) {
+            vec2 centerPos = ((projection * vec4(center[i], 0, 1)).xy + 1)/2;
+            //factor = max(factor, smoothstep(0, 0.1f, distance(centerPos, fragCoord)));
+            factor = min(1, factor + 1 - smoothstep(0, radius[i]/500.f, distance(centerPos, fragCoord)));
+        }
+    }
+
 
 	if (effectId == 0) { //Blink
 		if ((effectTimer % 100) < 50)
@@ -40,7 +64,6 @@ void main()
 	if(texColor.a < 0.5f)
 		discard;
 
-    texColor.a = 0.1f;
-	outColor = color * texColor;
+	outColor = color * (factor * texColor);
 }
 

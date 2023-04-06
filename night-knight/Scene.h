@@ -11,6 +11,9 @@
 #include "Item.h"
 #include "SoundManager.h"
 
+#define MAX_LIGHTS 10
+
+
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
 
@@ -28,6 +31,8 @@ public:
 	void changePauseState();
 	bool getPauseState();
 
+
+
 private:
 	void initShaders();
 	void spawnKey();
@@ -38,6 +43,7 @@ private:
 	void spawnDoorParticle(glm::vec2 pos);
 	void spawnCor();
 	//void executeFunction(void(Scene::*)());
+	vector<pair<glm::ivec2, int>>* getLightSources();
 
 	//void gameOver();
 
@@ -93,6 +99,9 @@ private:
 
 
 	bool paused;
+
+	vector<pair<glm::ivec2, int>> lightSources;
+
 
 };
 

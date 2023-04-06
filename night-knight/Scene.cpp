@@ -249,6 +249,8 @@ bool Scene::loadLevelInfo(const string& levelFile) {
 	sstream >> numEnemies;
 	sstream.clear();
 
+	lightSources.resize(numEnemies + 1);
+
 	// Leer la posición de cada enemigo
 	for (int i = 0; i < numEnemies; i++) {
 		std::getline(fin, line);
@@ -571,6 +573,30 @@ void Scene::update(int deltaTime)
 	
 }
 
+vector<pair<glm::ivec2, int>>* Scene::getLightSources()
+{
+	lightSources.resize(enemies.size() + 1);
+	lightSources[0].first = player->getCenterPos() + glm::ivec2(SCREEN_X, SCREEN_Y);
+	lightSources[0].second = 75;
+
+	for (int i = 0; i < enemies.size() && i < MAX_LIGHTS; ++i) {
+		lightSources[i + 1].first = enemies[i]->getCenterPos() + glm::ivec2(SCREEN_X, SCREEN_Y);
+		lightSources[i + 1].second = 45;
+	}
+
+	pair<glm::ivec2, int> keyData;
+
+	if (key != nullptr) {
+		keyData.first = key->getPosition() + key->getSpriteSize()*0.5f + glm::vec2(SCREEN_X, SCREEN_Y);
+		keyData.second = 32;
+
+		lightSources.push_back(keyData);
+	}
+
+	return &lightSources;
+}
+
+
 void Scene::render()
 {
 	//Render de game over
@@ -591,6 +617,30 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("projection", projection);
 
 
+	if (level > 0) { //Dark
+		vector<pair<glm::ivec2, int>>* data = getLightSources();
+		int n = data->size();
+
+		float lightPos[MAX_LIGHTS * 2];
+		int radius[MAX_LIGHTS];
+		for (int i = 0; i < n; ++i) {
+			lightPos[2*i] = (*data)[i].first.x;
+			lightPos[2*i + 1] = (*data)[i].first.y;
+			radius[i] = (*data)[i].second;
+		}
+
+		glm::vec4 aux =  projection* glm::vec4(lightPos[0], lightPos[1], 0, 1);
+
+		texProgram.setUniform1iv("radius", n, radius);
+		texProgram.setUniform2fv("center", n, lightPos);
+		texProgram.setUniform1i("count", n);
+
+		int vp[4];
+		glGetIntegerv(GL_VIEWPORT, vp);
+		texProgram.setUniform1i("WIDTH", vp[2]);
+		texProgram.setUniform1i("HEIGHT", vp[3]);
+	}
+
 	//Render normal
 	bg->render();
 
@@ -606,7 +656,6 @@ void Scene::render()
 	map->render();
 	door->render();
 	player->render();
-	cor->render();
 	if (particleDoor != nullptr) {
 		particleDoor->render();
 	}
@@ -625,6 +674,10 @@ void Scene::render()
 	if (key != nullptr) {
 		key->render();
 	}
+
+	//Disable dark
+	texProgram.setUniform1i("count", 0);
+	cor->render();
 	//Render de num vidas
 	text.render("x" + to_string(player->getVidas()), glm::vec2(SCREEN_X + 26, 30.f), 26, glm::vec4(1, 1, 1, 1));
 

@@ -65,9 +65,12 @@ bool Game::update(int deltaTime)
 	if (transitionTimer > 0) return bPlay;
 	if (currentLevel > 0 && !scene->getPauseState()) scene->update(deltaTime);
 	else if(currentLevel == 0) menu.update(deltaTime);
-	if (getKeyUp('m') && currentLevel > 0) {
+	if (getKeyUp('p') && currentLevel > 0) {
 		scene->changePauseState();
 		engine->setAllSoundsPaused(scene->getPauseState());
+	}
+	else if (getKeyUp(27) && currentLevel > 0) {
+		exitLevel();
 	}
 	if (getKeyUp('1')) changeLevel(1);
 	else if (getKeyUp('2')) changeLevel(2);
@@ -106,7 +109,6 @@ void Game::render()
 	postProcessingProgram.setUniform1i("effectId", postEffect.id);
 	postProcessingProgram.setUniform1i("effectTimer", postEffect.timer);
 	postProcessingProgram.setUniform1i("effectDuration", postEffect.duration);
-	postProcessingProgram.setUniform2f("center", postEffect.point.x, postEffect.point.y);
 	postProcessingProgram.setUniform4f("color", 1.f, 1.f, 1.f, 1.f);
 
 	glDisable(GL_DEPTH_TEST); // prevents framebuffer rectangle from being discarded
@@ -222,6 +224,7 @@ void Game::updateTimers(int deltaTime) {
 			if (currentLevel == 0) {
 
 				delete scene;
+				scene = nullptr;
 				puntuacionActual = 0;
 				vidasActuales = 3;
 				SoundManager::instance().stopBgMusic();
