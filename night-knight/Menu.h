@@ -5,7 +5,7 @@
 #include "Scene.h"
 
 enum Scenes {
-	MAIN_MENU, HOW_TO_PLAY1, HOW_TO_PLAY2, HOW_TO_PLAY3, HOW_TO_PLAY4, CREDITS
+	MAIN_MENU, HOW_TO_PLAY1, HOW_TO_PLAY2, HOW_TO_PLAY3, HOW_TO_PLAY4, CREDITS, END
 };
 
 struct TextInfo {
@@ -40,7 +40,7 @@ private:
 
 	Texture bgSpritesheet, bgcreditsheet, bghowtoplaysheet, doorSpritesheet, itemsSpriteSheet, platformsSpritesheet;
 	Texture manSpriteSheet, kbarrowssheet;
-	Texture batSpritesheet, skeletonspritesheet, ghostspritesheet;
+	Texture batSpritesheet, skeletonspritesheet, ghostspritesheet, endspritesheet;
 
 	Sprite* bg;
 	Sprite* bgCredit;
