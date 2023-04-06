@@ -384,7 +384,8 @@ void Scene::update(int deltaTime)
 				delete enemies[i];
 				enemies.pop_back();
 			}
-			engine->play2D("sound/stageClear.ogg");
+			if (level != 7) engine->play2D("sound/stageClear.ogg");
+			else engine->play2D("sound/clearlvl8.ogg");
 		}
 		if (stageTimer / 1000 > 0 && stageCompletedTimer <= 1000) {
 			int stageTimerActual = stageTimer / 1000;
@@ -402,9 +403,12 @@ void Scene::update(int deltaTime)
 				puntIncrSound->drop();
 				puntIncrSound = nullptr;
 			}
-			if (stageCompletedTimer <= 0) {
+			if (stageCompletedTimer <= 0 && level != 8) {
 				Game::instance().savePuntuacionYVidas(player->getPuntuacion(), player->getVidas());
 				Game::instance().changeLevel(++level);
+			}
+			else if (stageCompletedTimer <= -2000) {
+				//GO TO END
 			}
 		}
 		return;
